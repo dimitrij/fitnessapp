@@ -1,0 +1,32 @@
+.tip {
+    fill: #25B3F9;
+    opacity: 0;
+}
+
+.tip.active {
+    fill:#25B3F9;
+    stroke-width: 0;
+    opacity: 1;
+    width: 80px;
+    height: 40px;
+    mask: url(#dropshadow);
+    box-shadow: 1px 2px 1px #333;
+}
+
+.tip text {
+    fill: #000;
+    font-weight: normal;
+    text-anchor: middle;
+    stroke-width:0;
+}
+
+.tip .date {
+    font-size: 10px;
+    fill: #fff;
+}
+
+.tip .weight {
+    font-size: 12px;
+    font-weight: bold;
+    fill: #B2D682;
+}

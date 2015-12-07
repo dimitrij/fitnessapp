@@ -1,0 +1,64 @@
+#calories-remaining {
+    font-size: 2rem;
+    fill: #666;
+}
+
+#daily-permitted,
+#daily-permitted-text {
+    font-family: "Oswald", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    border: 0;
+    background-color: transparent;
+    padding: 4px 8px;
+    position: absolute;
+    left: 8px;
+    top: 40%;
+    font-size: 2.8rem;
+    cursor: pointer;
+    z-index: 15;
+    fill: #666;
+    outline: none;
+
+    &:focus {
+        cursor: text;
+    }
+}
+
+#daily-permitted-text {
+    top: 35%;
+    font-size: .8rem;
+    cursor: text;
+}
+
+#calories-remaining-text {
+    opacity: 0;
+    font-size: .6rem;
+    fill: #1E8F27;
+}
+#daily-permitted-text.visible,
+#calories-remaining-text.visible {
+    opacity: 1;
+}
+
+#calories-remaining {
+    font-size: 1.5rem;
+}
+
+.info {
+    font-size: .6rem;
+    font-weight: normal;
+    fill: #333;
+    opacity: 0;
+}
+
+#today {
+    font-weight: bold;
+    fill: #1E8F27;
+}
+
+.visible {
+    opacity: 1;
+}
+
+svg {
+    display: block;
+}

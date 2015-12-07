@@ -1,0 +1,25 @@
+#charting {
+    width: 1100px;
+    margin: 60px auto;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding-left: 20px;
+}
+
+#chart {
+    text-align: center;
+}
+
+#weight-tracker {
+    text-align: center;
+    border-radius: 3px;
+    background-color: #f7f7f7;
+    display: inline-block;
+    position: relative;
+    vertical-align: top;
+}
+
+#calories {
+    position: relative;
+    display: inline-block;
+}

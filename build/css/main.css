@@ -1,0 +1,227 @@
+html,
+body {
+  font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: 0;
+  background-color: #f7f7f7;
+  font-size: 1.2rem;
+  color: #666; }
+
+.clearfix:before, .clearfix:after {
+  content: "";
+  display: table;
+  line-height: 0; }
+
+.clearfix:after {
+  clear: both; }
+
+#charting {
+  width: 1100px;
+  margin: 60px auto;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding-left: 20px; }
+
+#chart {
+  text-align: center; }
+
+#weight-tracker {
+  text-align: center;
+  border-radius: 3px;
+  background-color: #f7f7f7;
+  display: inline-block;
+  position: relative;
+  vertical-align: top; }
+
+#calories {
+  position: relative;
+  display: inline-block; }
+
+.y {
+  stroke-width: 0;
+  transition: opacity .5s;
+  opacity: 0; }
+
+.grid {
+  stroke-width: 1;
+  transition: opacity .5s;
+  opacity: 0; }
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #999;
+  shape-rendering: crispEdges; }
+
+text {
+  font-family: sans-serif;
+  font-size: 11px; }
+
+.grid .tick {
+  stroke: #e5e5e5;
+  opacity: 0.7; }
+
+.grid path {
+  stroke-width: 0; }
+
+.tick text {
+  fill: #444;
+  opacity: 0.7; }
+
+/* plots */
+.bubble {
+  fill: #fff;
+  stroke: #25B3F9;
+  stroke-width: 1; }
+
+.bubble.active {
+  stroke-width: 3; }
+
+#calories-remaining {
+  font-size: 2rem;
+  fill: #666; }
+
+#daily-permitted,
+#daily-permitted-text {
+  font-family: "Oswald", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  border: 0;
+  background-color: transparent;
+  padding: 4px 8px;
+  position: absolute;
+  left: 8px;
+  top: 40%;
+  font-size: 2.8rem;
+  cursor: pointer;
+  z-index: 15;
+  fill: #666;
+  outline: none; }
+  #daily-permitted:focus,
+  #daily-permitted-text:focus {
+    cursor: text; }
+
+#daily-permitted-text {
+  top: 35%;
+  font-size: .8rem;
+  cursor: text; }
+
+#calories-remaining-text {
+  opacity: 0;
+  font-size: .6rem;
+  fill: #1E8F27; }
+
+#daily-permitted-text.visible,
+#calories-remaining-text.visible {
+  opacity: 1; }
+
+#calories-remaining {
+  font-size: 1.5rem; }
+
+.info {
+  font-size: .6rem;
+  font-weight: normal;
+  fill: #333;
+  opacity: 0; }
+
+#today {
+  font-weight: bold;
+  fill: #1E8F27; }
+
+.visible {
+  opacity: 1; }
+
+svg {
+  display: block; }
+
+h1 {
+  padding: 20px 0 0 0;
+  margin: 0 0 0 40px;
+  text-transform: uppercase;
+  font-size: .8rem;
+  text-align: left;
+  font-weight: normal;
+  position: absolute; }
+
+#calories h1 {
+  text-align: center;
+  margin: 0;
+  width: 100%; }
+#calories svg {
+  margin-top: 50px;
+  z-index: 10;
+  position: relative;
+  background: transparent; }
+
+label {
+  font-size: .6rem; }
+
+h2 {
+  font-size: .6rem;
+  margin: 0;
+  text-align: center;
+  position: absolute;
+  left: 100px; }
+
+#radios {
+  text-align: center;
+  left: 45px;
+  top: -28px; }
+
+#radios label {
+  margin: 3px;
+  display: inline-block; }
+
+#radios .year {
+  border-right: 1px solid #888;
+  padding-right: 10px; }
+
+p {
+  font-size: .8rem;
+  margin: 8px 0 0; }
+
+.d3 {
+  margin: 10px 0 0;
+  font-size: .5rem; }
+
+svg {
+  background-color: #f7f7f7;
+  border-radius: 5px;
+  margin: 0; }
+
+.user-stats {
+  position: absolute;
+  width: 260px;
+  height: 120px;
+  background-color: #e9e9e9;
+  border-radius: 8px;
+  top: 145px;
+  z-index: 1;
+  left: 0; }
+
+.tip {
+  fill: #25B3F9;
+  opacity: 0; }
+
+.tip.active {
+  fill: #25B3F9;
+  stroke-width: 0;
+  opacity: 1;
+  width: 80px;
+  height: 40px;
+  mask: url(#dropshadow);
+  box-shadow: 1px 2px 1px #333; }
+
+.tip text {
+  fill: #000;
+  font-weight: normal;
+  text-anchor: middle;
+  stroke-width: 0; }
+
+.tip .date {
+  font-size: 10px;
+  fill: #fff; }
+
+.tip .weight {
+  font-size: 12px;
+  font-weight: bold;
+  fill: #B2D682; }
+
+/*# sourceMappingURL=main.css.map */

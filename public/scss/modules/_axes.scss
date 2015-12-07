@@ -1,0 +1,48 @@
+.y {
+    stroke-width: 0;
+    transition: opacity .5s;
+    opacity:0;
+}
+.grid {
+    stroke-width: 1;
+    transition: opacity .5s;
+    opacity:0;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #999;
+    shape-rendering: crispEdges;
+}
+
+text {
+    font-family: sans-serif;
+    font-size: 11px;
+}
+
+.grid .tick {
+    stroke: #e5e5e5;
+    opacity: 0.7;
+}
+.grid path {
+    stroke-width: 0;
+}
+
+.tick text {
+    fill: #444;
+    opacity: 0.7;
+}
+
+
+/* plots */
+
+.bubble {
+    fill:#fff;
+    stroke: #25B3F9;
+    stroke-width: 1;
+}
+
+.bubble.active {
+    stroke-width: 3;
+}
