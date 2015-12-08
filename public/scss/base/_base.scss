@@ -5,6 +5,7 @@ body {
     background-color: #f7f7f7;
     font-size: 1.2rem;
     color: #666;
+    height: 110%;
 }
 
 .clearfix:before, .clearfix:after {
@@ -15,4 +16,8 @@ body {
 
 .clearfix:after {
     clear: both;
+}
+
+input {
+    outline: none;
 }

@@ -5,14 +5,14 @@ class Utils {
 	}
 
 	static addClass(elem, className) {
-		if (!hasClass(elem, className)) {
+		if (!Utils.hasClass(elem, className)) {
 			elem.className += ' ' + className;
 		}
 	}
 
 	static removeClass(elem, className) {
 		var newClass = ' ' + elem.className.replace( /[\t\r\n]/g, ' ') + ' ';
-		if (hasClass(elem, className)) {
+		if (Utils.hasClass(elem, className)) {
 			while (newClass.indexOf(' ' + className + ' ') >= 0 ) {
 				newClass = newClass.replace(' ' + className + ' ', ' ');
 			}
@@ -22,7 +22,7 @@ class Utils {
 
 	static toggleClass(elem, className) {
 		var newClass = ' ' + elem.className.replace( /[\t\r\n]/g, ' ' ) + ' ';
-		if (hasClass(elem, className)) {
+		if (Utils.hasClass(elem, className)) {
 			while (newClass.indexOf(' ' + className + ' ') >= 0 ) {
 				newClass = newClass.replace( ' ' + className + ' ' , ' ' );
 			}
@@ -30,6 +30,11 @@ class Utils {
 		} else {
 			elem.className += ' ' + className;
 		}
+	}
+
+	static $(str){
+		var id = str.replace('#', '');
+		return str.indexOf('#') !== -1 ? document.getElementById(id) : document.querySelectorAll(str);
 	}
 }
 
