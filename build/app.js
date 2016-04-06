@@ -21560,10 +21560,10 @@ var _jsUtils = require('../js/utils');
 var _jsUtils2 = _interopRequireDefault(_jsUtils);
 
 //Phase 1
+//make calories consumed / burned / excess dynamic (on load and on adding food)
 //debounce daily calorie intake input
 //get search data from real API
-//make calories consumed / burned / excess dynamic (on load and on adding food)
-// new db table for all user's previously selected foods, and related UI search
+//new db table for all user's previously selected foods, and related UI search
 //$pull only one element from array
 //validation on adding meal
 //add correct calories depending on number of servings
@@ -21576,10 +21576,14 @@ var caloriesTotal = 0,
     proteinTotal = 0,
     sodiumTotal = 0,
     sugarTotal = 0;
-var total = 0;
 
 function resetTotals() {
-	caloriesTotal = 0;carbsTotal = 0;fatTotal = 0;proteinTotal = 0;sodiumTotal = 0;sugarTotal = 0;
+	caloriesTotal = 0;
+	carbsTotal = 0;
+	fatTotal = 0;
+	proteinTotal = 0;
+	sodiumTotal = 0;
+	sugarTotal = 0;
 }
 
 var SearchAPI = (function (_React$Component) {
@@ -21812,98 +21816,58 @@ var FoodList = (function (_React$Component3) {
 		key: 'render',
 		value: function render() {
 			return _react2['default'].createElement(
-				'ul',
-				{ className: 'selectedFoods' },
+				'div',
+				null,
 				_react2['default'].createElement(
-					'li',
-					{ className: 'headers clearfix' },
-					_react2['default'].createElement('span', null),
+					'ul',
+					{ className: 'selected-foods' },
 					_react2['default'].createElement(
-						'span',
-						null,
-						'Cals'
-					),
-					_react2['default'].createElement(
-						'span',
-						null,
-						'Carbs'
-					),
-					_react2['default'].createElement(
-						'span',
-						null,
-						'Fat'
-					),
-					_react2['default'].createElement(
-						'span',
-						null,
-						'Protein'
-					),
-					_react2['default'].createElement(
-						'span',
-						null,
-						'Sodium'
-					),
-					_react2['default'].createElement(
-						'span',
-						null,
-						'Sugar'
-					),
-					_react2['default'].createElement(
-						'span',
-						null,
-						' '
-					)
-				),
-				_react2['default'].createElement(
-					'li',
-					null,
-					_react2['default'].createElement(
-						'h2',
-						null,
-						'Breakfast'
+						'li',
+						{ className: 'headers clearfix' },
+						_react2['default'].createElement('span', null),
+						_react2['default'].createElement(
+							'span',
+							null,
+							'Cals'
+						),
+						_react2['default'].createElement(
+							'span',
+							null,
+							'Carbs'
+						),
+						_react2['default'].createElement(
+							'span',
+							null,
+							'Fat'
+						),
+						_react2['default'].createElement(
+							'span',
+							null,
+							'Protein'
+						),
+						_react2['default'].createElement(
+							'span',
+							null,
+							'Sodium'
+						),
+						_react2['default'].createElement(
+							'span',
+							null,
+							'Sugar'
+						),
+						_react2['default'].createElement(
+							'span',
+							null,
+							' '
+						)
 					)
 				),
 				_react2['default'].createElement(Meal, { items: this.props.breakfastList, todaysFoods: this.props.todaysFoods, meal: 'breakfast' }),
-				_react2['default'].createElement(
-					'li',
-					null,
-					_react2['default'].createElement(
-						'h2',
-						null,
-						'Lunch'
-					)
-				),
 				_react2['default'].createElement(Meal, { items: this.props.lunchList, todaysFoods: this.props.todaysFoods, meal: 'lunch' }),
-				_react2['default'].createElement(
-					'li',
-					null,
-					_react2['default'].createElement(
-						'h2',
-						null,
-						'Dinner'
-					)
-				),
 				_react2['default'].createElement(Meal, { items: this.props.dinnerList, todaysFoods: this.props.todaysFoods, meal: 'dinner' }),
-				_react2['default'].createElement(
-					'li',
-					null,
-					_react2['default'].createElement(
-						'h2',
-						null,
-						'Snacks'
-					)
-				),
 				_react2['default'].createElement(Meal, { items: this.props.snacksList, todaysFoods: this.props.todaysFoods, meal: 'snacks' }),
 				_react2['default'].createElement(MealTotals, { foods: this.props.foodsList })
 			);
-		}
-	}], [{
-		key: 'setTotal',
-		value: function setTotal(total) {
-			console.log('totalll', total);
-			this.setState({
-				totalCalories: total
-			});
 		}
 	}]);
 
@@ -21939,8 +21903,17 @@ var Meal = (function (_React$Component4) {
 			var _this6 = this;
 
 			return _react2['default'].createElement(
-				'div',
-				null,
+				'ul',
+				{ className: 'selected-foods' },
+				_react2['default'].createElement(
+					'li',
+					null,
+					_react2['default'].createElement(
+						'h2',
+						null,
+						this.props.meal
+					)
+				),
 				this.props.items.map(function (food) {
 					caloriesTotal += food.calories;
 					carbsTotal += food.carbs;
@@ -22072,42 +22045,46 @@ var MealTotals = (function (_React$Component5) {
 			}
 
 			return _react2['default'].createElement(
-				'li',
-				{ className: 'totals clearfix' },
+				'ul',
+				{ className: 'selected-foods' },
 				_react2['default'].createElement(
-					'span',
-					{ className: 'food-name' },
-					'Totals'
-				),
-				_react2['default'].createElement(
-					'span',
-					null,
-					totalCalories
-				),
-				_react2['default'].createElement(
-					'span',
-					null,
-					totalCarbs
-				),
-				_react2['default'].createElement(
-					'span',
-					null,
-					totalFat
-				),
-				_react2['default'].createElement(
-					'span',
-					null,
-					totalProtein
-				),
-				_react2['default'].createElement(
-					'span',
-					null,
-					totalSodium
-				),
-				_react2['default'].createElement(
-					'span',
-					null,
-					totalSugar
+					'li',
+					{ className: 'totals clearfix' },
+					_react2['default'].createElement(
+						'span',
+						{ className: 'food-name' },
+						'Totals'
+					),
+					_react2['default'].createElement(
+						'span',
+						null,
+						totalCalories
+					),
+					_react2['default'].createElement(
+						'span',
+						null,
+						totalCarbs
+					),
+					_react2['default'].createElement(
+						'span',
+						null,
+						totalFat
+					),
+					_react2['default'].createElement(
+						'span',
+						null,
+						totalProtein
+					),
+					_react2['default'].createElement(
+						'span',
+						null,
+						totalSodium
+					),
+					_react2['default'].createElement(
+						'span',
+						null,
+						totalSugar
+					)
 				)
 			);
 		}

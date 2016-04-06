@@ -4,21 +4,26 @@ import Request from '../../node_modules/superagent/lib/client';
 import $ from '../js/utils';
 
 //Phase 1
+//make calories consumed / burned / excess dynamic (on load and on adding food)
 //debounce daily calorie intake input
 //get search data from real API
-//make calories consumed / burned / excess dynamic (on load and on adding food)
-// new db table for all user's previously selected foods, and related UI search
+//new db table for all user's previously selected foods, and related UI search
 //$pull only one element from array
 //validation on adding meal
 //add correct calories depending on number of servings
+//ajax calls to ApiService.js
 //better design...
 
 let selectedMeal = null;
 var caloriesTotal = 0, carbsTotal = 0, fatTotal = 0, proteinTotal = 0, sodiumTotal = 0, sugarTotal = 0;
-var total = 0;
 
 function resetTotals(){
-	caloriesTotal = 0; carbsTotal = 0; fatTotal = 0; proteinTotal = 0; sodiumTotal = 0; sugarTotal = 0;
+	caloriesTotal = 0;
+	carbsTotal = 0;
+	fatTotal = 0;
+	proteinTotal = 0;
+	sodiumTotal = 0;
+	sugarTotal = 0;
 }
 
 class SearchAPI extends React.Component {
@@ -193,33 +198,32 @@ class FoodList extends React.Component {
 
 	render(){
 		return (
-			<ul className="selectedFoods">
-				<li className="headers clearfix">
-					<span></span>
-					<span>Cals</span>
-					<span>Carbs</span>
-					<span>Fat</span>
-					<span>Protein</span>
-					<span>Sodium</span>
-					<span>Sugar</span>
-					<span> </span>
-				</li>
+			<div>
+				<ul className="selected-foods">
+					<li className="headers clearfix">
+						<span></span>
+						<span>Cals</span>
+						<span>Carbs</span>
+						<span>Fat</span>
+						<span>Protein</span>
+						<span>Sodium</span>
+						<span>Sugar</span>
+						<span> </span>
+					</li>
+				</ul>
 
-				<li><h2>Breakfast</h2></li>
 				<Meal items={this.props.breakfastList} todaysFoods={this.props.todaysFoods} meal="breakfast"/>
 
-				<li><h2>Lunch</h2></li>
 				<Meal items={this.props.lunchList} todaysFoods={this.props.todaysFoods} meal="lunch"/>
 
-				<li><h2>Dinner</h2></li>
 				<Meal items={this.props.dinnerList} todaysFoods={this.props.todaysFoods} meal="dinner"/>
 
-				<li><h2>Snacks</h2></li>
 				<Meal items={this.props.snacksList} todaysFoods={this.props.todaysFoods} meal="snacks"/>
 
 				<MealTotals foods={this.props.foodsList}/>
 
-			</ul>
+			</div>
+
 		)
 	}
 }
@@ -244,7 +248,8 @@ class Meal extends React.Component {
 
 	render(){
 		return (
-			<div>
+			<ul className="selected-foods">
+				<li><h2>{this.props.meal}</h2></li>
 				{this.props.items.map(food => {
 					caloriesTotal += food.calories;
 					carbsTotal += food.carbs;
@@ -277,7 +282,7 @@ class Meal extends React.Component {
 
 				{resetTotals()}
 
-			</div>
+			</ul>
 		)
 	}
 }
@@ -302,15 +307,17 @@ class MealTotals extends React.Component {
 		})}
 
 		return (
-				<li className="totals clearfix">
-					<span className="food-name">Totals</span>
-					<span>{totalCalories}</span>
-					<span>{totalCarbs}</span>
-					<span>{totalFat}</span>
-					<span>{totalProtein}</span>
-					<span>{totalSodium}</span>
-					<span>{totalSugar}</span>
-				</li>
+				<ul className="selected-foods">
+					<li className="totals clearfix">
+						<span className="food-name">Totals</span>
+						<span>{totalCalories}</span>
+						<span>{totalCarbs}</span>
+						<span>{totalFat}</span>
+						<span>{totalProtein}</span>
+						<span>{totalSodium}</span>
+						<span>{totalSugar}</span>
+					</li>
+				</ul>
 		)
 	}
 }
