@@ -1,12 +1,13 @@
 
 h1 {
     padding: 20px 0 0 0;
-    margin: 0 0 0 40px;
+    margin: 0;
     text-transform: uppercase;
     font-size: .8rem;
-    text-align: left;
+    text-align: center;
     font-weight: normal;
     position: absolute;
+    width: 100%;
 }
 
 #calories {
@@ -40,6 +41,10 @@ h2 {
     text-align: center;
     left: 45px;
     top: -28px;
+
+    input {
+        margin-right: 6px;
+    }
 }
 
 #radios label {
@@ -89,7 +94,6 @@ svg {
         border-bottom: 1px solid #ddd;
         padding-bottom: 5px;
         margin-bottom: 5px;
-        list-style: none;
         font-size: .6rem;
         width: 240px;
         text-align: left;
@@ -134,20 +138,21 @@ svg {
         padding: 10px 0 10px 12px;
         background-color: #fbfbfb;
         font-size: 1rem;
-        width: 50%;
+        width: 49%;
     }
 
-    > ul {
-        width: 48%;
+    .results {
+        width: 47%;
         list-style: none;
         background-color: #fff;
         box-shadow: 0px 0px 5px #ccc;
         padding: 5px 15px 0;
-        margin-top: 10px;
+        margin-top: 0;
         display: none;
         position: absolute;
+        top: 46px;
         overflow: auto;
-        max-height: 372px;
+        max-height: 353px;
 
         &.active {
             display: block;
@@ -164,7 +169,7 @@ svg {
         /*&:hover {
             border-left: 3px solid #25B3F9;
         }*/
-        
+
         &:last-child {
             border: 0;
         }
@@ -182,6 +187,22 @@ svg {
             &:hover {
                 color: #25B3F9;
             }
+
+            button {
+                float: right;
+                margin-right: 14px;
+                background-color: #25B3F9;
+                color: #fff;
+                border: 0;
+                border-radius: 5px;
+                box-shadow: 1px 1px 2px #ececec;
+                cursor: pointer;
+            }
+
+        }
+
+        select {
+            margin-left: 8px;
         }
 
         div {
@@ -191,12 +212,13 @@ svg {
 
         input {
             width: 15px;
-            border: 0;
+            border: 1px solid #ddd;
             padding: 2px 5px;
             border-radius: 5px;
             font-size: .7rem;
+            text-align: center;
         }
-        
+
         ul {
             float: right;
             padding: 0;
@@ -215,8 +237,79 @@ svg {
                 border: 0;
             }
 
-            &:hover {
+            &:hover,
+            &.active {
                 color: #25B3F9;
+            }
+        }
+    }
+
+    .selectedFoods {
+        width: 50%;
+
+        h2 {
+            position: static;
+            font-size: .6rem;
+            text-align: left;
+            margin: 10px 10px 2px;
+            text-transform: uppercase;
+            font-weight: normal;
+        }
+
+        .headers {
+            background-color: #fbfbfb;
+
+            span {
+                display: inline-block;
+
+                &:last-child {
+                    width: auto;
+                }
+            }
+        }
+
+        li {
+            font-size: .7rem;
+            border-bottom: 1px solid #ddd;
+            padding: 5px;
+
+            &.totals:last-child {
+                xborder-top: 1px solid #ddd;
+            }
+
+            &.totals span {
+                font-weight: bold;
+            }
+
+            span {
+                padding: 5px;
+                float: left;
+                font-size: .6rem;
+                width: 8%;
+                text-align: center;
+
+                &:first-child {
+                    width: 32%;
+                    text-align: left;
+                }
+            }
+
+            .food-name {
+                padding-left: 10px;
+                width: 52%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .remove{
+                background-color: #25B3F9;
+                color: #fff;
+                border: 0;
+                border-radius: 5px;
+                box-shadow: 1px 1px 2px #ececec;
+                cursor: pointer;
+                width: auto;
             }
         }
     }

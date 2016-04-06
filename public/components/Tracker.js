@@ -5,7 +5,7 @@ import d3 from '../../node_modules/d3/d3.min';
 class Tracker extends React.Component {
 
 	constructor() {
-		super()
+		super();
 		this.selectUnit = this.selectUnit.bind(this);
 		this.selectYear = this.selectYear.bind(this);
 		this.margin = {top: 90, bottom: 20, left: 40, right: 40};

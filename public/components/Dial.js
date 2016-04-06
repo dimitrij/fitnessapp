@@ -37,9 +37,9 @@ class Dial extends React.Component{
 						dataExcessConsumed : parseInt(this.calsObj[0]['excessConsumed'])
 					});
 
-					this.setState({
+					/*this.setState({
 						caloriesRemaining : (this.state.dataTotalCals + this.state.dataCaloriesBurned) - (this.state.dataCurrentConsumed + this.state.dataExcessConsumed)
-					});
+					});*/
 
 					this.appendCaloriesText();
 
@@ -128,11 +128,7 @@ class Dial extends React.Component{
 		return (
 			<div id="calories">
 				<h1>Today's calories</h1>
-				<ul id="legend">
-					<li><div className="legend blue"></div>Caloried consumed <span className="amount">{this.state.dataCurrentConsumed}</span></li>
-					<li><div className="legend green"></div>Caloried burned <span className="amount">{this.state.dataCaloriesBurned}</span></li>
-					<li><div className="legend red"></div>Excess calories <span className="amount">{this.state.dataExcessConsumed}</span></li>
-				</ul>
+				<Legend dataCurrentConsumed={this.state.dataCurrentConsumed} dataCaloriesBurned={this.state.dataCaloriesBurned} dataExcessConsumed={this.state.dataExcessConsumed} />
 				<div className="user-stats"></div>
 				<Calories data={{id : 'calories-burned', dataTotalCals :this.state.dataTotalCals, consumed : this.state.dataCaloriesBurned, innerRadius : 65, outerRadius : 95, bgColour: '#e9e9e9', fgColour : '#7FBB5B', circ : this.circ}} />
 				<Calories data={{id : 'current-consumed', dataTotalCals :this.state.dataTotalCals, consumed : this.state.dataCurrentConsumed, innerRadius : 90, outerRadius : 115, bgColour: '#e9e9e9', fgColour : '#25B3F9', circ : this.circ}} />
@@ -142,6 +138,18 @@ class Dial extends React.Component{
 				<input type="text" ref="dailyPermitted" id="daily-permitted" onBlur={this.updateDailyPermitted} onChange={this.rerenderDailyPermitted} value={this.state.dataTotalCals} />
 			</div>
 		);
+	}
+}
+
+class Legend extends React.Component{
+	render(){
+		return(
+			<ul id="legend">
+				<li><div className="legend blue"></div>Caloried consumed <span className="amount">{this.props.dataCurrentConsumed}</span></li>
+				<li><div className="legend green"></div>Caloried burned <span className="amount">{this.props.dataCaloriesBurned}</span></li>
+				<li><div className="legend red"></div>Excess calories <span className="amount">{this.props.dataExcessConsumed}</span></li>
+			</ul>
+		)
 	}
 }
 

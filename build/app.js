@@ -21356,9 +21356,9 @@ var Dial = (function (_React$Component) {
 					dataExcessConsumed: parseInt(_this.calsObj[0]['excessConsumed'])
 				});
 
-				_this.setState({
-					caloriesRemaining: _this.state.dataTotalCals + _this.state.dataCaloriesBurned - (_this.state.dataCurrentConsumed + _this.state.dataExcessConsumed)
-				});
+				/*this.setState({
+    	caloriesRemaining : (this.state.dataTotalCals + this.state.dataCaloriesBurned) - (this.state.dataCurrentConsumed + this.state.dataExcessConsumed)
+    });*/
 
 				_this.appendCaloriesText();
 			} else {
@@ -21451,43 +21451,7 @@ var Dial = (function (_React$Component) {
 					null,
 					'Today\'s calories'
 				),
-				_react2['default'].createElement(
-					'ul',
-					{ id: 'legend' },
-					_react2['default'].createElement(
-						'li',
-						null,
-						_react2['default'].createElement('div', { className: 'legend blue' }),
-						'Caloried consumed ',
-						_react2['default'].createElement(
-							'span',
-							{ className: 'amount' },
-							this.state.dataCurrentConsumed
-						)
-					),
-					_react2['default'].createElement(
-						'li',
-						null,
-						_react2['default'].createElement('div', { className: 'legend green' }),
-						'Caloried burned ',
-						_react2['default'].createElement(
-							'span',
-							{ className: 'amount' },
-							this.state.dataCaloriesBurned
-						)
-					),
-					_react2['default'].createElement(
-						'li',
-						null,
-						_react2['default'].createElement('div', { className: 'legend red' }),
-						'Excess calories ',
-						_react2['default'].createElement(
-							'span',
-							{ className: 'amount' },
-							this.state.dataExcessConsumed
-						)
-					)
-				),
+				_react2['default'].createElement(Legend, { dataCurrentConsumed: this.state.dataCurrentConsumed, dataCaloriesBurned: this.state.dataCaloriesBurned, dataExcessConsumed: this.state.dataExcessConsumed }),
 				_react2['default'].createElement('div', { className: 'user-stats' }),
 				_react2['default'].createElement(_Calories2['default'], { data: { id: 'calories-burned', dataTotalCals: this.state.dataTotalCals, consumed: this.state.dataCaloriesBurned, innerRadius: 65, outerRadius: 95, bgColour: '#e9e9e9', fgColour: '#7FBB5B', circ: this.circ } }),
 				_react2['default'].createElement(_Calories2['default'], { data: { id: 'current-consumed', dataTotalCals: this.state.dataTotalCals, consumed: this.state.dataCurrentConsumed, innerRadius: 90, outerRadius: 115, bgColour: '#e9e9e9', fgColour: '#25B3F9', circ: this.circ } }),
@@ -21504,6 +21468,61 @@ var Dial = (function (_React$Component) {
 	}]);
 
 	return Dial;
+})(_react2['default'].Component);
+
+var Legend = (function (_React$Component2) {
+	_inherits(Legend, _React$Component2);
+
+	function Legend() {
+		_classCallCheck(this, Legend);
+
+		_get(Object.getPrototypeOf(Legend.prototype), 'constructor', this).apply(this, arguments);
+	}
+
+	_createClass(Legend, [{
+		key: 'render',
+		value: function render() {
+			return _react2['default'].createElement(
+				'ul',
+				{ id: 'legend' },
+				_react2['default'].createElement(
+					'li',
+					null,
+					_react2['default'].createElement('div', { className: 'legend blue' }),
+					'Caloried consumed ',
+					_react2['default'].createElement(
+						'span',
+						{ className: 'amount' },
+						this.props.dataCurrentConsumed
+					)
+				),
+				_react2['default'].createElement(
+					'li',
+					null,
+					_react2['default'].createElement('div', { className: 'legend green' }),
+					'Caloried burned ',
+					_react2['default'].createElement(
+						'span',
+						{ className: 'amount' },
+						this.props.dataCaloriesBurned
+					)
+				),
+				_react2['default'].createElement(
+					'li',
+					null,
+					_react2['default'].createElement('div', { className: 'legend red' }),
+					'Excess calories ',
+					_react2['default'].createElement(
+						'span',
+						{ className: 'amount' },
+						this.props.dataExcessConsumed
+					)
+				)
+			);
+		}
+	}]);
+
+	return Legend;
 })(_react2['default'].Component);
 
 exports['default'] = Dial;
@@ -21534,9 +21553,34 @@ var _node_modulesSuperagentLibClient = require('../../node_modules/superagent/li
 
 var _node_modulesSuperagentLibClient2 = _interopRequireDefault(_node_modulesSuperagentLibClient);
 
+//import ApiService from '../services/ApiService.js';
+
 var _jsUtils = require('../js/utils');
 
 var _jsUtils2 = _interopRequireDefault(_jsUtils);
+
+//Phase 1
+//debounce daily calorie intake input
+//get search data from real API
+//make calories consumed / burned / excess dynamic (on load and on adding food)
+// new db table for all user's previously selected foods, and related UI search
+//$pull only one element from array
+//validation on adding meal
+//add correct calories depending on number of servings
+//better design...
+
+var selectedMeal = null;
+var caloriesTotal = 0,
+    carbsTotal = 0,
+    fatTotal = 0,
+    proteinTotal = 0,
+    sodiumTotal = 0,
+    sugarTotal = 0;
+var total = 0;
+
+function resetTotals() {
+	caloriesTotal = 0;carbsTotal = 0;fatTotal = 0;proteinTotal = 0;sodiumTotal = 0;sugarTotal = 0;
+}
 
 var SearchAPI = (function (_React$Component) {
 	_inherits(SearchAPI, _React$Component);
@@ -21546,12 +21590,21 @@ var SearchAPI = (function (_React$Component) {
 
 		_get(Object.getPrototypeOf(SearchAPI.prototype), 'constructor', this).call(this);
 		this.searchApi = this.searchApi.bind(this);
+		this.getTodaysFoods = this.getTodaysFoods.bind(this);
 		var apiUrl = 'http://api.exchangeratelab.com/api/current/GBP?apikey=';
 		var apiKey = 'F06383D65BCBFF52629D059B7D3EEB7D&callback=JSON_CALLBACK';
 
 		this.state = {
-			searchResults: []
+			searchResults: [],
+			query: '',
+			breakfastList: [],
+			lunchList: [],
+			dinnerList: [],
+			snacksList: [],
+			foodsList: []
 		};
+
+		this.getTodaysFoods();
 	}
 
 	_createClass(SearchAPI, [{
@@ -21559,28 +21612,65 @@ var SearchAPI = (function (_React$Component) {
 		value: function searchApi(e) {
 			var _this = this;
 
-			var query = e.target.value;
+			if (e.target.value === '') {
+				this.setState({
+					searchResults: []
+				});
+				return;
+			}
+			this.query = e.target.value;
 
-			_node_modulesSuperagentLibClient2['default'].get('../../data/data.json').end(function (err, res) {
+			_node_modulesSuperagentLibClient2['default'].get('../../data/mfpapi.json').end(function (err, res) {
 				if (res.ok) {
-					_this.setState({ searchResults: res.body['2014'] });
+					//will need to send search params to api, and not load all results on keypress
+					var breakfast = res.body['meals']['breakfast']['food'],
+					    lunch = res.body['meals']['lunch']['food'],
+					    dinner = res.body['meals']['dinner']['food'],
+					    snacks = res.body['meals']['snacks']['food'],
+					    foods = breakfast.concat(lunch.concat(dinner.concat(snacks)));
+
+					_this.setState({
+						searchResults: foods,
+						query: _this.query
+					});
 				} else {
 					console.log('error');
 				}
 			});
 		}
 	}, {
-		key: 'componentDidMount',
-		value: function componentDidMount() {}
+		key: 'getTodaysFoods',
+		value: function getTodaysFoods() {
+			var _this2 = this;
+
+			_node_modulesSuperagentLibClient2['default'].get('/users/todaysfoods').end(function (err, res) {
+				if (res.ok) {
+					_this2.meals = res.body;
+
+					if (_this2.meals && _this2.meals[0]) {
+						_this2.setState({
+							breakfastList: _this2.meals[0]['meals']['breakfast']['food'],
+							lunchList: _this2.meals[0]['meals']['lunch']['food'],
+							dinnerList: _this2.meals[0]['meals']['dinner']['food'],
+							snacksList: _this2.meals[0]['meals']['snacks']['food'],
+							foodsList: _this2.meals[0]['meals']['breakfast']['food'].concat(_this2.meals[0]['meals']['lunch']['food'].concat(_this2.meals[0]['meals']['dinner']['food'].concat(_this2.meals[0]['meals']['snacks']['food'])))
+						});
+					}
+				} else {
+					console.log('error');
+				}
+			});
+		}
 	}, {
 		key: 'render',
 		value: function render() {
-
 			return _react2['default'].createElement(
 				'div',
 				{ id: 'search' },
 				_react2['default'].createElement('input', { type: 'text', ref: 'searchApi', id: 'search-api', onChange: this.searchApi, placeholder: 'Search database' }),
-				_react2['default'].createElement(ApiSearchResults, { results: this.state.searchResults })
+				_react2['default'].createElement(ApiSearchResults, { query: this.state.query, results: this.state.searchResults, todaysFoods: this.getTodaysFoods }),
+				_react2['default'].createElement(FoodList, { foodsList: this.state.foodsList, breakfastList: this.state.breakfastList, lunchList: this.state.lunchList, dinnerList: this.state.dinnerList, snacksList: this.state.snacksList, todaysFoods: this.getTodaysFoods }),
+				' '
 			);
 		}
 	}]);
@@ -21596,60 +21686,103 @@ var ApiSearchResults = (function (_React$Component2) {
 
 		_get(Object.getPrototypeOf(ApiSearchResults.prototype), 'constructor', this).call(this);
 		this.selectResult = this.selectResult.bind(this);
+		var selectedMeal = null;
 	}
 
 	_createClass(ApiSearchResults, [{
 		key: 'selectResult',
-		value: function selectResult(e) {
-			_jsUtils2['default'].$('#search-api').value = e.target.innerHTML;
-			_jsUtils2['default'].removeClass(_react2['default'].findDOMNode(this), 'active');
-			console.log(e.target.innerHTML);
+		value: function selectResult(result) {
+			_jsUtils2['default'].$('#search-api').value = '';
+			this.addFood(result);
+			_jsUtils2['default'].removeClass(this.refs['results'].getDOMNode(), 'active');
+		}
+	}, {
+		key: 'selectMeal',
+		value: function selectMeal(e) {
+			var foods = e.target.parentNode.getElementsByTagName('li');
+			selectedMeal = e.target.getAttribute('data-meal');
+
+			for (var i = 0, j = foods.length; i < j; i++) {
+				_jsUtils2['default'].removeClass(foods[i], 'active');
+			}
+			_jsUtils2['default'].addClass(e.target, 'active');
+		}
+	}, {
+		key: 'addFood',
+		value: function addFood(food) {
+			var _this3 = this;
+
+			resetTotals();
+
+			food['meal'] = selectedMeal;
+			_node_modulesSuperagentLibClient2['default'].put('/users/addfood').set('Accept', 'application/json').send(food).end(function (err, res) {
+				if (res.ok) {
+					_this3.props.todaysFoods();
+				} else {
+					console.log('error');
+				}
+			});
 		}
 	}, {
 		key: 'render',
 		value: function render() {
-			var _this2 = this;
+			var _this4 = this;
 
 			return _react2['default'].createElement(
-				'ul',
-				{ className: this.props.results.length > 0 && 'active' },
-				this.props.results.map(function (result) {
-					console.log('zzz');
-					return _react2['default'].createElement(
-						'li',
-						{ className: 'item', onClick: _this2.selectResult },
-						_react2['default'].createElement(
-							'p',
-							null,
-							'Sainsbury\'s Tast The Difference Venison Burger'
-						),
-						_react2['default'].createElement(
-							'div',
-							null,
-							_react2['default'].createElement('input', { type: 'text', className: 'servings' }),
-							' servings of 1 burger',
-							_react2['default'].createElement(
-								'ul',
-								null,
+				'div',
+				null,
+				_react2['default'].createElement(
+					'ul',
+					{ ref: 'results', className: this.props.results.length > 0 ? 'results active' : 'results' },
+					this.props.results.map(function (result) {
+						if (result.name.toLowerCase().indexOf(_this4.props.query.toLowerCase()) !== -1 && _this4.props.query !== '') {
+							return _react2['default'].createElement(
+								'li',
+								{ className: 'item' },
 								_react2['default'].createElement(
-									'li',
+									'p',
 									null,
-									'breakfast'
+									result.name,
+									_react2['default'].createElement(
+										'button',
+										{ onClick: _this4.selectResult.bind(_this4, result) },
+										'Add'
+									)
 								),
 								_react2['default'].createElement(
-									'li',
+									'div',
 									null,
-									'lunch'
-								),
-								_react2['default'].createElement(
-									'li',
-									null,
-									'dinner'
+									_react2['default'].createElement('input', { type: 'text', className: 'servings', defaultValue: '1' }),
+									' serving(s)',
+									_react2['default'].createElement(
+										'ul',
+										{ className: 'meal', onClick: _this4.selectMeal },
+										_react2['default'].createElement(
+											'li',
+											{ 'data-meal': 'breakfast' },
+											'breakfast'
+										),
+										_react2['default'].createElement(
+											'li',
+											{ 'data-meal': 'lunch' },
+											'lunch'
+										),
+										_react2['default'].createElement(
+											'li',
+											{ 'data-meal': 'dinner' },
+											'dinner'
+										),
+										_react2['default'].createElement(
+											'li',
+											{ 'data-meal': 'snacks' },
+											'snacks'
+										)
+									)
 								)
-							)
-						)
-					);
-				})
+							);
+						}
+					})
+				)
 			);
 		}
 	}]);
@@ -21657,8 +21790,335 @@ var ApiSearchResults = (function (_React$Component2) {
 	return ApiSearchResults;
 })(_react2['default'].Component);
 
+var FoodList = (function (_React$Component3) {
+	_inherits(FoodList, _React$Component3);
+
+	function FoodList() {
+		_classCallCheck(this, FoodList);
+
+		_get(Object.getPrototypeOf(FoodList.prototype), 'constructor', this).call(this);
+		this.state = {
+			totalCalories: 0
+		};
+	}
+
+	_createClass(FoodList, [{
+		key: 'componentWillReceiveProps',
+		value: function componentWillReceiveProps() {}
+	}, {
+		key: 'componentDidMount',
+		value: function componentDidMount() {}
+	}, {
+		key: 'render',
+		value: function render() {
+			return _react2['default'].createElement(
+				'ul',
+				{ className: 'selectedFoods' },
+				_react2['default'].createElement(
+					'li',
+					{ className: 'headers clearfix' },
+					_react2['default'].createElement('span', null),
+					_react2['default'].createElement(
+						'span',
+						null,
+						'Cals'
+					),
+					_react2['default'].createElement(
+						'span',
+						null,
+						'Carbs'
+					),
+					_react2['default'].createElement(
+						'span',
+						null,
+						'Fat'
+					),
+					_react2['default'].createElement(
+						'span',
+						null,
+						'Protein'
+					),
+					_react2['default'].createElement(
+						'span',
+						null,
+						'Sodium'
+					),
+					_react2['default'].createElement(
+						'span',
+						null,
+						'Sugar'
+					),
+					_react2['default'].createElement(
+						'span',
+						null,
+						' '
+					)
+				),
+				_react2['default'].createElement(
+					'li',
+					null,
+					_react2['default'].createElement(
+						'h2',
+						null,
+						'Breakfast'
+					)
+				),
+				_react2['default'].createElement(Meal, { items: this.props.breakfastList, todaysFoods: this.props.todaysFoods, meal: 'breakfast' }),
+				_react2['default'].createElement(
+					'li',
+					null,
+					_react2['default'].createElement(
+						'h2',
+						null,
+						'Lunch'
+					)
+				),
+				_react2['default'].createElement(Meal, { items: this.props.lunchList, todaysFoods: this.props.todaysFoods, meal: 'lunch' }),
+				_react2['default'].createElement(
+					'li',
+					null,
+					_react2['default'].createElement(
+						'h2',
+						null,
+						'Dinner'
+					)
+				),
+				_react2['default'].createElement(Meal, { items: this.props.dinnerList, todaysFoods: this.props.todaysFoods, meal: 'dinner' }),
+				_react2['default'].createElement(
+					'li',
+					null,
+					_react2['default'].createElement(
+						'h2',
+						null,
+						'Snacks'
+					)
+				),
+				_react2['default'].createElement(Meal, { items: this.props.snacksList, todaysFoods: this.props.todaysFoods, meal: 'snacks' }),
+				_react2['default'].createElement(MealTotals, { foods: this.props.foodsList })
+			);
+		}
+	}], [{
+		key: 'setTotal',
+		value: function setTotal(total) {
+			console.log('totalll', total);
+			this.setState({
+				totalCalories: total
+			});
+		}
+	}]);
+
+	return FoodList;
+})(_react2['default'].Component);
+
+var Meal = (function (_React$Component4) {
+	_inherits(Meal, _React$Component4);
+
+	function Meal() {
+		_classCallCheck(this, Meal);
+
+		_get(Object.getPrototypeOf(Meal.prototype), 'constructor', this).apply(this, arguments);
+	}
+
+	_createClass(Meal, [{
+		key: 'removeFood',
+		value: function removeFood(food, meal) {
+			var _this5 = this;
+
+			food['meal'] = meal;
+			_node_modulesSuperagentLibClient2['default'].put('/users/deletefood').set('Accept', 'application/json').send(food).end(function (err, res) {
+				if (res.ok) {
+					_this5.props.todaysFoods();
+				} else {
+					console.log('error');
+				}
+			});
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var _this6 = this;
+
+			return _react2['default'].createElement(
+				'div',
+				null,
+				this.props.items.map(function (food) {
+					caloriesTotal += food.calories;
+					carbsTotal += food.carbs;
+					fatTotal += food.fat;
+					proteinTotal += food.protein;
+					sodiumTotal += food.sodium;
+					sugarTotal += food.sugar;
+
+					return _react2['default'].createElement(
+						'li',
+						{ className: 'clearfix' },
+						_react2['default'].createElement(
+							'span',
+							{ className: 'food-name', title: food.name },
+							food.name
+						),
+						_react2['default'].createElement(
+							'span',
+							null,
+							food.calories
+						),
+						_react2['default'].createElement(
+							'span',
+							null,
+							food.carbs
+						),
+						_react2['default'].createElement(
+							'span',
+							null,
+							food.fat
+						),
+						_react2['default'].createElement(
+							'span',
+							null,
+							food.protein
+						),
+						_react2['default'].createElement(
+							'span',
+							null,
+							food.sodium
+						),
+						_react2['default'].createElement(
+							'span',
+							null,
+							food.sugar
+						),
+						_react2['default'].createElement(
+							'span',
+							{ className: 'remove', onClick: _this6.removeFood.bind(_this6, food, _this6.props.meal) },
+							'X'
+						)
+					);
+				}),
+				_react2['default'].createElement(
+					'li',
+					{ className: 'totals clearfix' },
+					_react2['default'].createElement(
+						'span',
+						{ className: 'food-name' },
+						'Total'
+					),
+					_react2['default'].createElement(
+						'span',
+						null,
+						caloriesTotal
+					),
+					_react2['default'].createElement(
+						'span',
+						null,
+						carbsTotal
+					),
+					_react2['default'].createElement(
+						'span',
+						null,
+						fatTotal
+					),
+					_react2['default'].createElement(
+						'span',
+						null,
+						proteinTotal
+					),
+					_react2['default'].createElement(
+						'span',
+						null,
+						sodiumTotal
+					),
+					_react2['default'].createElement(
+						'span',
+						null,
+						sugarTotal
+					)
+				),
+				resetTotals()
+			);
+		}
+	}]);
+
+	return Meal;
+})(_react2['default'].Component);
+
+var MealTotals = (function (_React$Component5) {
+	_inherits(MealTotals, _React$Component5);
+
+	function MealTotals() {
+		_classCallCheck(this, MealTotals);
+
+		_get(Object.getPrototypeOf(MealTotals.prototype), 'constructor', this).apply(this, arguments);
+	}
+
+	_createClass(MealTotals, [{
+		key: 'render',
+		value: function render() {
+			var totalCalories = 0,
+			    totalCarbs = 0,
+			    totalFat = 0,
+			    totalProtein = 0,
+			    totalSodium = 0,
+			    totalSugar = 0;
+
+			{
+				this.props.foods.map(function (food) {
+					totalCalories += food.calories;
+					totalCarbs += food.carbs;
+					totalFat += food.fat;
+					totalProtein += food.protein;
+					totalSodium += food.sodium;
+					totalSugar += food.sugar;
+				});
+			}
+
+			return _react2['default'].createElement(
+				'li',
+				{ className: 'totals clearfix' },
+				_react2['default'].createElement(
+					'span',
+					{ className: 'food-name' },
+					'Totals'
+				),
+				_react2['default'].createElement(
+					'span',
+					null,
+					totalCalories
+				),
+				_react2['default'].createElement(
+					'span',
+					null,
+					totalCarbs
+				),
+				_react2['default'].createElement(
+					'span',
+					null,
+					totalFat
+				),
+				_react2['default'].createElement(
+					'span',
+					null,
+					totalProtein
+				),
+				_react2['default'].createElement(
+					'span',
+					null,
+					totalSodium
+				),
+				_react2['default'].createElement(
+					'span',
+					null,
+					totalSugar
+				)
+			);
+		}
+	}]);
+
+	return MealTotals;
+})(_react2['default'].Component);
+
 exports['default'] = SearchAPI;
 module.exports = exports['default'];
+/*load today's selected foods from db on page load*/
 
 },{"../../node_modules/superagent/lib/client":160,"../js/utils":167,"react":158}],165:[function(require,module,exports){
 'use strict';
@@ -21986,12 +22446,12 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var Utils = (function () {
-	function Utils() {
-		_classCallCheck(this, Utils);
+var $ = (function () {
+	function $() {
+		_classCallCheck(this, $);
 	}
 
-	_createClass(Utils, null, [{
+	_createClass($, null, [{
 		key: 'hasClass',
 		value: function hasClass(elem, className) {
 			return new RegExp(' ' + className + ' ').test(' ' + elem.className + ' ');
@@ -21999,7 +22459,7 @@ var Utils = (function () {
 	}, {
 		key: 'addClass',
 		value: function addClass(elem, className) {
-			if (!Utils.hasClass(elem, className)) {
+			if (!$.hasClass(elem, className)) {
 				elem.className += ' ' + className;
 			}
 		}
@@ -22007,7 +22467,7 @@ var Utils = (function () {
 		key: 'removeClass',
 		value: function removeClass(elem, className) {
 			var newClass = ' ' + elem.className.replace(/[\t\r\n]/g, ' ') + ' ';
-			if (Utils.hasClass(elem, className)) {
+			if ($.hasClass(elem, className)) {
 				while (newClass.indexOf(' ' + className + ' ') >= 0) {
 					newClass = newClass.replace(' ' + className + ' ', ' ');
 				}
@@ -22018,7 +22478,7 @@ var Utils = (function () {
 		key: 'toggleClass',
 		value: function toggleClass(elem, className) {
 			var newClass = ' ' + elem.className.replace(/[\t\r\n]/g, ' ') + ' ';
-			if (Utils.hasClass(elem, className)) {
+			if ($.hasClass(elem, className)) {
 				while (newClass.indexOf(' ' + className + ' ') >= 0) {
 					newClass = newClass.replace(' ' + className + ' ', ' ');
 				}
@@ -22035,10 +22495,10 @@ var Utils = (function () {
 		}
 	}]);
 
-	return Utils;
+	return $;
 })();
 
-exports['default'] = Utils;
+exports['default'] = $;
 module.exports = exports['default'];
 
 },{}]},{},[166])

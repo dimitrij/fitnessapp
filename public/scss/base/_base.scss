@@ -18,6 +18,11 @@ body {
     clear: both;
 }
 
-input {
+input,
+button {
     outline: none;
+}
+
+ul {
+    list-style: none;
 }
