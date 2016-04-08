@@ -462,7 +462,7 @@ text {
   padding: 4px 8px;
   position: absolute;
   left: 8px;
-  top: 44%;
+  top: 250px;
   font-size: 2.8rem;
   cursor: pointer;
   z-index: 15;
@@ -473,9 +473,10 @@ text {
     cursor: text; }
 
 #daily-permitted-text {
-  top: 39%;
+  top: 230px;
   font-size: .8rem;
-  cursor: text; }
+  cursor: text;
+  text-align: left; }
 
 #calories-remaining-text {
   opacity: 0;
@@ -565,11 +566,11 @@ svg {
 
 .user-stats {
   position: absolute;
-  width: 260px;
+  width: 200px;
   height: 120px;
   background-color: #e9e9e9;
   border-radius: 8px;
-  top: 170px;
+  top: 215px;
   z-index: 1;
   left: 0; }
 
@@ -601,6 +602,9 @@ svg {
     color: #000;
     font-weight: bold;
     letter-spacing: .5px; }
+  #legend p {
+    font-size: .6rem;
+    color: #0096E0; }
 
 #search {
   text-align: left;

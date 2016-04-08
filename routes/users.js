@@ -21,7 +21,7 @@ router.put('/updatecalories', function(req, res) {
 	var db = req.db;
 	var collection = db.get('user');
 
-	collection.update({ _id : "56f14e3f3750b4be64fe3996"}, {$set:{totalCalories : req.body.totalCalories}}, {safe:true},
+	collection.update({ _id : "57064d38b53fce4e10505ee7"}, {$set:{totalCalories : req.body.totalCalories}}, {safe:true},
 		function(err){
 			res.send(
 				(err === null) ? { msg: '' } : { msg: err }

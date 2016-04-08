@@ -15,6 +15,14 @@ class Calories extends React.Component{
 		this.bgColour = nextProps.data.bgColour;
 		this.fgColour = nextProps.data.fgColour;
 		this.arc = d3.svg.arc().innerRadius(this.innerRadius).outerRadius(this.outerRadius).startAngle(0);
+		this.dialClass = '';
+
+		if(this.id === 'excess-consumed') {
+			this.dialClass = 'excess-dial';
+			if(this.consumed <= 0){
+				return;
+			}
+		}
 
 		this.bg = d3.select('#calories svg g').append('path')
 			.datum({endAngle: nextProps.data.circ})
@@ -23,12 +31,13 @@ class Calories extends React.Component{
 
 			.attr('d', this.arc);
 
-		if(this.id === 'centre') return;
+		//if(this.id === 'centre') return;
 
 		this.fgColour = d3.select('#calories svg g').append('path')
 			.datum({endAngle: 0})
 			.style('fill', this.fgColour)
-			.attr('d', this.arc);
+			.attr('d', this.arc)
+			.attr('class', this.dialClass );
 			/*.on('mouseover', () => {
 				this.offsetWidth = document.getElementById(this.id).getBBox().width;
 				d3.select('#' + this.id).attr('transform', 'translate(' + ((this.width/2) - this.offsetWidth - 20) + ',-160)');

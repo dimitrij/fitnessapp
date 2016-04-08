@@ -2,6 +2,8 @@ import React from 'react';
 import Request from '../../node_modules/superagent/lib/client';
 //import ApiService from '../services/ApiService.js';
 import $ from '../js/utils';
+import {cursors, userCalories} from '../services/UserCalories';
+
 
 //Phase 1
 //make calories consumed / burned / excess dynamic (on load and on adding food)
@@ -12,7 +14,7 @@ import $ from '../js/utils';
 //validation on adding meal
 //add correct calories depending on number of servings
 //ajax calls to ApiService.js
-//better design...
+//move graph below dial, new user's food list below todays food list
 
 let selectedMeal = null;
 var caloriesTotal = 0, carbsTotal = 0, fatTotal = 0, proteinTotal = 0, sodiumTotal = 0, sugarTotal = 0;
@@ -305,6 +307,8 @@ class MealTotals extends React.Component {
 			totalSodium += food.sodium;
 			totalSugar += food.sugar;
 		})}
+
+		userCalories.updateCalories(totalCalories);
 
 		return (
 				<ul className="selected-foods">

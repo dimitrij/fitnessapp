@@ -2,6 +2,13 @@ import React from 'react';
 import Request from '../../node_modules/superagent/lib/client';
 import d3 from '../../node_modules/d3/d3.min';
 import Calories from './Calories';
+import {cursors, userCalories} from '../services/UserCalories';
+
+var dataTotalCals = 0,
+	dataCurrentConsumed = 0,
+	dataCaloriesBurned = 0,
+	dataExcessConsumed = 0,
+	caloriesRemaining = 0;
 
 class Dial extends React.Component{
 
@@ -18,30 +25,26 @@ class Dial extends React.Component{
 		this.centreX = this.width / 2;
 		this.centreY = this.height / 2;
 		this.state = {
-			dataTotalCals : null,
-			dataCurrentConsumed : null,
-			dataCaloriesBurned : null,
-			dataExcessConsumed : null,
-			caloriesRemaining : null
+			dataTotalCals : 0,
+			dataCurrentConsumed : 0,
+			dataCaloriesBurned : 0,
+			dataExcessConsumed : 0,
+			caloriesRemaining : 0
 		};
+
+
 
 		Request
 			.get('/users/user')
 			.end((err, res)=> {
 				if (res.ok){
 					this.calsObj = res.body;
-					this.setState({
-						dataTotalCals : parseInt(this.calsObj[0]['totalCalories']),
-						dataCurrentConsumed : parseInt(this.calsObj[0]['currentConsumed']),
-						dataCaloriesBurned : parseInt(this.calsObj[0]['caloriesBurned']),
-						dataExcessConsumed : parseInt(this.calsObj[0]['excessConsumed'])
-					});
-
-					/*this.setState({
-						caloriesRemaining : (this.state.dataTotalCals + this.state.dataCaloriesBurned) - (this.state.dataCurrentConsumed + this.state.dataExcessConsumed)
-					});*/
-
-					this.appendCaloriesText();
+					//this.setState({
+						dataTotalCals = parseInt(this.calsObj[0]['totalCalories']);
+						//dataCurrentConsumed = parseInt(this.calsObj[0]['currentConsumed']);
+						dataCaloriesBurned = parseInt(this.calsObj[0]['caloriesBurned']);
+						dataExcessConsumed = parseInt(this.calsObj[0]['excessConsumed']);
+					//});
 
 				} else{
 					console.log('error');
@@ -53,51 +56,37 @@ class Dial extends React.Component{
 		return d3.time.format('%Y%m%d').parse(date);
 	}
 
-	appendCaloriesText(){
-		/*this.svg.append('input').attr('id', 'daily-permitted').attr('transform', 'translate(-10000,0)').text(this.state.dataTotalCals)
-			.on('mouseover', function () {
-				var offsetWidth = document.getElementById('daily-permitted-text').getBBox().width;
-				d3.select('#daily-permitted-text').attr('transform', 'translate(' + (-offsetWidth/2) + ',-45)');
-				d3.select('#daily-permitted-text').classed('visible', true);
-			})
-			.on('mouseout', function(){
-				d3.select('#daily-permitted-text').classed('visible', false);
-			})
-			.on('focus', function(){
-				console.log('sdfsdfsdfsd');
-			});
-		this.dailyPermittedOffset = document.getElementById('daily-permitted').getBBox();
-		d3.select('#daily-permitted').attr('transform', 'translate(' + -(this.dailyPermittedOffset.width / 2) + ',0)');*/
-
-		/*this.svg.append('text').attr('id', 'calories-remaining').attr('transform', 'translate(-10000,150)').text(this.state.caloriesRemaining)
-			.on('mouseover', function () {
-				var offsetWidth = document.getElementById('calories-remaining-text').getBBox().width;
-				d3.select('#calories-remaining-text').attr('transform', 'translate(' + (-offsetWidth/2) + ',55)');
-				d3.select('#calories-remaining-text').classed('visible', true);
-			})
-			.on('mouseout', function(){
-				d3.select('#calories-remaining-text').classed('visible', false);
-			});
-		this.dailyCaloriesRemaining = document.getElementById('calories-remaining').getBBox();
-		d3.select('#calories-remaining').attr('transform', 'translate(' + -(this.dailyCaloriesRemaining.width / 2) + ',35)');*/
-
-		this.svg.append('text').attr('id', 'daily-permitted-text').attr('transform', 'translate(-10000,-45)').text('Daily calorie intake');
-		this.svg.append('text').attr('id', 'calories-remaining-text').attr('transform', 'translate(-10000,60)').text('Remaining calories today');
-		this.svg.append('text').attr('id', 'today').attr('class', 'info').attr('transform', 'translate(-10000,-135)').text(this.today);
-		this.svg.append('text').attr('id', 'current-consumed').attr('class', 'info').attr('transform', 'translate(-10000,-120)').text('Calories consumed: ' + this.state.dataCurrentConsumed);
-		this.svg.append('text').attr('id', 'calories-burned').attr('class', 'info').attr('transform', 'translate(-10000,-120)').text('Calories burned: ' + this.state.dataCaloriesBurned);
-		this.svg.append('text').attr('id', 'excess-consumed').attr('class', 'info').attr('transform', 'translate(-10000,-120)').text('Excess calories: ' + this.state.dataExcessConsumed);
-	}
-
 	componentDidMount(){
 		this.svg = d3.select('#calories').append('svg')
 			.attr('width', this.width)
 			.attr('height', this.height)
-			.append('g')
+			.append('g').attr('id', 'dial-container')
 			.attr('transform', 'translate(' + (this.centreX + 80) + ',' + this.centreY + ')');
+
+		cursors.consumedCalories.on('update', () => {
+			if(document.querySelector('#dial-container')){
+				document.querySelector('#dial-container').innerHTML = '';
+			}
+			var objConsumed = userCalories.getCalories()
+
+			//console.log('xxxx', objConsumed.calories.consumed, dataTotalCals)
+
+			this.setState({
+				dataCurrentConsumed : objConsumed.calories.consumed,
+				dataTotalCals : dataTotalCals,
+				dataCaloriesBurned : dataCaloriesBurned,
+				dataExcessConsumed : objConsumed.calories.consumed - dataTotalCals
+				 /*dataCaloriesBurned : dataCaloriesBurned,
+				 dataExcessConsumed : dataExcessConsumed*/
+			});
+			//console.log(this.state.dataCurrentConsumed, this.state.dataTotalCals)
+		})
 	}
 
 	rerenderDailyPermitted(e){
+		if(document.querySelector('#dial-container')){
+			document.querySelector('#dial-container').innerHTML = '';
+		}
 		this.setState({
 			dataTotalCals : e.target.value //will need to add debounce
 		});
@@ -111,7 +100,7 @@ class Dial extends React.Component{
 			.end((err, res)=> {
 				if (res.ok){
 					//this.calsObj = res.body;
-					console.log(React.findDOMNode(this.refs.dailyPermitted).value);
+					//console.log(React.findDOMNode(this.refs.dailyPermitted).value);
 
 				} else{
 					console.log('error');
@@ -120,20 +109,34 @@ class Dial extends React.Component{
 	}
 
 	render(){
-
-		if (this.state.dataCurrentConsumed > this.state.dataTotalCals){
+		//console.log(this.state.dataCurrentConsumed > this.state.dataTotalCals, this.state.dataCurrentConsumed, this.state.dataTotalCals)
+		/*if (this.state.dataCurrentConsumed > this.state.dataTotalCals){
+			console.log('inside if')
 			var exceededCals = <Calories data={{id : 'excess-consumed', dataTotalCals :this.state.dataTotalCals, consumed : this.state.dataExcessConsumed, innerRadius : 90, outerRadius : 115, bgColour: 'transparent', fgColour : '#CE392B', circ : this.circ}} />;
-		}
+		}*/
+
+		//if(this.state.dataCurrentConsumed > this.state.dataTotalCals){
+			console.log('dataCurrentConsumed', this.state.dataCurrentConsumed)
+			console.log('dataTotalCals', this.state.dataTotalCals)
+			console.log('dataCaloriesBurned', this.state.dataCaloriesBurned)
+			console.log('dataExcessConsumed', this.state.dataExcessConsumed)
+			console.log(this.state.dataCurrentConsumed > this.state.dataTotalCals)
+			//console.log('greater')
+		//}
 
 		return (
 			<div id="calories">
 				<h1>Today's calories</h1>
 				<Legend dataCurrentConsumed={this.state.dataCurrentConsumed} dataCaloriesBurned={this.state.dataCaloriesBurned} dataExcessConsumed={this.state.dataExcessConsumed} />
 				<div className="user-stats"></div>
-				<Calories data={{id : 'calories-burned', dataTotalCals :this.state.dataTotalCals, consumed : this.state.dataCaloriesBurned, innerRadius : 65, outerRadius : 95, bgColour: '#e9e9e9', fgColour : '#7FBB5B', circ : this.circ}} />
+				{/*<Calories data={{id : 'calories-burned', dataTotalCals :this.state.dataTotalCals, consumed : this.state.dataCaloriesBurned, innerRadius : 65, outerRadius : 95, bgColour: '#e9e9e9', fgColour : '#7FBB5B', circ : this.circ}} />*/}
 				<Calories data={{id : 'current-consumed', dataTotalCals :this.state.dataTotalCals, consumed : this.state.dataCurrentConsumed, innerRadius : 90, outerRadius : 115, bgColour: '#e9e9e9', fgColour : '#25B3F9', circ : this.circ}} />
-				{exceededCals}
-				<Calories data={{id : 'centre', dataTotalCals :0, consumed : 0, innerRadius : 0, outerRadius : 65, bgColour: '#f7f7f7', fgColour : '#f7f7f7', circ : this.circ}} />
+
+				{console.log('in render', this.state.dataCurrentConsumed,  this.state.dataTotalCals)}
+				<Calories data={{id : 'excess-consumed', dataTotalCals :this.state.dataTotalCals, consumed : this.state.dataExcessConsumed, innerRadius : 65, outerRadius : 90, bgColour: '#e9e9e9', fgColour : '#CE392B', circ : this.circ}}/>
+
+
+				{/*<Calories data={{id : 'centre', dataTotalCals :0, consumed : 0, innerRadius : 0, outerRadius : 65, bgColour: '#f7f7f7', fgColour : '#f7f7f7', circ : this.circ}} />*/}
 				<text id="daily-permitted-text">Daily calorie intake</text>
 				<input type="text" ref="dailyPermitted" id="daily-permitted" onBlur={this.updateDailyPermitted} onChange={this.rerenderDailyPermitted} value={this.state.dataTotalCals} />
 			</div>
@@ -147,7 +150,10 @@ class Legend extends React.Component{
 			<ul id="legend">
 				<li><div className="legend blue"></div>Caloried consumed <span className="amount">{this.props.dataCurrentConsumed}</span></li>
 				<li><div className="legend green"></div>Caloried burned <span className="amount">{this.props.dataCaloriesBurned}</span></li>
-				<li><div className="legend red"></div>Excess calories <span className="amount">{this.props.dataExcessConsumed}</span></li>
+				<li><div className="legend red"></div>Excess calories <span className="amount">{this.props.dataExcessConsumed <= 0 ? 0 : this.props.dataExcessConsumed}</span></li>
+				{this.props.dataExcessConsumed <= 0 &&
+					<li><p>You have {-this.props.dataExcessConsumed} calories remaining</p></li>
+				}
 			</ul>
 		)
 	}
