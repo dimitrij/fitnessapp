@@ -15,6 +15,16 @@ import {cursors, userCalories} from '../services/UserCalories';
 //add correct calories depending on number of servings
 //ajax calls to ApiService.js
 //move graph below dial, new user's food list below todays food list
+//Gulp workflow, linting, git hooks etc
+
+//Phase 2
+//User registration / log in functionality
+
+//Phase 3
+//Adding exercises / calories burned etc
+
+//Ohase 4
+//Activate weight history graph per user
 
 let selectedMeal = null;
 var caloriesTotal = 0, carbsTotal = 0, fatTotal = 0, proteinTotal = 0, sodiumTotal = 0, sugarTotal = 0;

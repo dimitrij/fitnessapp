@@ -23627,7 +23627,6 @@ var Dial = (function (_React$Component) {
 
 		_get(Object.getPrototypeOf(Dial.prototype), 'constructor', this).call(this);
 		this.rerenderDailyPermitted = this.rerenderDailyPermitted.bind(this);
-		this.updateDailyPermitted = this.updateDailyPermitted.bind(this);
 		this.width = 420;
 		this.height = 400;
 		this.date = new Date();
@@ -23652,6 +23651,7 @@ var Dial = (function (_React$Component) {
 				//dataCurrentConsumed = parseInt(this.calsObj[0]['currentConsumed']);
 				dataCaloriesBurned = parseInt(_this.calsObj[0]['caloriesBurned']);
 				dataExcessConsumed = parseInt(_this.calsObj[0]['excessConsumed']);
+				_react2['default'].findDOMNode(_this.refs.dailyPermitted).value = dataTotalCals;
 				//});
 			} else {
 					console.log('error');
@@ -23677,60 +23677,52 @@ var Dial = (function (_React$Component) {
 				}
 				var objConsumed = _servicesUserCalories.userCalories.getCalories();
 
-				//console.log('xxxx', objConsumed.calories.consumed, dataTotalCals)
-
 				_this2.setState({
 					dataCurrentConsumed: objConsumed.calories.consumed,
 					dataTotalCals: dataTotalCals,
 					dataCaloriesBurned: dataCaloriesBurned,
 					dataExcessConsumed: objConsumed.calories.consumed - dataTotalCals
-					/*dataCaloriesBurned : dataCaloriesBurned,
-     dataExcessConsumed : dataExcessConsumed*/
 				});
-				//console.log(this.state.dataCurrentConsumed, this.state.dataTotalCals)
 			});
 		}
 	}, {
 		key: 'rerenderDailyPermitted',
 		value: function rerenderDailyPermitted(e) {
+			var _this3 = this;
+
 			if (document.querySelector('#dial-container')) {
 				document.querySelector('#dial-container').innerHTML = '';
 			}
-			this.setState({
-				dataTotalCals: e.target.value //will need to add debounce
+
+			var newDailyPermitted = _react2['default'].findDOMNode(this.refs.dailyPermitted).value;
+
+			_node_modulesSuperagentLibClient2['default'].put('/users/updatecalories').set('Accept', 'application/json').send({ 'totalCalories': newDailyPermitted }).end(function (err, res) {
+				if (res.ok) {
+					var objConsumed = _servicesUserCalories.userCalories.getCalories();
+					_this3.setState({
+						dataTotalCals: newDailyPermitted,
+						dataExcessConsumed: objConsumed.calories.consumed - newDailyPermitted
+					});
+				} else {
+					console.log('error');
+				}
 			});
 		}
 	}, {
-		key: 'updateDailyPermitted',
-		value: function updateDailyPermitted(e) {
-			_node_modulesSuperagentLibClient2['default'].put('/users/updatecalories').set('Accept', 'application/json').send({ 'totalCalories': _react2['default'].findDOMNode(this.refs.dailyPermitted).value }).end(function (err, res) {
-				if (res.ok) {
-					//this.calsObj = res.body;
-					//console.log(React.findDOMNode(this.refs.dailyPermitted).value);
-
-				} else {
-						console.log('error');
-					}
-			});
+		key: 'debounce',
+		value: function debounce(fn, delay) {
+			var timer = null;
+			return function () {
+				var args = arguments;
+				clearTimeout(timer);
+				timer = setTimeout(function () {
+					fn(args);
+				}, delay);
+			};
 		}
 	}, {
 		key: 'render',
 		value: function render() {
-			//console.log(this.state.dataCurrentConsumed > this.state.dataTotalCals, this.state.dataCurrentConsumed, this.state.dataTotalCals)
-			/*if (this.state.dataCurrentConsumed > this.state.dataTotalCals){
-   	console.log('inside if')
-   	var exceededCals = <Calories data={{id : 'excess-consumed', dataTotalCals :this.state.dataTotalCals, consumed : this.state.dataExcessConsumed, innerRadius : 90, outerRadius : 115, bgColour: 'transparent', fgColour : '#CE392B', circ : this.circ}} />;
-   }*/
-
-			//if(this.state.dataCurrentConsumed > this.state.dataTotalCals){
-			console.log('dataCurrentConsumed', this.state.dataCurrentConsumed);
-			console.log('dataTotalCals', this.state.dataTotalCals);
-			console.log('dataCaloriesBurned', this.state.dataCaloriesBurned);
-			console.log('dataExcessConsumed', this.state.dataExcessConsumed);
-			console.log(this.state.dataCurrentConsumed > this.state.dataTotalCals);
-			//console.log('greater')
-			//}
-
 			return _react2['default'].createElement(
 				'div',
 				{ id: 'calories' },
@@ -23742,14 +23734,14 @@ var Dial = (function (_React$Component) {
 				_react2['default'].createElement(Legend, { dataCurrentConsumed: this.state.dataCurrentConsumed, dataCaloriesBurned: this.state.dataCaloriesBurned, dataExcessConsumed: this.state.dataExcessConsumed }),
 				_react2['default'].createElement('div', { className: 'user-stats' }),
 				_react2['default'].createElement(_Calories2['default'], { data: { id: 'current-consumed', dataTotalCals: this.state.dataTotalCals, consumed: this.state.dataCurrentConsumed, innerRadius: 90, outerRadius: 115, bgColour: '#e9e9e9', fgColour: '#25B3F9', circ: this.circ } }),
-				console.log('in render', this.state.dataCurrentConsumed, this.state.dataTotalCals),
 				_react2['default'].createElement(_Calories2['default'], { data: { id: 'excess-consumed', dataTotalCals: this.state.dataTotalCals, consumed: this.state.dataExcessConsumed, innerRadius: 65, outerRadius: 90, bgColour: '#e9e9e9', fgColour: '#CE392B', circ: this.circ } }),
 				_react2['default'].createElement(
 					'text',
 					{ id: 'daily-permitted-text' },
 					'Daily calorie intake'
 				),
-				_react2['default'].createElement('input', { type: 'text', ref: 'dailyPermitted', id: 'daily-permitted', onBlur: this.updateDailyPermitted, onChange: this.rerenderDailyPermitted, value: this.state.dataTotalCals })
+				console.log('render'),
+				_react2['default'].createElement('input', { type: 'text', ref: 'dailyPermitted', id: 'daily-permitted', onChange: this.debounce(this.rerenderDailyPermitted, 800), defaultValue: '' })
 			);
 		}
 	}]);
@@ -23763,20 +23755,32 @@ var Legend = (function (_React$Component2) {
 	function Legend() {
 		_classCallCheck(this, Legend);
 
-		_get(Object.getPrototypeOf(Legend.prototype), 'constructor', this).apply(this, arguments);
+		_get(Object.getPrototypeOf(Legend.prototype), 'constructor', this).call(this);
+		this.state = {
+			dataExcessConsumed: 0
+		};
 	}
 
 	_createClass(Legend, [{
+		key: 'componentWillReceiveProps',
+		value: function componentWillReceiveProps(nextProps) {
+			console.log('props received');
+		}
+	}, {
 		key: 'render',
 		value: function render() {
+
+			console.log('dataExcessConsumed', this.props.dataExcessConsumed);
+
 			return _react2['default'].createElement(
 				'ul',
 				{ id: 'legend' },
+				console.log('legend'),
 				_react2['default'].createElement(
 					'li',
 					null,
 					_react2['default'].createElement('div', { className: 'legend blue' }),
-					'Caloried consumed ',
+					'Calories consumed ',
 					_react2['default'].createElement(
 						'span',
 						{ className: 'amount' },
@@ -23787,7 +23791,7 @@ var Legend = (function (_React$Component2) {
 					'li',
 					null,
 					_react2['default'].createElement('div', { className: 'legend green' }),
-					'Caloried burned ',
+					'Calories burned ',
 					_react2['default'].createElement(
 						'span',
 						{ className: 'amount' },
@@ -23813,7 +23817,18 @@ var Legend = (function (_React$Component2) {
 						null,
 						'You have ',
 						-this.props.dataExcessConsumed,
-						' calories remaining'
+						' calories remaining today'
+					)
+				),
+				this.props.dataExcessConsumed > 0 && _react2['default'].createElement(
+					'li',
+					null,
+					_react2['default'].createElement(
+						'p',
+						null,
+						'You have exceeded your daily calorie intake by ',
+						this.props.dataExcessConsumed,
+						' calories'
 					)
 				)
 			);
@@ -23869,7 +23884,17 @@ var _servicesUserCalories = require('../services/UserCalories');
 //validation on adding meal
 //add correct calories depending on number of servings
 //ajax calls to ApiService.js
-//better design...
+//move graph below dial, new user's food list below todays food list
+//Gulp workflow, linting, git hooks etc
+
+//Phase 2
+//User registration / log in functionality
+
+//Phase 3
+//Adding exercises / calories burned etc
+
+//Ohase 4
+//Activate weight history graph per user
 
 var selectedMeal = null;
 var caloriesTotal = 0,
