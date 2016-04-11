@@ -73,6 +73,8 @@ class Dial extends React.Component{
 				dataCaloriesBurned : dataCaloriesBurned,
 				dataExcessConsumed : objConsumed.calories.consumed - dataTotalCals
 			});
+
+
 		})
 	}
 
@@ -136,10 +138,6 @@ class Legend extends React.Component{
 		this.state = {
 			dataExcessConsumed : 0
 		}
-	}
-
-	componentWillReceiveProps(nextProps){
-		console.log('props received')
 	}
 
 	render(){

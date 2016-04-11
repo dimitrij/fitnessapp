@@ -6,8 +6,6 @@ import {cursors, userCalories} from '../services/UserCalories';
 
 
 //Phase 1
-//make calories consumed / burned / excess dynamic (on load and on adding food)
-//debounce daily calorie intake input
 //get search data from real API
 //new db table for all user's previously selected foods, and related UI search
 //$pull only one element from array
@@ -26,17 +24,23 @@ import {cursors, userCalories} from '../services/UserCalories';
 //Ohase 4
 //Activate weight history graph per user
 
-let selectedMeal = null;
-var caloriesTotal = 0, carbsTotal = 0, fatTotal = 0, proteinTotal = 0, sodiumTotal = 0, sugarTotal = 0;
+let selectedMeal = null,
+	searching = false,
+	caloriesTotal = 0,
+	carbsTotal = 0,
+	fatTotal = 0,
+	proteinTotal = 0,
+	sodiumTotal = 0,
+	sugarTotal = 0;
 
-function resetTotals(){
+/*function resetTotals(){
 	caloriesTotal = 0;
 	carbsTotal = 0;
 	fatTotal = 0;
 	proteinTotal = 0;
 	sodiumTotal = 0;
 	sugarTotal = 0;
-}
+}*/
 
 class SearchAPI extends React.Component {
 
@@ -49,7 +53,7 @@ class SearchAPI extends React.Component {
 
 		this.state = {
 			searchResults: [],
-			query : '',
+			query : 'init',
 			breakfastList : [],
 			lunchList : [],
 			dinnerList : [],
@@ -61,12 +65,14 @@ class SearchAPI extends React.Component {
 	}
 
 	searchApi(e){
+		searching = true;
 		if(e.target.value === ''){
 			this.setState({
 				searchResults : []
 			});
 			return;
 		}
+
 		this.query = e.target.value;
 
 		Request
@@ -85,6 +91,8 @@ class SearchAPI extends React.Component {
 						query : this.query
 					});
 
+					searching = false;
+
 				}  else {
 					console.log('error');
 				}
@@ -92,6 +100,8 @@ class SearchAPI extends React.Component {
 	}
 
 	getTodaysFoods(){
+		searching = false;
+
 		Request
 			.get('/users/todaysfoods')
 			.end((err, res)=> {
@@ -117,9 +127,20 @@ class SearchAPI extends React.Component {
 	render(){
 		return (
 			<div id="search">
-				<input type="text" ref="searchApi" id="search-api" onChange={this.searchApi} placeholder="Search database" />
-				<ApiSearchResults query={this.state.query} results={this.state.searchResults} todaysFoods={this.getTodaysFoods} />
-				<FoodList foodsList={this.state.foodsList} breakfastList={this.state.breakfastList} lunchList={this.state.lunchList} dinnerList={this.state.dinnerList} snacksList={this.state.snacksList} todaysFoods={this.getTodaysFoods} /> {/*load today's selected foods from db on page load*/}
+				<input type="text" ref="searchApi" id="search-api"
+					   onChange={this.searchApi}
+					   placeholder="Search database" />
+
+				<ApiSearchResults query={this.state.query}
+								  results={this.state.searchResults}
+								  todaysFoods={this.getTodaysFoods} />
+
+				<FoodList foodsList={this.state.foodsList}
+						  breakfastList={this.state.breakfastList}
+						  lunchList={this.state.lunchList}
+						  dinnerList={this.state.dinnerList}
+						  snacksList={this.state.snacksList}
+						  todaysFoods={this.getTodaysFoods} /> {/*load today's selected foods from db on page load*/}
 			</div>
 		)
 	}
@@ -150,7 +171,7 @@ class ApiSearchResults extends React.Component {
 	}
 
 	addFood(food){
-		resetTotals();
+		//resetTotals();
 
 		food['meal'] = selectedMeal ;
 		Request
@@ -167,6 +188,7 @@ class ApiSearchResults extends React.Component {
 	}
 
 	render(){
+		console.log('render')
 
 		return (
 			<div>
@@ -204,9 +226,9 @@ class FoodList extends React.Component {
 		}
 	}
 
-	componentWillReceiveProps(){}
-
-	componentDidMount(){}
+	shouldComponentUpdate(){
+		return !searching;
+	}
 
 	render(){
 		return (
@@ -224,15 +246,23 @@ class FoodList extends React.Component {
 					</li>
 				</ul>
 
-				<Meal items={this.props.breakfastList} todaysFoods={this.props.todaysFoods} meal="breakfast"/>
+				<Meal items={this.props.breakfastList}
+					todaysFoods={this.props.todaysFoods}
+					meal="breakfast"/>
 
-				<Meal items={this.props.lunchList} todaysFoods={this.props.todaysFoods} meal="lunch"/>
+				<Meal items={this.props.lunchList}
+					todaysFoods={this.props.todaysFoods}
+					meal="lunch"/>
 
-				<Meal items={this.props.dinnerList} todaysFoods={this.props.todaysFoods} meal="dinner"/>
+				<Meal items={this.props.dinnerList}
+					todaysFoods={this.props.todaysFoods}
+					meal="dinner"/>
 
-				<Meal items={this.props.snacksList} todaysFoods={this.props.todaysFoods} meal="snacks"/>
+				<Meal items={this.props.snacksList}
+					todaysFoods={this.props.todaysFoods}
+					meal="snacks"/>
 
-				<MealTotals foods={this.props.foodsList}/>
+				<MealTotals	foods={this.props.foodsList}/>
 
 			</div>
 
@@ -257,6 +287,16 @@ class Meal extends React.Component {
 				}
 			});
 	}
+
+	resetTotals(){
+		caloriesTotal = 0;
+		carbsTotal = 0;
+		fatTotal = 0;
+		proteinTotal = 0;
+		sodiumTotal = 0;
+		sugarTotal = 0;
+	}
+
 
 	render(){
 		return (
@@ -292,7 +332,7 @@ class Meal extends React.Component {
 					<span>{sugarTotal}</span>
 				</li>
 
-				{resetTotals()}
+				{this.resetTotals()}
 
 			</ul>
 		)

@@ -23762,11 +23762,6 @@ var Legend = (function (_React$Component2) {
 	}
 
 	_createClass(Legend, [{
-		key: 'componentWillReceiveProps',
-		value: function componentWillReceiveProps(nextProps) {
-			console.log('props received');
-		}
-	}, {
 		key: 'render',
 		value: function render() {
 
@@ -23877,7 +23872,6 @@ var _servicesUserCalories = require('../services/UserCalories');
 
 //Phase 1
 //make calories consumed / burned / excess dynamic (on load and on adding food)
-//debounce daily calorie intake input
 //get search data from real API
 //new db table for all user's previously selected foods, and related UI search
 //$pull only one element from array
@@ -23896,22 +23890,23 @@ var _servicesUserCalories = require('../services/UserCalories');
 //Ohase 4
 //Activate weight history graph per user
 
-var selectedMeal = null;
-var caloriesTotal = 0,
+var selectedMeal = null,
+    searching = false,
+    caloriesTotal = 0,
     carbsTotal = 0,
     fatTotal = 0,
     proteinTotal = 0,
     sodiumTotal = 0,
     sugarTotal = 0;
 
-function resetTotals() {
+/*function resetTotals(){
 	caloriesTotal = 0;
 	carbsTotal = 0;
 	fatTotal = 0;
 	proteinTotal = 0;
 	sodiumTotal = 0;
 	sugarTotal = 0;
-}
+}*/
 
 var SearchAPI = (function (_React$Component) {
 	_inherits(SearchAPI, _React$Component);
@@ -23927,7 +23922,7 @@ var SearchAPI = (function (_React$Component) {
 
 		this.state = {
 			searchResults: [],
-			query: '',
+			query: 'init',
 			breakfastList: [],
 			lunchList: [],
 			dinnerList: [],
@@ -23943,12 +23938,14 @@ var SearchAPI = (function (_React$Component) {
 		value: function searchApi(e) {
 			var _this = this;
 
+			searching = true;
 			if (e.target.value === '') {
 				this.setState({
 					searchResults: []
 				});
 				return;
 			}
+
 			this.query = e.target.value;
 
 			_node_modulesSuperagentLibClient2['default'].get('../../data/mfpapi.json').end(function (err, res) {
@@ -23964,6 +23961,8 @@ var SearchAPI = (function (_React$Component) {
 						searchResults: foods,
 						query: _this.query
 					});
+
+					searching = false;
 				} else {
 					console.log('error');
 				}
@@ -23973,6 +23972,8 @@ var SearchAPI = (function (_React$Component) {
 		key: 'getTodaysFoods',
 		value: function getTodaysFoods() {
 			var _this2 = this;
+
+			searching = false;
 
 			_node_modulesSuperagentLibClient2['default'].get('/users/todaysfoods').end(function (err, res) {
 				if (res.ok) {
@@ -23998,9 +23999,18 @@ var SearchAPI = (function (_React$Component) {
 			return _react2['default'].createElement(
 				'div',
 				{ id: 'search' },
-				_react2['default'].createElement('input', { type: 'text', ref: 'searchApi', id: 'search-api', onChange: this.searchApi, placeholder: 'Search database' }),
-				_react2['default'].createElement(ApiSearchResults, { query: this.state.query, results: this.state.searchResults, todaysFoods: this.getTodaysFoods }),
-				_react2['default'].createElement(FoodList, { foodsList: this.state.foodsList, breakfastList: this.state.breakfastList, lunchList: this.state.lunchList, dinnerList: this.state.dinnerList, snacksList: this.state.snacksList, todaysFoods: this.getTodaysFoods }),
+				_react2['default'].createElement('input', { type: 'text', ref: 'searchApi', id: 'search-api',
+					onChange: this.searchApi,
+					placeholder: 'Search database' }),
+				_react2['default'].createElement(ApiSearchResults, { query: this.state.query,
+					results: this.state.searchResults,
+					todaysFoods: this.getTodaysFoods }),
+				_react2['default'].createElement(FoodList, { foodsList: this.state.foodsList,
+					breakfastList: this.state.breakfastList,
+					lunchList: this.state.lunchList,
+					dinnerList: this.state.dinnerList,
+					snacksList: this.state.snacksList,
+					todaysFoods: this.getTodaysFoods }),
 				' '
 			);
 		}
@@ -24043,7 +24053,7 @@ var ApiSearchResults = (function (_React$Component2) {
 		value: function addFood(food) {
 			var _this3 = this;
 
-			resetTotals();
+			//resetTotals();
 
 			food['meal'] = selectedMeal;
 			_node_modulesSuperagentLibClient2['default'].put('/users/addfood').set('Accept', 'application/json').send(food).end(function (err, res) {
@@ -24058,6 +24068,8 @@ var ApiSearchResults = (function (_React$Component2) {
 		key: 'render',
 		value: function render() {
 			var _this4 = this;
+
+			console.log('render');
 
 			return _react2['default'].createElement(
 				'div',
@@ -24134,11 +24146,10 @@ var FoodList = (function (_React$Component3) {
 	}
 
 	_createClass(FoodList, [{
-		key: 'componentWillReceiveProps',
-		value: function componentWillReceiveProps() {}
-	}, {
-		key: 'componentDidMount',
-		value: function componentDidMount() {}
+		key: 'shouldComponentUpdate',
+		value: function shouldComponentUpdate() {
+			return !searching;
+		}
 	}, {
 		key: 'render',
 		value: function render() {
@@ -24189,10 +24200,18 @@ var FoodList = (function (_React$Component3) {
 						)
 					)
 				),
-				_react2['default'].createElement(Meal, { items: this.props.breakfastList, todaysFoods: this.props.todaysFoods, meal: 'breakfast' }),
-				_react2['default'].createElement(Meal, { items: this.props.lunchList, todaysFoods: this.props.todaysFoods, meal: 'lunch' }),
-				_react2['default'].createElement(Meal, { items: this.props.dinnerList, todaysFoods: this.props.todaysFoods, meal: 'dinner' }),
-				_react2['default'].createElement(Meal, { items: this.props.snacksList, todaysFoods: this.props.todaysFoods, meal: 'snacks' }),
+				_react2['default'].createElement(Meal, { items: this.props.breakfastList,
+					todaysFoods: this.props.todaysFoods,
+					meal: 'breakfast' }),
+				_react2['default'].createElement(Meal, { items: this.props.lunchList,
+					todaysFoods: this.props.todaysFoods,
+					meal: 'lunch' }),
+				_react2['default'].createElement(Meal, { items: this.props.dinnerList,
+					todaysFoods: this.props.todaysFoods,
+					meal: 'dinner' }),
+				_react2['default'].createElement(Meal, { items: this.props.snacksList,
+					todaysFoods: this.props.todaysFoods,
+					meal: 'snacks' }),
 				_react2['default'].createElement(MealTotals, { foods: this.props.foodsList })
 			);
 		}
@@ -24223,6 +24242,16 @@ var Meal = (function (_React$Component4) {
 					console.log('error');
 				}
 			});
+		}
+	}, {
+		key: 'resetTotals',
+		value: function resetTotals() {
+			caloriesTotal = 0;
+			carbsTotal = 0;
+			fatTotal = 0;
+			proteinTotal = 0;
+			sodiumTotal = 0;
+			sugarTotal = 0;
 		}
 	}, {
 		key: 'render',
@@ -24333,7 +24362,7 @@ var Meal = (function (_React$Component4) {
 						sugarTotal
 					)
 				),
-				resetTotals()
+				this.resetTotals()
 			);
 		}
 	}]);
