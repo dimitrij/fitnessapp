@@ -3,7 +3,7 @@ var router = express.Router();
 
 router.get('/user', function(req, res) {
 	var db = req.db;
-	var collection = db.get('user');
+	var collection = db.get('weighttracker.user');
 	collection.find({},{},function(e,docs){
 		res.json(docs);
 	});
@@ -11,7 +11,7 @@ router.get('/user', function(req, res) {
 
 router.get('/todaysfoods', function(req, res) {
 	var db = req.db;
-	var collection = db.get('todaysfoods');
+	var collection = db.get('weighttracker.todaysfoods');
 	collection.find({},{},function(e,docs){
 		res.json(docs);
 	});
@@ -19,9 +19,9 @@ router.get('/todaysfoods', function(req, res) {
 
 router.put('/updatecalories', function(req, res) {
 	var db = req.db;
-	var collection = db.get('user');
+	var collection = db.get('weighttracker.user');
 
-	collection.update({ _id : "57064d38b53fce4e10505ee7"}, {$set:{totalCalories : req.body.totalCalories}}, {safe:true},
+	collection.update({ _id : "570d04b7b745e4ca2f0092ff"}, {$set:{totalCalories : req.body.totalCalories}}, {safe:true},
 		function(err){
 			res.send(
 				(err === null) ? { msg: '' } : { msg: err }
@@ -31,7 +31,7 @@ router.put('/updatecalories', function(req, res) {
 
 router.put('/addfood', function(req, res) {
 	var db = req.db,
-		collection = db.get('todaysfoods'),
+		collection = db.get('weighttracker.todaysfoods'),
 		item = req.body,
 		meal = item['meal'],
 		object;
@@ -48,7 +48,7 @@ router.put('/addfood', function(req, res) {
 
 router.put('/deletefood', function(req, res) {
 	var db = req.db,
-		collection = db.get('todaysfoods'),
+		collection = db.get('weighttracker.todaysfoods'),
 		item = req.body,
 		meal = item['meal'],
 		object;

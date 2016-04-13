@@ -36,14 +36,11 @@ class Dial extends React.Component{
 			.end((err, res)=> {
 				if (res.ok){
 					this.calsObj = res.body;
-					//this.setState({
-						dataTotalCals = parseInt(this.calsObj[0]['totalCalories']);
-						//dataCurrentConsumed = parseInt(this.calsObj[0]['currentConsumed']);
-						dataCaloriesBurned = parseInt(this.calsObj[0]['caloriesBurned']);
-						dataExcessConsumed = parseInt(this.calsObj[0]['excessConsumed']);
+					dataTotalCals = parseInt(this.calsObj[0]['totalCalories']);
+					//dataCurrentConsumed = parseInt(this.calsObj[0]['currentConsumed']);
+					dataCaloriesBurned = parseInt(this.calsObj[0]['caloriesBurned']);
+					dataExcessConsumed = parseInt(this.calsObj[0]['excessConsumed']);
 					React.findDOMNode(this.refs.dailyPermitted).value = dataTotalCals;
-					//});
-
 				} else{
 					console.log('error');
 				}
@@ -117,15 +114,19 @@ class Dial extends React.Component{
 		return (
 			<div id="calories">
 				<h1>Today's calories</h1>
-				<Legend dataCurrentConsumed={this.state.dataCurrentConsumed} dataCaloriesBurned={this.state.dataCaloriesBurned} dataExcessConsumed={this.state.dataExcessConsumed} />
+				<Legend dataCurrentConsumed={this.state.dataCurrentConsumed}
+						dataCaloriesBurned={this.state.dataCaloriesBurned}
+						dataExcessConsumed={this.state.dataExcessConsumed} />
+
 				<div className="user-stats"></div>
 				{/*<Calories data={{id : 'calories-burned', dataTotalCals :this.state.dataTotalCals, consumed : this.state.dataCaloriesBurned, innerRadius : 65, outerRadius : 95, bgColour: '#e9e9e9', fgColour : '#7FBB5B', circ : this.circ}} />*/}
 				<Calories data={{id : 'current-consumed', dataTotalCals :this.state.dataTotalCals, consumed : this.state.dataCurrentConsumed, innerRadius : 90, outerRadius : 115, bgColour: '#e9e9e9', fgColour : '#25B3F9', circ : this.circ}} />
 				<Calories data={{id : 'excess-consumed', dataTotalCals :this.state.dataTotalCals, consumed : this.state.dataExcessConsumed, innerRadius : 65, outerRadius : 90, bgColour: '#e9e9e9', fgColour : '#CE392B', circ : this.circ}}/>
 				{/*<Calories data={{id : 'centre', dataTotalCals :0, consumed : 0, innerRadius : 0, outerRadius : 65, bgColour: '#f7f7f7', fgColour : '#f7f7f7', circ : this.circ}} />*/}
 				<text id="daily-permitted-text">Daily calorie intake</text>
-				{console.log('render')}
-				<input type="text" ref="dailyPermitted" id="daily-permitted" onChange={this.debounce(this.rerenderDailyPermitted, 800)} defaultValue="" />
+				<input type="text" ref="dailyPermitted" id="daily-permitted"
+					   onChange={this.debounce(this.rerenderDailyPermitted, 800)}
+					   defaultValue="" />
 			</div>
 		);
 	}
@@ -141,21 +142,27 @@ class Legend extends React.Component{
 	}
 
 	render(){
-
-		console.log('dataExcessConsumed', this.props.dataExcessConsumed)
-
 		return(
 
 			<ul id="legend">
-				{console.log('legend')}
-				<li><div className="legend blue"></div>Calories consumed <span className="amount">{this.props.dataCurrentConsumed}</span></li>
-				<li><div className="legend green"></div>Calories burned <span className="amount">{this.props.dataCaloriesBurned}</span></li>
-				<li><div className="legend red"></div>Excess calories <span className="amount">{this.props.dataExcessConsumed <= 0 ? 0 : this.props.dataExcessConsumed}</span></li>
+				<li>
+					<div className="legend blue"></div>Calories consumed <span className="amount">{this.props.dataCurrentConsumed}</span>
+				</li>
+				<li>
+					<div className="legend green"></div>Calories burned <span className="amount">{this.props.dataCaloriesBurned}</span>
+				</li>
+				<li>
+					<div className="legend red"></div>Excess calories <span className="amount">{this.props.dataExcessConsumed <= 0 ? 0 : this.props.dataExcessConsumed}</span>
+				</li>
 				{this.props.dataExcessConsumed <= 0 &&
-					<li><p>You have {-this.props.dataExcessConsumed} calories remaining today</p></li>
+					<li>
+						<p>You have {-this.props.dataExcessConsumed} calories remaining today</p>
+					</li>
 				}
 				{this.props.dataExcessConsumed > 0 &&
-					<li><p>You have exceeded your daily calorie intake by {this.props.dataExcessConsumed} calories</p></li>
+					<li>
+						<p>You have exceeded your daily calorie intake by {this.props.dataExcessConsumed} calories</p>
+					</li>
 				}
 			</ul>
 		)

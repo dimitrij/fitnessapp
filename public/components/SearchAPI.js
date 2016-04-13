@@ -6,7 +6,10 @@ import {cursors, userCalories} from '../services/UserCalories';
 
 
 //Phase 1
+//Get app running on Heroku
+//Change heroku name to my domain name
 //get search data from real API
+
 //new db table for all user's previously selected foods, and related UI search
 //$pull only one element from array
 //validation on adding meal
@@ -14,6 +17,7 @@ import {cursors, userCalories} from '../services/UserCalories';
 //ajax calls to ApiService.js
 //move graph below dial, new user's food list below todays food list
 //Gulp workflow, linting, git hooks etc
+//Adapt to use Mongoose?
 
 //Phase 2
 //User registration / log in functionality
@@ -188,8 +192,6 @@ class ApiSearchResults extends React.Component {
 	}
 
 	render(){
-		console.log('render')
-
 		return (
 			<div>
 				<ul ref="results" className={this.props.results.length > 0 ? 'results active' : 'results'}>
@@ -235,7 +237,7 @@ class FoodList extends React.Component {
 			<div>
 				<ul className="selected-foods">
 					<li className="headers clearfix">
-						<span></span>
+						<span> </span>
 						<span>Cals</span>
 						<span>Carbs</span>
 						<span>Fat</span>

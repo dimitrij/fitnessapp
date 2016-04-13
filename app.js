@@ -7,7 +7,10 @@ var bodyParser = require('body-parser');
 // Database
 var mongo = require('mongodb');
 var monk = require('monk');
-var db = monk('localhost:27017/fitness');
+var db = monk('mongodb://mike:mongo@ds023520.mlab.com:23520/weighttracker');
+
+//var db = monk('localhost:27017/fitness');
+
 //var cors = require('cors');
 // routes
 var routes = require('./routes/index');

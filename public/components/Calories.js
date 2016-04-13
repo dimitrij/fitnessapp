@@ -28,10 +28,7 @@ class Calories extends React.Component{
 			.datum({endAngle: nextProps.data.circ})
 			.style('fill', this.bgColour)
 			.attr('f', 'sdfsd')
-
 			.attr('d', this.arc);
-
-		//if(this.id === 'centre') return;
 
 		this.fgColour = d3.select('#calories svg g').append('path')
 			.datum({endAngle: 0})
