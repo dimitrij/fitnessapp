@@ -1,6 +1,9 @@
 import React from 'react';
 import Request from '../../node_modules/superagent/lib/client';
 import d3 from '../../node_modules/d3/d3.min';
+import ApiService from '../services/ApiService';
+
+let apiService = new ApiService();
 
 class Tracker extends React.Component {
 
@@ -29,29 +32,32 @@ class Tracker extends React.Component {
 		this.kgs = [];
 		this.lbs = [];
 
-		Request
-			.get('/users/user')
-			.end((err, res)=> {
-				if (res.ok) {
-					this.trackerObj = res.body;
-					this.name = this.trackerObj[0]['name'];
-					this.data = this.trackerObj[0][this.selectedYear];
+		apiService.getUser().end((err, res)=>{
+			this.getUserCallback(err, res, b);
+		});
 
-					this.data.map(datum => {
-						if (datum.date.substr(0, 4) === this.selectedYear) {
-							this.dates.push(Tracker.parseDate(datum.date));
-							this.kgs.push(datum.kg);
-							this.lbs.push(datum.lb);
-						}
-					})
+	}
 
-					this.setUnit();
-					this.initChart(b);
+	getUserCallback(err, res, b){
+		if (res.ok) {
+			this.trackerObj = res.body;
+			this.name = this.trackerObj[0]['name'];
+			this.data = this.trackerObj[0][this.selectedYear];
 
-				} else {
-					console.log('error');
+			this.data.map(datum => {
+				if (datum.date.substr(0, 4) === this.selectedYear) {
+					this.dates.push(Tracker.parseDate(datum.date));
+					this.kgs.push(datum.kg);
+					this.lbs.push(datum.lb);
 				}
 			});
+
+			this.setUnit();
+			this.initChart(b);
+
+		} else {
+			console.log(err);
+		}
 	}
 
 	initChart(b){

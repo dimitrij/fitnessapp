@@ -3,12 +3,13 @@ import Request from '../../node_modules/superagent/lib/client';
 import d3 from '../../node_modules/d3/d3.min';
 import Calories from './Calories';
 import {cursors, userCalories} from '../services/UserCalories';
+import ApiService from '../services/ApiService';
 
 var dataTotalCals = 0,
 	dataCurrentConsumed = 0,
 	dataCaloriesBurned = 0,
 	dataExcessConsumed = 0,
-	caloriesRemaining = 0;
+	apiService = new ApiService();
 
 class Dial extends React.Component{
 
@@ -31,20 +32,22 @@ class Dial extends React.Component{
 			caloriesRemaining : 0
 		};
 
-		Request
-			.get('/users/user')
-			.end((err, res)=> {
-				if (res.ok){
-					this.calsObj = res.body;
-					dataTotalCals = parseInt(this.calsObj[0]['totalCalories']);
-					//dataCurrentConsumed = parseInt(this.calsObj[0]['currentConsumed']);
-					dataCaloriesBurned = parseInt(this.calsObj[0]['caloriesBurned']);
-					dataExcessConsumed = parseInt(this.calsObj[0]['excessConsumed']);
-					React.findDOMNode(this.refs.dailyPermitted).value = dataTotalCals;
-				} else{
-					console.log('error');
-				}
-			});
+		apiService.getUser().end((err, res)=> {
+			this.getUserCallback(err, res);
+		});
+	}
+
+	getUserCallback(err, res){
+		if (res.ok){
+			this.calsObj = res.body;
+			dataTotalCals = parseInt(this.calsObj[0]['totalCalories']);
+			//dataCurrentConsumed = parseInt(this.calsObj[0]['currentConsumed']);
+			dataCaloriesBurned = parseInt(this.calsObj[0]['caloriesBurned']);
+			dataExcessConsumed = parseInt(this.calsObj[0]['excessConsumed']);
+			React.findDOMNode(this.refs.dailyPermitted).value = dataTotalCals;
+		} else{
+			console.log(err);
+		}
 	}
 
 	parseDate(date){
@@ -82,21 +85,21 @@ class Dial extends React.Component{
 
 		var newDailyPermitted = React.findDOMNode(this.refs.dailyPermitted).value;
 
-		Request
-			.put('/users/updatecalories')
-			.set('Accept', 'application/json')
-			.send({'totalCalories' : newDailyPermitted})
-			.end((err, res)=> {
-				if (res.ok){
-					var objConsumed = userCalories.getCalories();
-					this.setState({
-						dataTotalCals : newDailyPermitted,
-						dataExcessConsumed : objConsumed.calories.consumed - newDailyPermitted
-					});
-				} else{
-					console.log('error');
-				}
+		apiService.updateCalories({'totalCalories' : newDailyPermitted}).end((err, res)=>{
+			this.updateCaloriesCallback(err, res, newDailyPermitted);
+		})
+	}
+
+	updateCaloriesCallback(err, res, newDailyPermitted){
+		if (res.ok){
+			var objConsumed = userCalories.getCalories();
+			this.setState({
+				dataTotalCals : newDailyPermitted,
+				dataExcessConsumed : objConsumed.calories.consumed - newDailyPermitted
 			});
+		} else{
+			console.log(err);
+		}
 	}
 
 	debounce(fn, delay) {

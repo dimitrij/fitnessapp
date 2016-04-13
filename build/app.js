@@ -23609,11 +23609,15 @@ var _Calories2 = _interopRequireDefault(_Calories);
 
 var _servicesUserCalories = require('../services/UserCalories');
 
+var _servicesApiService = require('../services/ApiService');
+
+var _servicesApiService2 = _interopRequireDefault(_servicesApiService);
+
 var dataTotalCals = 0,
     dataCurrentConsumed = 0,
     dataCaloriesBurned = 0,
     dataExcessConsumed = 0,
-    caloriesRemaining = 0;
+    apiService = new _servicesApiService2['default']();
 
 var Dial = (function (_React$Component) {
 	_inherits(Dial, _React$Component);
@@ -23641,21 +23645,26 @@ var Dial = (function (_React$Component) {
 			caloriesRemaining: 0
 		};
 
-		_node_modulesSuperagentLibClient2['default'].get('/users/user').end(function (err, res) {
-			if (res.ok) {
-				_this.calsObj = res.body;
-				dataTotalCals = parseInt(_this.calsObj[0]['totalCalories']);
-				//dataCurrentConsumed = parseInt(this.calsObj[0]['currentConsumed']);
-				dataCaloriesBurned = parseInt(_this.calsObj[0]['caloriesBurned']);
-				dataExcessConsumed = parseInt(_this.calsObj[0]['excessConsumed']);
-				_react2['default'].findDOMNode(_this.refs.dailyPermitted).value = dataTotalCals;
-			} else {
-				console.log('error');
-			}
+		apiService.getUser().end(function (err, res) {
+			_this.getUserCallback(err, res);
 		});
 	}
 
 	_createClass(Dial, [{
+		key: 'getUserCallback',
+		value: function getUserCallback(err, res) {
+			if (res.ok) {
+				this.calsObj = res.body;
+				dataTotalCals = parseInt(this.calsObj[0]['totalCalories']);
+				//dataCurrentConsumed = parseInt(this.calsObj[0]['currentConsumed']);
+				dataCaloriesBurned = parseInt(this.calsObj[0]['caloriesBurned']);
+				dataExcessConsumed = parseInt(this.calsObj[0]['excessConsumed']);
+				_react2['default'].findDOMNode(this.refs.dailyPermitted).value = dataTotalCals;
+			} else {
+				console.log(err);
+			}
+		}
+	}, {
 		key: 'parseDate',
 		value: function parseDate(date) {
 			return _node_modulesD3D3Min2['default'].time.format('%Y%m%d').parse(date);
@@ -23692,17 +23701,22 @@ var Dial = (function (_React$Component) {
 
 			var newDailyPermitted = _react2['default'].findDOMNode(this.refs.dailyPermitted).value;
 
-			_node_modulesSuperagentLibClient2['default'].put('/users/updatecalories').set('Accept', 'application/json').send({ 'totalCalories': newDailyPermitted }).end(function (err, res) {
-				if (res.ok) {
-					var objConsumed = _servicesUserCalories.userCalories.getCalories();
-					_this3.setState({
-						dataTotalCals: newDailyPermitted,
-						dataExcessConsumed: objConsumed.calories.consumed - newDailyPermitted
-					});
-				} else {
-					console.log('error');
-				}
+			apiService.updateCalories({ 'totalCalories': newDailyPermitted }).end(function (err, res) {
+				_this3.updateCaloriesCallback(err, res, newDailyPermitted);
 			});
+		}
+	}, {
+		key: 'updateCaloriesCallback',
+		value: function updateCaloriesCallback(err, res, newDailyPermitted) {
+			if (res.ok) {
+				var objConsumed = _servicesUserCalories.userCalories.getCalories();
+				this.setState({
+					dataTotalCals: newDailyPermitted,
+					dataExcessConsumed: objConsumed.calories.consumed - newDailyPermitted
+				});
+			} else {
+				console.log(err);
+			}
 		}
 	}, {
 		key: 'debounce',
@@ -23832,7 +23846,7 @@ exports['default'] = Dial;
 module.exports = exports['default'];
 /*<Calories data={{id : 'calories-burned', dataTotalCals :this.state.dataTotalCals, consumed : this.state.dataCaloriesBurned, innerRadius : 65, outerRadius : 95, bgColour: '#e9e9e9', fgColour : '#7FBB5B', circ : this.circ}} />*/ /*<Calories data={{id : 'centre', dataTotalCals :0, consumed : 0, innerRadius : 0, outerRadius : 65, bgColour: '#f7f7f7', fgColour : '#f7f7f7', circ : this.circ}} />*/
 
-},{"../../node_modules/d3/d3.min":11,"../../node_modules/superagent/lib/client":170,"../services/UserCalories":179,"./Calories":171,"react":168}],174:[function(require,module,exports){
+},{"../../node_modules/d3/d3.min":11,"../../node_modules/superagent/lib/client":170,"../services/ApiService":178,"../services/UserCalories":180,"./Calories":171,"react":168}],174:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -23857,7 +23871,9 @@ var _node_modulesSuperagentLibClient = require('../../node_modules/superagent/li
 
 var _node_modulesSuperagentLibClient2 = _interopRequireDefault(_node_modulesSuperagentLibClient);
 
-//import ApiService from '../services/ApiService.js';
+var _servicesApiService = require('../services/ApiService');
+
+var _servicesApiService2 = _interopRequireDefault(_servicesApiService);
 
 var _jsUtils = require('../js/utils');
 
@@ -23866,15 +23882,14 @@ var _jsUtils2 = _interopRequireDefault(_jsUtils);
 var _servicesUserCalories = require('../services/UserCalories');
 
 //Phase 1
-//Get app running on Heroku
 //Change heroku name to my domain name
 //get search data from real API
 
+//ajax calls to ApiService.js
 //new db table for all user's previously selected foods, and related UI search
 //$pull only one element from array
 //validation on adding meal
 //add correct calories depending on number of servings
-//ajax calls to ApiService.js
 //move graph below dial, new user's food list below todays food list
 //Gulp workflow, linting, git hooks etc
 //Adapt to use Mongoose?
@@ -23895,16 +23910,8 @@ var selectedMeal = null,
     fatTotal = 0,
     proteinTotal = 0,
     sodiumTotal = 0,
-    sugarTotal = 0;
-
-/*function resetTotals(){
-	caloriesTotal = 0;
-	carbsTotal = 0;
-	fatTotal = 0;
-	proteinTotal = 0;
-	sodiumTotal = 0;
-	sugarTotal = 0;
-}*/
+    sugarTotal = 0,
+    apiService = new _servicesApiService2['default']();
 
 var SearchAPI = (function (_React$Component) {
 	_inherits(SearchAPI, _React$Component);
@@ -23920,7 +23927,6 @@ var SearchAPI = (function (_React$Component) {
 
 		this.state = {
 			searchResults: [],
-			query: 'init',
 			breakfastList: [],
 			lunchList: [],
 			dinnerList: [],
@@ -23946,24 +23952,8 @@ var SearchAPI = (function (_React$Component) {
 
 			this.query = e.target.value;
 
-			_node_modulesSuperagentLibClient2['default'].get('../../data/mfpapi.json').end(function (err, res) {
-				if (res.ok) {
-					//will need to send search params to api, and not load all results on keypress
-					var breakfast = res.body['meals']['breakfast']['food'],
-					    lunch = res.body['meals']['lunch']['food'],
-					    dinner = res.body['meals']['dinner']['food'],
-					    snacks = res.body['meals']['snacks']['food'],
-					    foods = breakfast.concat(lunch.concat(dinner.concat(snacks)));
-
-					_this.setState({
-						searchResults: foods,
-						query: _this.query
-					});
-
-					searching = false;
-				} else {
-					console.log('error');
-				}
+			apiService.getApiData().end(function (err, res) {
+				_this.getApiDataCallback(err, res);
 			});
 		}
 	}, {
@@ -23972,24 +23962,49 @@ var SearchAPI = (function (_React$Component) {
 			var _this2 = this;
 
 			searching = false;
-
-			_node_modulesSuperagentLibClient2['default'].get('/users/todaysfoods').end(function (err, res) {
-				if (res.ok) {
-					_this2.meals = res.body;
-
-					if (_this2.meals && _this2.meals[0]) {
-						_this2.setState({
-							breakfastList: _this2.meals[0]['meals']['breakfast']['food'],
-							lunchList: _this2.meals[0]['meals']['lunch']['food'],
-							dinnerList: _this2.meals[0]['meals']['dinner']['food'],
-							snacksList: _this2.meals[0]['meals']['snacks']['food'],
-							foodsList: _this2.meals[0]['meals']['breakfast']['food'].concat(_this2.meals[0]['meals']['lunch']['food'].concat(_this2.meals[0]['meals']['dinner']['food'].concat(_this2.meals[0]['meals']['snacks']['food'])))
-						});
-					}
-				} else {
-					console.log('error');
-				}
+			apiService.getTodaysFoods().end(function (err, res) {
+				_this2.todaysFoodsCallback(err, res);
 			});
+		}
+	}, {
+		key: 'getApiDataCallback',
+		value: function getApiDataCallback(err, res) {
+			if (res.ok) {
+				//will need to send search params to api, and not load all results on keypress
+				var breakfast = res.body['meals']['breakfast']['food'],
+				    lunch = res.body['meals']['lunch']['food'],
+				    dinner = res.body['meals']['dinner']['food'],
+				    snacks = res.body['meals']['snacks']['food'],
+				    foods = breakfast.concat(lunch.concat(dinner.concat(snacks)));
+
+				this.setState({
+					searchResults: foods,
+					query: this.query
+				});
+
+				searching = false;
+			} else {
+				console.log(err);
+			}
+		}
+	}, {
+		key: 'todaysFoodsCallback',
+		value: function todaysFoodsCallback(err, res) {
+			if (res.ok) {
+				this.meals = res.body;
+
+				if (this.meals && this.meals[0]) {
+					this.setState({
+						breakfastList: this.meals[0]['meals']['breakfast']['food'],
+						lunchList: this.meals[0]['meals']['lunch']['food'],
+						dinnerList: this.meals[0]['meals']['dinner']['food'],
+						snacksList: this.meals[0]['meals']['snacks']['food'],
+						foodsList: this.meals[0]['meals']['breakfast']['food'].concat(this.meals[0]['meals']['lunch']['food'].concat(this.meals[0]['meals']['dinner']['food'].concat(this.meals[0]['meals']['snacks']['food'])))
+					});
+				}
+			} else {
+				console.log(err);
+			}
 		}
 	}, {
 		key: 'render',
@@ -24051,16 +24066,20 @@ var ApiSearchResults = (function (_React$Component2) {
 		value: function addFood(food) {
 			var _this3 = this;
 
-			//resetTotals();
-
 			food['meal'] = selectedMeal;
-			_node_modulesSuperagentLibClient2['default'].put('/users/addfood').set('Accept', 'application/json').send(food).end(function (err, res) {
-				if (res.ok) {
-					_this3.props.todaysFoods();
-				} else {
-					console.log('error');
-				}
+
+			apiService.addFood(food).end(function (err, res) {
+				_this3.addFoodCallback(err, res);
 			});
+		}
+	}, {
+		key: 'addFoodCallback',
+		value: function addFoodCallback(err, res) {
+			if (res.ok) {
+				this.props.todaysFoods();
+			} else {
+				console.log(err);
+			}
 		}
 	}, {
 		key: 'render',
@@ -24235,13 +24254,19 @@ var Meal = (function (_React$Component4) {
 			var _this5 = this;
 
 			food['meal'] = meal;
-			_node_modulesSuperagentLibClient2['default'].put('/users/deletefood').set('Accept', 'application/json').send(food).end(function (err, res) {
-				if (res.ok) {
-					_this5.props.todaysFoods();
-				} else {
-					console.log('error');
-				}
+
+			apiService.removeFood(food).end(function (err, res) {
+				_this5.removeFoodCallback(err, res);
 			});
+		}
+	}, {
+		key: 'removeFoodCallback',
+		value: function removeFoodCallback(err, res) {
+			if (res.ok) {
+				this.props.todaysFoods();
+			} else {
+				console.log(err);
+			}
 		}
 	}, {
 		key: 'resetTotals',
@@ -24455,7 +24480,7 @@ exports['default'] = SearchAPI;
 module.exports = exports['default'];
 /*load today's selected foods from db on page load*/
 
-},{"../../node_modules/superagent/lib/client":170,"../js/utils":177,"../services/UserCalories":179,"react":168}],175:[function(require,module,exports){
+},{"../../node_modules/superagent/lib/client":170,"../js/utils":177,"../services/ApiService":178,"../services/UserCalories":180,"react":168}],175:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -24483,6 +24508,12 @@ var _node_modulesSuperagentLibClient2 = _interopRequireDefault(_node_modulesSupe
 var _node_modulesD3D3Min = require('../../node_modules/d3/d3.min');
 
 var _node_modulesD3D3Min2 = _interopRequireDefault(_node_modulesD3D3Min);
+
+var _servicesApiService = require('../services/ApiService');
+
+var _servicesApiService2 = _interopRequireDefault(_servicesApiService);
+
+var apiService = new _servicesApiService2['default']();
 
 var Tracker = (function (_React$Component) {
 	_inherits(Tracker, _React$Component);
@@ -24514,26 +24545,33 @@ var Tracker = (function (_React$Component) {
 			this.kgs = [];
 			this.lbs = [];
 
-			_node_modulesSuperagentLibClient2['default'].get('/users/user').end(function (err, res) {
-				if (res.ok) {
-					_this.trackerObj = res.body;
-					_this.name = _this.trackerObj[0]['name'];
-					_this.data = _this.trackerObj[0][_this.selectedYear];
-
-					_this.data.map(function (datum) {
-						if (datum.date.substr(0, 4) === _this.selectedYear) {
-							_this.dates.push(Tracker.parseDate(datum.date));
-							_this.kgs.push(datum.kg);
-							_this.lbs.push(datum.lb);
-						}
-					});
-
-					_this.setUnit();
-					_this.initChart(b);
-				} else {
-					console.log('error');
-				}
+			apiService.getUser().end(function (err, res) {
+				_this.getUserCallback(err, res, b);
 			});
+		}
+	}, {
+		key: 'getUserCallback',
+		value: function getUserCallback(err, res, b) {
+			var _this2 = this;
+
+			if (res.ok) {
+				this.trackerObj = res.body;
+				this.name = this.trackerObj[0]['name'];
+				this.data = this.trackerObj[0][this.selectedYear];
+
+				this.data.map(function (datum) {
+					if (datum.date.substr(0, 4) === _this2.selectedYear) {
+						_this2.dates.push(Tracker.parseDate(datum.date));
+						_this2.kgs.push(datum.kg);
+						_this2.lbs.push(datum.lb);
+					}
+				});
+
+				this.setUnit();
+				this.initChart(b);
+			} else {
+				console.log(err);
+			}
 		}
 	}, {
 		key: 'initChart',
@@ -24584,37 +24622,37 @@ var Tracker = (function (_React$Component) {
 	}, {
 		key: 'setChart',
 		value: function setChart() {
-			var _this2 = this;
+			var _this3 = this;
 
 			this.area = _node_modulesD3D3Min2['default'].svg.area()
 			//.interpolate('cardinal')
 			.x(function (d, i) {
-				return _this2.xScale(_this2.dates[i]);
+				return _this3.xScale(_this3.dates[i]);
 			}).y0(function (d) {
-				return _this2.areaHeight;
+				return _this3.areaHeight;
 			}).y1(function (d, i) {
-				return _this2.areaHeight;
+				return _this3.areaHeight;
 			});
 
 			this.path.datum(this.data).attr('d', this.area).attr('stroke', '#25B3F9').attr('stroke-width', 1).attr('fill', 'rgba(204, 204, 204, .6)');
 
 			this.svg.selectAll('circle').data(this.data).enter().append('circle').attr('transform', 'translate(40, 70)').attr('class', 'bubble').attr('cx', function (d, i) {
-				return _this2.xScale(_this2.dates[i]);
+				return _this3.xScale(_this3.dates[i]);
 			}).attr('cy', function (d, i) {
-				return _this2.areaHeight;
+				return _this3.areaHeight;
 			}).attr('r', function (d) {
 				return 4;
 			}).on('mouseover', function (d, i) {
-				var circle = _node_modulesD3D3Min2['default'].select(_this2.svg[0][0].childNodes[i + 5]);
+				var circle = _node_modulesD3D3Min2['default'].select(_this3.svg[0][0].childNodes[i + 5]);
 				circle.attr('r', 6);
 				circle.classed('active', true);
-				_this2.yScale = _node_modulesD3D3Min2['default'].scale.linear().domain(_node_modulesD3D3Min2['default'].extent(_this2.units)).range([_this2.h, 0]);
-				_this2.toggleToolTip(true, _this2.xScale(_this2.dates[i]), _this2.yScale(_this2.units[i]), _this2.dates[i], _this2.units[i]);
+				_this3.yScale = _node_modulesD3D3Min2['default'].scale.linear().domain(_node_modulesD3D3Min2['default'].extent(_this3.units)).range([_this3.h, 0]);
+				_this3.toggleToolTip(true, _this3.xScale(_this3.dates[i]), _this3.yScale(_this3.units[i]), _this3.dates[i], _this3.units[i]);
 			}).on('mouseout', function (d, i) {
-				var circle = _node_modulesD3D3Min2['default'].select(_this2.svg[0][0].childNodes[i + 5]);
+				var circle = _node_modulesD3D3Min2['default'].select(_this3.svg[0][0].childNodes[i + 5]);
 				circle.attr('r', 4);
 				circle.classed('active', false);
-				_this2.toggleToolTip(false);
+				_this3.toggleToolTip(false);
 			});
 
 			this.svg.append('g').attr('id', 'tooltip').attr('transform', 'translate(-100,-100)').attr('class', 'tip').append('path').attr('d', 'm1.74999,8.00043l0,0c0,-3.42177 3.56758,-6.19543 7.96823,-6.19543l3.62185,0l0,0l17.38534,0l32.59726,0c2.11353,0 4.14029,0.65274 5.63466,1.81467c1.49402,1.16192 2.33368,2.73772 2.33368,4.38076l0,15.4886l0,0l0,9.29327l0,0c0,3.42158 -3.56772,6.19535 -7.96834,6.19535l-32.59726,0l33.65634,-0.0432l-51.04168,0.0432l-3.62185,0c-4.40065,0 -7.96823,-2.77377 -7.96823,-6.19535l0,0l0,-9.29327l0,0l0,-15.4886z');
@@ -24624,27 +24662,27 @@ var Tracker = (function (_React$Component) {
 	}, {
 		key: 'movePlots',
 		value: function movePlots() {
-			var _this3 = this;
+			var _this4 = this;
 
 			this.svg.selectAll('circle').transition().duration(1000).ease('exp').attr('cx', function (d, i) {
-				return _this3.xScale(_this3.dates[i]);
+				return _this4.xScale(_this4.dates[i]);
 			}).attr('cy', function (d, i) {
-				return _this3.yScale(_this3.units[i]);
+				return _this4.yScale(_this4.units[i]);
 			});
 		}
 	}, {
 		key: 'tweenChart',
 		value: function tweenChart() {
-			var _this4 = this;
+			var _this5 = this;
 
 			this.area = _node_modulesD3D3Min2['default'].svg.area()
 			//.interpolate('cardinal')
 			.x(function (d, i) {
-				return _this4.xScale(_this4.dates[i]);
+				return _this5.xScale(_this5.dates[i]);
 			}).y0(function (d) {
-				return _this4.areaHeight;
+				return _this5.areaHeight;
 			}).y1(function (d, i) {
-				return _this4.yScale(_this4.units[i]);
+				return _this5.yScale(_this5.units[i]);
 			});
 
 			this.path.datum(this.data).transition().duration(1000).ease('exp').attr('d', this.area).attr('stroke', '#25B3F9').attr('stroke-width', 1).attr('fill', 'rgba(204, 204, 204, .2)');
@@ -24746,7 +24784,7 @@ var Tracker = (function (_React$Component) {
 exports['default'] = Tracker;
 module.exports = exports['default'];
 
-},{"../../node_modules/d3/d3.min":11,"../../node_modules/superagent/lib/client":170,"react":168}],176:[function(require,module,exports){
+},{"../../node_modules/d3/d3.min":11,"../../node_modules/superagent/lib/client":170,"../services/ApiService":178,"react":168}],176:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -24837,6 +24875,66 @@ exports['default'] = $;
 module.exports = exports['default'];
 
 },{}],178:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+	value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var _node_modulesSuperagentLibClient = require('../../node_modules/superagent/lib/client');
+
+var _node_modulesSuperagentLibClient2 = _interopRequireDefault(_node_modulesSuperagentLibClient);
+
+var ApiService = (function () {
+	function ApiService() {
+		_classCallCheck(this, ApiService);
+	}
+
+	_createClass(ApiService, [{
+		key: 'getTodaysFoods',
+		value: function getTodaysFoods() {
+			return _node_modulesSuperagentLibClient2['default'].get('/users/todaysfoods');
+		}
+	}, {
+		key: 'getApiData',
+		value: function getApiData() {
+			return _node_modulesSuperagentLibClient2['default'].get('../../data/mfpapi.json');
+		}
+	}, {
+		key: 'addFood',
+		value: function addFood(food) {
+			return _node_modulesSuperagentLibClient2['default'].put('/users/addfood').set('Accept', 'application/json').send(food);
+		}
+	}, {
+		key: 'removeFood',
+		value: function removeFood(food) {
+			return _node_modulesSuperagentLibClient2['default'].put('/users/deletefood').set('Accept', 'application/json').send(food);
+		}
+	}, {
+		key: 'getUser',
+		value: function getUser() {
+			return _node_modulesSuperagentLibClient2['default'].get('/users/user');
+		}
+	}, {
+		key: 'updateCalories',
+		value: function updateCalories(newDailyPermitted) {
+			return _node_modulesSuperagentLibClient2['default'].put('/users/updatecalories').set('Accept', 'application/json').send(newDailyPermitted);
+		}
+	}]);
+
+	return ApiService;
+})();
+
+exports['default'] = ApiService;
+module.exports = exports['default'];
+
+},{"../../node_modules/superagent/lib/client":170}],179:[function(require,module,exports){
 /**
  * Central application state
  */
@@ -24865,7 +24963,7 @@ var AppState = new _baobab2['default']({
 exports['default'] = AppState;
 module.exports = exports['default'];
 
-},{"baobab":2}],179:[function(require,module,exports){
+},{"baobab":2}],180:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -24899,4 +24997,4 @@ var userCalories = {
 exports.cursors = cursors;
 exports.userCalories = userCalories;
 
-},{"./AppState.js":178}]},{},[176])
+},{"./AppState.js":179}]},{},[176])

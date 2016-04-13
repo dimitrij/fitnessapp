@@ -97,6 +97,10 @@ svg {
         font-size: .6rem;
         width: 240px;
         text-align: left;
+
+        &:last-child {
+            border: 0;
+        }
     }
 
     .legend {

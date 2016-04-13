@@ -585,6 +585,8 @@ svg {
     font-size: .6rem;
     width: 240px;
     text-align: left; }
+    #legend li:last-child {
+      border: 0; }
   #legend .legend {
     height: 4px;
     width: 30px;

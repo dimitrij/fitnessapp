@@ -1,12 +1,11 @@
 import React from 'react';
 import Request from '../../node_modules/superagent/lib/client';
-//import ApiService from '../services/ApiService.js';
+import ApiService from '../services/ApiService';
 import $ from '../js/utils';
 import {cursors, userCalories} from '../services/UserCalories';
 
 
 //Phase 1
-//Get app running on Heroku
 //Change heroku name to my domain name
 //get search data from real API
 
@@ -14,7 +13,6 @@ import {cursors, userCalories} from '../services/UserCalories';
 //$pull only one element from array
 //validation on adding meal
 //add correct calories depending on number of servings
-//ajax calls to ApiService.js
 //move graph below dial, new user's food list below todays food list
 //Gulp workflow, linting, git hooks etc
 //Adapt to use Mongoose?
@@ -35,16 +33,8 @@ let selectedMeal = null,
 	fatTotal = 0,
 	proteinTotal = 0,
 	sodiumTotal = 0,
-	sugarTotal = 0;
-
-/*function resetTotals(){
-	caloriesTotal = 0;
-	carbsTotal = 0;
-	fatTotal = 0;
-	proteinTotal = 0;
-	sodiumTotal = 0;
-	sugarTotal = 0;
-}*/
+	sugarTotal = 0,
+	apiService = new ApiService();
 
 class SearchAPI extends React.Component {
 
@@ -57,7 +47,6 @@ class SearchAPI extends React.Component {
 
 		this.state = {
 			searchResults: [],
-			query : 'init',
 			breakfastList : [],
 			lunchList : [],
 			dinnerList : [],
@@ -79,53 +68,56 @@ class SearchAPI extends React.Component {
 
 		this.query = e.target.value;
 
-		Request
-			.get('../../data/mfpapi.json')
-			.end((err, res) => {
-				if (res.ok) {
-					//will need to send search params to api, and not load all results on keypress
-					let breakfast =  res.body['meals']['breakfast']['food'],
-						lunch =  res.body['meals']['lunch']['food'],
-						dinner =  res.body['meals']['dinner']['food'],
-						snacks =  res.body['meals']['snacks']['food'],
-						foods = breakfast.concat(lunch.concat(dinner.concat(snacks)));
-
-					this.setState({
-						searchResults : foods,
-						query : this.query
-					});
-
-					searching = false;
-
-				}  else {
-					console.log('error');
-				}
-		})
+		apiService.getApiData().end((err, res)=>{
+			this.getApiDataCallback(err, res);
+		});
 	}
 
 	getTodaysFoods(){
 		searching = false;
+		apiService.getTodaysFoods().end((err, res)=>{
+			this.todaysFoodsCallback(err, res);
+		});
+	}
 
-		Request
-			.get('/users/todaysfoods')
-			.end((err, res)=> {
-				if (res.ok){
-					this.meals = res.body;
+	getApiDataCallback(err, res){
+		if (res.ok) {
+			//will need to send search params to api, and not load all results on keypress
+			let breakfast =  res.body['meals']['breakfast']['food'],
+				lunch =  res.body['meals']['lunch']['food'],
+				dinner =  res.body['meals']['dinner']['food'],
+				snacks =  res.body['meals']['snacks']['food'],
+				foods = breakfast.concat(lunch.concat(dinner.concat(snacks)));
 
-					if(this.meals && this.meals[0]){
-						this.setState({
-							breakfastList : this.meals[0]['meals']['breakfast']['food'],
-							lunchList : this.meals[0]['meals']['lunch']['food'],
-							dinnerList : this.meals[0]['meals']['dinner']['food'],
-							snacksList : this.meals[0]['meals']['snacks']['food'],
-							foodsList : this.meals[0]['meals']['breakfast']['food'].concat(this.meals[0]['meals']['lunch']['food'].concat(this.meals[0]['meals']['dinner']['food'].concat(this.meals[0]['meals']['snacks']['food'])))
-						});
-					}
-
-				} else{
-					console.log('error');
-				}
+			this.setState({
+				searchResults : foods,
+				query : this.query
 			});
+
+			searching = false;
+
+		}  else {
+			console.log(err);
+		}
+	}
+
+	todaysFoodsCallback(err, res){
+		if (res.ok){
+			this.meals = res.body;
+
+			if(this.meals && this.meals[0]){
+				this.setState({
+					breakfastList : this.meals[0]['meals']['breakfast']['food'],
+					lunchList : this.meals[0]['meals']['lunch']['food'],
+					dinnerList : this.meals[0]['meals']['dinner']['food'],
+					snacksList : this.meals[0]['meals']['snacks']['food'],
+					foodsList : this.meals[0]['meals']['breakfast']['food'].concat(this.meals[0]['meals']['lunch']['food'].concat(this.meals[0]['meals']['dinner']['food'].concat(this.meals[0]['meals']['snacks']['food'])))
+				});
+			}
+
+		} else{
+			console.log(err);
+		}
 	}
 
 	render(){
@@ -175,20 +167,21 @@ class ApiSearchResults extends React.Component {
 	}
 
 	addFood(food){
-		//resetTotals();
 
-		food['meal'] = selectedMeal ;
-		Request
-			.put('/users/addfood')
-			.set('Accept', 'application/json')
-			.send(food)
-			.end((err, res) => {
-				if (res.ok){
-					this.props.todaysFoods();
-				} else{
-					console.log('error');
-				}
-			});
+		food['meal'] = selectedMeal;
+
+		apiService.addFood(food).end((err, res) => {
+			this.addFoodCallback(err, res);
+		});
+
+	}
+
+	addFoodCallback(err, res){
+		if (res.ok){
+			this.props.todaysFoods();
+		} else {
+			console.log(err);
+		}
 	}
 
 	render(){
@@ -277,17 +270,18 @@ class Meal extends React.Component {
 	removeFood(food, meal){
 
 		food['meal'] = meal;
-		Request
-			.put('/users/deletefood')
-			.set('Accept', 'application/json')
-			.send(food)
-			.end((err, res) => {
-				if (res.ok){
-					this.props.todaysFoods();
-				} else{
-					console.log('error');
-				}
-			});
+
+		apiService.removeFood(food).end((err, res) => {
+			this.removeFoodCallback(err, res);
+		});
+	}
+
+	removeFoodCallback(err, res){
+		if (res.ok){
+			this.props.todaysFoods();
+		} else {
+			console.log(err);
+		}
 	}
 
 	resetTotals(){
