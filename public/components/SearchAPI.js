@@ -6,7 +6,6 @@ import {cursors, userCalories} from '../services/UserCalories';
 
 
 //Phase 1
-//Change heroku name to my domain name
 //get search data from real API
 
 //new db table for all user's previously selected foods, and related UI search
@@ -15,6 +14,7 @@ import {cursors, userCalories} from '../services/UserCalories';
 //add correct calories depending on number of servings
 //move graph below dial, new user's food list below todays food list
 //Gulp workflow, linting, git hooks etc
+//fix weight chart bugs
 //Adapt to use Mongoose?
 
 //Phase 2
@@ -53,6 +53,17 @@ class SearchAPI extends React.Component {
 			snacksList : [],
 			foodsList : []
 		};
+
+		/*var encodedStr = 'http://platform.fatsecret.com/rest/server.api?food_id=33691&method=food.get&oauth_consumer_key=4d662c4b8b394fd290ae2fbacf2bd1bf&oauth_nonce=1234&oauth_signature_method=HMAC-SHA1&oauth_timestamp=1245126631&oauth_version=1.0'
+
+		Request.get(encodedStr).end((err, res)=>{
+			if (res.ok){
+				console.log('res', res)
+
+			} else{
+				console.log(err);
+			}
+		})*/
 
 		this.getTodaysFoods();
 	}
@@ -228,8 +239,8 @@ class FoodList extends React.Component {
 	render(){
 		return (
 			<div>
-				<ul className="selected-foods">
-					<li className="headers clearfix">
+				<ul className="selected-foods headers">
+					<li className="clearfix">
 						<span> </span>
 						<span>Cals</span>
 						<span>Carbs</span>
@@ -241,23 +252,27 @@ class FoodList extends React.Component {
 					</li>
 				</ul>
 
-				<Meal items={this.props.breakfastList}
-					todaysFoods={this.props.todaysFoods}
-					meal="breakfast"/>
+				<div className="selected-foods-container">
 
-				<Meal items={this.props.lunchList}
-					todaysFoods={this.props.todaysFoods}
-					meal="lunch"/>
+					<Meal items={this.props.breakfastList}
+						todaysFoods={this.props.todaysFoods}
+						meal="breakfast"/>
 
-				<Meal items={this.props.dinnerList}
-					todaysFoods={this.props.todaysFoods}
-					meal="dinner"/>
+					<Meal items={this.props.lunchList}
+						todaysFoods={this.props.todaysFoods}
+						meal="lunch"/>
 
-				<Meal items={this.props.snacksList}
-					todaysFoods={this.props.todaysFoods}
-					meal="snacks"/>
+					<Meal items={this.props.dinnerList}
+						todaysFoods={this.props.todaysFoods}
+						meal="dinner"/>
 
-				<MealTotals	foods={this.props.foodsList}/>
+					<Meal items={this.props.snacksList}
+						todaysFoods={this.props.todaysFoods}
+						meal="snacks"/>
+
+					<MealTotals	foods={this.props.foodsList}/>
+
+				</div>
 
 			</div>
 
@@ -306,7 +321,7 @@ class Meal extends React.Component {
 					sodiumTotal += food.sodium;
 					sugarTotal += food.sugar;
 
-					return <li className="clearfix">
+					return <li className="clearfix" key={food.name}>
 						<span className="food-name" title={food.name}>{food.name}</span>
 						<span>{food.calories}</span>
 						<span>{food.carbs}</span>

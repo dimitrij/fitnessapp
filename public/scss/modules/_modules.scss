@@ -253,8 +253,29 @@ svg {
         }
     }
 
-    .selected-foods {
+    .selected-foods-container {
+        max-height: 300px;
+        overflow: auto;
         width: 50%;
+    }
+
+    .selected-foods {
+
+        &.headers {
+            width: 50%;
+
+            li {
+                background-color: #fbfbfb;
+
+                span {
+                    display: inline-block;
+
+                    &:last-child {
+                        width: auto;
+                    }
+                }
+            }
+        }
 
         h2 {
             position: static;
@@ -263,18 +284,6 @@ svg {
             margin: 10px 10px 2px;
             text-transform: uppercase;
             font-weight: normal;
-        }
-
-        .headers {
-            background-color: #fbfbfb;
-
-            span {
-                display: inline-block;
-
-                &:last-child {
-                    width: auto;
-                }
-            }
         }
 
         li {
@@ -294,7 +303,7 @@ svg {
                 padding: 5px;
                 float: left;
                 font-size: .6rem;
-                width: 8%;
+                width: 7.5%;
                 text-align: center;
 
                 &:first-child {

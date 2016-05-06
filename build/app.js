@@ -23882,16 +23882,15 @@ var _jsUtils2 = _interopRequireDefault(_jsUtils);
 var _servicesUserCalories = require('../services/UserCalories');
 
 //Phase 1
-//Change heroku name to my domain name
 //get search data from real API
 
-//ajax calls to ApiService.js
 //new db table for all user's previously selected foods, and related UI search
 //$pull only one element from array
 //validation on adding meal
 //add correct calories depending on number of servings
 //move graph below dial, new user's food list below todays food list
 //Gulp workflow, linting, git hooks etc
+//fix weight chart bugs
 //Adapt to use Mongoose?
 
 //Phase 2
@@ -23933,6 +23932,15 @@ var SearchAPI = (function (_React$Component) {
 			snacksList: [],
 			foodsList: []
 		};
+
+		/*var encodedStr = 'http://platform.fatsecret.com/rest/server.api?food_id=33691&method=food.get&oauth_consumer_key=4d662c4b8b394fd290ae2fbacf2bd1bf&oauth_nonce=1234&oauth_signature_method=HMAC-SHA1&oauth_timestamp=1245126631&oauth_version=1.0'
+  	Request.get(encodedStr).end((err, res)=>{
+  	if (res.ok){
+  		console.log('res', res)
+  		} else{
+  		console.log(err);
+  	}
+  })*/
 
 		this.getTodaysFoods();
 	}
@@ -24173,10 +24181,10 @@ var FoodList = (function (_React$Component3) {
 				null,
 				_react2['default'].createElement(
 					'ul',
-					{ className: 'selected-foods' },
+					{ className: 'selected-foods headers' },
 					_react2['default'].createElement(
 						'li',
-						{ className: 'headers clearfix' },
+						{ className: 'clearfix' },
 						_react2['default'].createElement(
 							'span',
 							null,
@@ -24219,19 +24227,23 @@ var FoodList = (function (_React$Component3) {
 						)
 					)
 				),
-				_react2['default'].createElement(Meal, { items: this.props.breakfastList,
-					todaysFoods: this.props.todaysFoods,
-					meal: 'breakfast' }),
-				_react2['default'].createElement(Meal, { items: this.props.lunchList,
-					todaysFoods: this.props.todaysFoods,
-					meal: 'lunch' }),
-				_react2['default'].createElement(Meal, { items: this.props.dinnerList,
-					todaysFoods: this.props.todaysFoods,
-					meal: 'dinner' }),
-				_react2['default'].createElement(Meal, { items: this.props.snacksList,
-					todaysFoods: this.props.todaysFoods,
-					meal: 'snacks' }),
-				_react2['default'].createElement(MealTotals, { foods: this.props.foodsList })
+				_react2['default'].createElement(
+					'div',
+					{ className: 'selected-foods-container' },
+					_react2['default'].createElement(Meal, { items: this.props.breakfastList,
+						todaysFoods: this.props.todaysFoods,
+						meal: 'breakfast' }),
+					_react2['default'].createElement(Meal, { items: this.props.lunchList,
+						todaysFoods: this.props.todaysFoods,
+						meal: 'lunch' }),
+					_react2['default'].createElement(Meal, { items: this.props.dinnerList,
+						todaysFoods: this.props.todaysFoods,
+						meal: 'dinner' }),
+					_react2['default'].createElement(Meal, { items: this.props.snacksList,
+						todaysFoods: this.props.todaysFoods,
+						meal: 'snacks' }),
+					_react2['default'].createElement(MealTotals, { foods: this.props.foodsList })
+				)
 			);
 		}
 	}]);
@@ -24305,7 +24317,7 @@ var Meal = (function (_React$Component4) {
 
 					return _react2['default'].createElement(
 						'li',
-						{ className: 'clearfix' },
+						{ className: 'clearfix', key: food.name },
 						_react2['default'].createElement(
 							'span',
 							{ className: 'food-name', title: food.name },

@@ -689,52 +689,56 @@ svg {
         border: 0; }
       #search .item li:hover, #search .item li.active {
         color: #25B3F9; }
-  #search .selected-foods {
+  #search .selected-foods-container {
+    max-height: 300px;
+    overflow: auto;
     width: 50%; }
-    #search .selected-foods h2 {
-      position: static;
-      font-size: .6rem;
-      text-align: left;
-      margin: 10px 10px 2px;
-      text-transform: uppercase;
-      font-weight: normal; }
-    #search .selected-foods .headers {
+  #search .selected-foods.headers {
+    width: 50%; }
+    #search .selected-foods.headers li {
       background-color: #fbfbfb; }
-      #search .selected-foods .headers span {
+      #search .selected-foods.headers li span {
         display: inline-block; }
-        #search .selected-foods .headers span:last-child {
+        #search .selected-foods.headers li span:last-child {
           width: auto; }
-    #search .selected-foods li {
-      font-size: .7rem;
-      border-bottom: 1px solid #ddd;
-      padding: 5px; }
-      #search .selected-foods li.totals:last-child {
-        xborder-top: 1px solid #ddd; }
-      #search .selected-foods li.totals span {
-        font-weight: bold; }
-      #search .selected-foods li span {
-        padding: 5px;
-        float: left;
-        font-size: .6rem;
-        width: 8%;
-        text-align: center; }
-        #search .selected-foods li span:first-child {
-          width: 32%;
-          text-align: left; }
-      #search .selected-foods li .food-name {
-        padding-left: 10px;
-        width: 52%;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis; }
-      #search .selected-foods li .remove {
-        background-color: #25B3F9;
-        color: #fff;
-        border: 0;
-        border-radius: 5px;
-        box-shadow: 1px 1px 2px #ececec;
-        cursor: pointer;
-        width: auto; }
+  #search .selected-foods h2 {
+    position: static;
+    font-size: .6rem;
+    text-align: left;
+    margin: 10px 10px 2px;
+    text-transform: uppercase;
+    font-weight: normal; }
+  #search .selected-foods li {
+    font-size: .7rem;
+    border-bottom: 1px solid #ddd;
+    padding: 5px; }
+    #search .selected-foods li.totals:last-child {
+      xborder-top: 1px solid #ddd; }
+    #search .selected-foods li.totals span {
+      font-weight: bold; }
+    #search .selected-foods li span {
+      padding: 5px;
+      float: left;
+      font-size: .6rem;
+      width: 7.5%;
+      text-align: center; }
+      #search .selected-foods li span:first-child {
+        width: 32%;
+        text-align: left; }
+    #search .selected-foods li .food-name {
+      padding-left: 10px;
+      width: 52%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis; }
+    #search .selected-foods li .remove {
+      background-color: #25B3F9;
+      color: #fff;
+      border: 0;
+      border-radius: 5px;
+      box-shadow: 1px 1px 2px #ececec;
+      cursor: pointer;
+      width: auto; }
 
 .tip {
   fill: #25B3F9;
