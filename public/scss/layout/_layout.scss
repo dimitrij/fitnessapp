@@ -1,3 +1,10 @@
+
+#content {
+    float:left;
+    width: calc(100% - 250px);
+    background-color: #354D5B;
+}
+
 #charting {
     width: 1100px;
     margin: 60px auto;
@@ -7,21 +14,27 @@
 }
 
 #chart {
-    text-align: center;
+    padding: 50px 0 50px 50px;
+    margin-right: 50px;
 }
 
 #weight-tracker {
     text-align: center;
-    border-radius: 3px;
+    border-radius: 2px;
     background-color: #f7f7f7;
     display: inline-block;
     position: relative;
     vertical-align: top;
+
+    h1 {
+        color: #408E7C;
+    }
 }
 
 #calories {
     position: relative;
     display: inline-block;
+    margin-right: 50px;
 }
 
 #search-api-container {

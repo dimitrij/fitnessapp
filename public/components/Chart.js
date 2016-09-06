@@ -7,8 +7,8 @@ class Chart extends React.Component{
 	render(){
 		return (
 			<div id="chart" className="clearfix">
-				<Tracker/>
 				<Dial/>
+				<Tracker/>
 			</div>
 		);
 	}

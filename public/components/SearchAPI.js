@@ -4,28 +4,6 @@ import ApiService from '../services/ApiService';
 import $ from '../js/utils';
 import {cursors, userCalories} from '../services/UserCalories';
 
-
-//Phase 1
-//get search data from real API
-
-//new db table for all user's previously selected foods, and related UI search
-//$pull only one element from array
-//validation on adding meal
-//add correct calories depending on number of servings
-//move graph below dial, new user's food list below todays food list
-//Gulp workflow, linting, git hooks etc
-//fix weight chart bugs
-//Adapt to use Mongoose?
-
-//Phase 2
-//User registration / log in functionality
-
-//Phase 3
-//Adding exercises / calories burned etc
-
-//Ohase 4
-//Activate weight history graph per user
-
 let selectedMeal = null,
 	searching = false,
 	caloriesTotal = 0,
@@ -42,8 +20,6 @@ class SearchAPI extends React.Component {
 		super();
 		this.searchApi = this.searchApi.bind(this);
 		this.getTodaysFoods = this.getTodaysFoods.bind(this);
-		const apiUrl = 'http://api.exchangeratelab.com/api/current/GBP?apikey=';
-		const apiKey = 'F06383D65BCBFF52629D059B7D3EEB7D&callback=JSON_CALLBACK';
 
 		this.state = {
 			searchResults: [],
@@ -53,17 +29,6 @@ class SearchAPI extends React.Component {
 			snacksList : [],
 			foodsList : []
 		};
-
-		/*var encodedStr = 'http://platform.fatsecret.com/rest/server.api?food_id=33691&method=food.get&oauth_consumer_key=4d662c4b8b394fd290ae2fbacf2bd1bf&oauth_nonce=1234&oauth_signature_method=HMAC-SHA1&oauth_timestamp=1245126631&oauth_version=1.0'
-
-		Request.get(encodedStr).end((err, res)=>{
-			if (res.ok){
-				console.log('res', res)
-
-			} else{
-				console.log(err);
-			}
-		})*/
 
 		this.getTodaysFoods();
 	}

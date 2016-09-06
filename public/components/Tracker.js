@@ -198,7 +198,7 @@ class Tracker extends React.Component {
 			.duration(1000)
 			.ease('exp')
 			.attr('d', this.area)
-			.attr('stroke', '#25B3F9')
+			.attr('stroke', '#429A86')
 			.attr('stroke-width', 1)
 			.attr('fill', 'rgba(204, 204, 204, .2)');
 	}
