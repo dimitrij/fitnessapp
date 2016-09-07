@@ -21,13 +21,13 @@
 #weight-tracker {
     text-align: center;
     border-radius: 2px;
-    background-color: #f7f7f7;
+    background-color: #5FB9A5;
     display: inline-block;
     position: relative;
     vertical-align: top;
 
     h1 {
-        color: #408E7C;
+        color: $white;
     }
 }
 
@@ -39,7 +39,6 @@
 
 #search-api-container {
     clear: both;
-    width: 950px;
-    text-align: center;
     margin: 0 auto;
+    padding: 0 50px 50px;
 }

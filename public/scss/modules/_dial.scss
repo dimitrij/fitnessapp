@@ -10,8 +10,8 @@
     background-color: transparent;
     padding: 4px 8px;
     position: absolute;
-    left: 8px;
-    top: 250px;
+    left: 150px;
+    top: 148px;
     font-size: 2.8rem;
     cursor: pointer;
     z-index: 15;
@@ -24,10 +24,14 @@
 }
 
 #daily-permitted-text {
-    top:230px;
+    top: 132px;
+    left: 142px;
+    font-weight: bold;
+    letter-spacing: .5px;
     font-size: .8rem;
     cursor: text;
     text-align: left;
+    color: #E0F6FF;
 }
 
 #calories-remaining-text {

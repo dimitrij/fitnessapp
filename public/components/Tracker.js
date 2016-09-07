@@ -13,8 +13,8 @@ class Tracker extends React.Component {
 		this.selectYear = this.selectYear.bind(this);
 		this.margin = {top: 90, bottom: 20, left: 40, right: 40};
 		this.w = 450;
-		this.h = 300;
-		this.areaHeight = 300;
+		this.h = 164;
+		this.areaHeight = 240;
 		this.dates = [];
 		this.kgs = [];
 		this.lbs = [];
@@ -102,12 +102,12 @@ class Tracker extends React.Component {
 
 		this.path = this.svg.append('g')
 			.attr('id', 'path')
-			.attr('transform', 'translate(40, 70)')
+			.attr('transform', 'translate(40, 10)')
 			.append('path')
 
 		this.svg.append('g')
 			.attr('class', 'x axis')
-			.attr('transform', 'translate(40, '+ (this.h+70) + ')')
+			.attr('transform', 'translate(40, '+ (this.h+86) + ')')
 			.call(this.xAxis);
 
 		this.svg.append('g')
@@ -143,7 +143,7 @@ class Tracker extends React.Component {
 			.data(this.data)
 			.enter()
 			.append('circle')
-			.attr('transform', 'translate(40, 70)')
+			.attr('transform', 'translate(40, 10)')
 			.attr('class', 'bubble')
 			.attr('cx', (d, i) => this.xScale(this.dates[i]))
 			.attr('cy', (d, i) => this.areaHeight)
@@ -155,7 +155,7 @@ class Tracker extends React.Component {
 				this.yScale = d3.scale.linear()
 					.domain(d3.extent(this.units))
 					.range([this.h, 0]);
-				this.toggleToolTip(true, this.xScale(this.dates[i]), this.yScale(this.units[i]), this.dates[i], this.units[i])
+				this.toggleToolTip(true, this.xScale(this.dates[i]), (circle.attr('cy')-40), this.dates[i], this.units[i])
 			})
 			.on('mouseout', (d, i) => {
 				var circle = d3.select(this.svg[0][0].childNodes[i+5]);
@@ -200,7 +200,7 @@ class Tracker extends React.Component {
 			.attr('d', this.area)
 			.attr('stroke', '#429A86')
 			.attr('stroke-width', 1)
-			.attr('fill', 'rgba(204, 204, 204, .2)');
+			.attr('fill', 'rgba(204, 204, 204, .4)');
 	}
 
 	toggleYAxes(){
@@ -208,7 +208,7 @@ class Tracker extends React.Component {
 
 		this.yScale = d3.scale.linear()
 			.domain(d3.extent(this.units))
-			.range([this.h, 0]);
+			.range([240, 0]);
 
 		this.yAxis = d3.svg.axis()
 			.scale(this.yScale)
@@ -216,27 +216,28 @@ class Tracker extends React.Component {
 
 		this.svg.append('g')
 			.attr('class', 'y axis currentY')
-			.attr('transform', 'translate(40, 70)')
+			.attr('transform', 'translate(40, 10)')
 			.call(this.yAxis);
 
 		this.svg.append("g")
 			.attr("class", "y grid currentY")
 			.attr('id', '#grid')
-			.attr('transform', 'translate(40, 70)')
+			.attr('transform', 'translate(40, 10)')
 
 			.call(this.yGridLine()
 				.tickSize(-this.w, 0, 0)
 				.tickFormat("")
 		);
 
-		d3.selectAll('.currentY').transition().style('opacity' , 1);
+		d3.selectAll('.axis.currentY').transition().style('opacity' , 1);
+		d3.selectAll('.grid.currentY').transition().style('opacity' ,.5);
 	}
 
 	toggleToolTip(b, xVal, yVal, date, weight){
 		date = String(date).substr(4, 11);
 		if(b){
 			d3.select('#tooltip')
-				.attr('transform', 'translate(' + (xVal + 5) + ',' + (yVal + 20) + ')')
+				.attr('transform', 'translate(' + (xVal + 5) + ',' + (yVal) + ')')
 				.classed('active', true);
 
 			d3.selectAll('.content text').remove();

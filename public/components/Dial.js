@@ -17,7 +17,7 @@ class Dial extends React.Component{
 		super();
 		this.rerenderDailyPermitted = this.rerenderDailyPermitted.bind(this);
 		this.width = 420;
-		this.height = 400;
+		this.height = 240;
 		this.date = new Date();
 		this.month = this.date.getMonth() + 1 < 10 ? '0' + (this.date.getMonth() + 1) : this.date.getMonth() + 1;
 		this.today = String(this.parseDate(this.date.getFullYear() + '' + this.month + '' + this.date.getDate())).substr(4, 11);
@@ -59,7 +59,7 @@ class Dial extends React.Component{
 			.attr('width', this.width)
 			.attr('height', this.height)
 			.append('g').attr('id', 'dial-container')
-			.attr('transform', 'translate(' + (this.centreX + 80) + ',' + this.centreY + ')');
+			.attr('transform', 'translate(' + (this.centreX) + ',' + 110 + ')');
 
 		cursors.consumedCalories.on('update', () => {
 			if(document.querySelector('#dial-container')){
@@ -117,11 +117,7 @@ class Dial extends React.Component{
 		return (
 			<div id="calories">
 				<h1>Today's calories</h1>
-				<Legend dataCurrentConsumed={this.state.dataCurrentConsumed}
-						dataCaloriesBurned={this.state.dataCaloriesBurned}
-						dataExcessConsumed={this.state.dataExcessConsumed} />
-
-				<div className="user-stats"></div>
+				{/*<div className="user-stats"></div>*/}
 				{/*<Calories data={{id : 'calories-burned', dataTotalCals :this.state.dataTotalCals, consumed : this.state.dataCaloriesBurned, innerRadius : 65, outerRadius : 95, bgColour: '#e9e9e9', fgColour : '#7FBB5B', circ : this.circ}} />*/}
 				<Calories data={{id : 'current-consumed', dataTotalCals :this.state.dataTotalCals, consumed : this.state.dataCurrentConsumed, innerRadius : 90, outerRadius : 105, bgColour: '#7CBDD7', fgColour : '#ffffff', circ : this.circ}} />
 				<Calories data={{id : 'excess-consumed', dataTotalCals :this.state.dataTotalCals, consumed : this.state.dataExcessConsumed, innerRadius : 65, outerRadius : 90, bgColour: '#7CBDD7', fgColour : '#CE392B', circ : this.circ}}/>
@@ -130,6 +126,9 @@ class Dial extends React.Component{
 				<input type="text" ref="dailyPermitted" id="daily-permitted"
 					   onChange={this.debounce(this.rerenderDailyPermitted, 800)}
 					   defaultValue="" />
+				<Legend dataCurrentConsumed={this.state.dataCurrentConsumed}
+						dataCaloriesBurned={this.state.dataCaloriesBurned}
+						dataExcessConsumed={this.state.dataExcessConsumed} />
 			</div>
 		);
 	}

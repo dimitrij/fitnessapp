@@ -4,12 +4,11 @@
 }
 
 .tip.active {
-    fill:#25B3F9;
+    fill:#fff;
     stroke-width: 0;
     opacity: 1;
     width: 80px;
     height: 40px;
-    mask: url(#dropshadow);
     box-shadow: 1px 2px 1px #333;
 }
 
@@ -22,11 +21,11 @@
 
 .tip .date {
     font-size: 10px;
-    fill: #fff;
+    fill: #429A86;
 }
 
 .tip .weight {
     font-size: 12px;
     font-weight: bold;
-    fill: #B2D682;
+    fill: #5FB9A5;
 }

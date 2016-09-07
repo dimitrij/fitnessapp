@@ -46,9 +46,9 @@ nav {
 }
 
 h1 {
-    padding: 20px;
+    padding: 10px 20px;
     margin: 0;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     text-align: left;
     font-weight: normal;
 
@@ -59,18 +59,34 @@ h1 {
         font-size: 1rem;
         letter-spacing: 1px;
         width: auto;
+
+
     }
 }
 
 #calories {
+    background-color: #5CAECE;
+
     h1 {
         background-color: #5CAECE;
+        border-bottom: 1px solid #3D92B6;
+        padding-bottom: 10px;
+        margin: 0 10px 10px 10px;
     }
 
     svg {
         z-index: 10;
         position: relative;
         background-color: #5CAECE;
+    }
+}
+
+#weight-tracker {
+
+    h1 {
+        border-bottom: 1px solid #429A86;
+        padding-bottom: 10px;
+        margin: 0 10px 10px 10px;
     }
 }
 
@@ -87,23 +103,23 @@ h2 {
 }
 
 #radios {
-    text-align: center;
-    left: 45px;
-    top: -28px;
+    height: 70px;
+    background-color: #429A86;
 
     input {
         margin-right: 6px;
     }
-}
 
-#radios label {
-    margin:3px;
-    display: inline-block;
-}
+    label {
+        margin:3px;
+        display: inline-block;
+        font-size: .9rem;
+        line-height: 64px;
+    }
 
-#radios .year {
-    border-right: 1px solid #888;
-    padding-right: 10px;
+    .year {
+        padding-right: 10px;
+    }
 }
 
 p {
@@ -116,10 +132,11 @@ p {
     font-size: .5rem;
 }
 
-svg {
-    background-color: #f7f7f7;
-    border-radius: 2px;
+#svg {
+    background-color: #5FB9A5;
+    border-radius: 0;
     margin: 0;
+    overflow: visible;
 }
 
 .user-stats {
@@ -132,21 +149,33 @@ svg {
 }
 
 #legend {
-
     position: absolute;
-    padding: 0;
-    margin-top: 87px;
+    top: 298px;
+    width: calc(100% - 40px);
+    background-color: #3D92B6;
+    padding: 20px;
 
     li {
-        border-bottom: 1px solid #ddd;
-        padding-bottom: 5px;
-        margin-bottom: 5px;
+        padding: 5px 10px;
         font-size: .6rem;
-        width: 240px;
+        width: 190px;
         text-align: left;
+        background-color: #72C6E5;
+        border-radius: 0;
+        letter-spacing: 1px;
+
+        &:first-child {
+            border-radius: 2px 2px 0 0;
+        }
 
         &:last-child {
-            border: 0;
+            border-radius: 0 0 2px 2px;
+            position: absolute;
+            top: 12px;
+            right: 0;
+            background-color: transparent;
+            color: #E0F6FF;
+            width: 160px;
         }
     }
 
@@ -159,11 +188,11 @@ svg {
     }
 
     .blue {
-        background-color: #25B3F9;
+        background-color: #fff;
     }
 
     .green {
-        background-color: #7FBB5B;
+        background-color: #8F4DAE;
     }
 
     .red {
@@ -172,20 +201,22 @@ svg {
 
     .amount {
         float: right;
-        color: #000;
         font-weight: bold;
-        letter-spacing: .5px;
+        letter-spacing: 1px;
     }
 
     p {
-        font-size: .6rem;
-        color: #0096E0;
+        font-size: 0.8rem;
+        margin: 0;
     }
 }
 
 #search {
     text-align: left;
     position: relative;
+    width: 50%;
+    background-color: $white;
+    color: #444;
 
     input {
         border: 0;
@@ -194,7 +225,19 @@ svg {
         padding: 10px 0 10px 12px;
         background-color: #fbfbfb;
         font-size: 1rem;
-        width: 49%;
+        width: calc(100% - 12px);
+    }
+
+    input::-webkit-input-placeholder {
+        color:#429A86;
+    }
+
+    input::-moz-placeholder {
+        color:#429A86;
+    }
+
+    input:-ms-input-placeholder {
+        color:#429A86;
     }
 
     .results {
@@ -303,19 +346,19 @@ svg {
     .selected-foods-container {
         max-height: 300px;
         overflow: auto;
-        width: 50%;
     }
 
     .selected-foods {
 
         &.headers {
-            width: 50%;
 
             li {
                 background-color: #fbfbfb;
 
                 span {
                     display: inline-block;
+                    font-size: .7rem;
+                    color: #429A86;
 
                     &:last-child {
                         width: auto;
@@ -326,11 +369,12 @@ svg {
 
         h2 {
             position: static;
-            font-size: .6rem;
+            font-size: .8rem;
             text-align: left;
             margin: 10px 10px 2px;
             text-transform: uppercase;
             font-weight: normal;
+            color: #429A86;
         }
 
         li {
@@ -368,13 +412,17 @@ svg {
             }
 
             .remove{
-                background-color: #25B3F9;
+                background-color: #53C0A8;
                 color: #fff;
                 border: 0;
-                border-radius: 5px;
+                border-radius: 2px;
                 box-shadow: 1px 1px 2px #ececec;
                 cursor: pointer;
-                width: auto;
+                width: 20px;
+
+                &:hover {
+                    background-color: #429A86
+                }
             }
         }
     }
