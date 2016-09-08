@@ -538,14 +538,14 @@ nav ul {
       background-color: #23333E;
       height: 39px;
       border: 0;
-      padding: 20px 10px 10px 60px;
+      padding: 40px 10px 22px 60px;
       cursor: default; }
       nav ul li.user img {
         -webkit-clip-path: circle(20px at center);
         width: 40px;
         position: absolute;
         left: 8px;
-        top: 10px; }
+        top: 28px; }
       nav ul li.user span {
         display: block;
         font-size: .6rem; }
@@ -554,11 +554,22 @@ nav ul {
       margin-left: 5px; }
 
 .updates {
-  height: 30px;
   line-height: 30px;
+  height: 60px;
   background-color: #8F4DAE;
   padding-left: 30px;
-  font-size: .8rem; }
+  font-size: .8rem;
+  transition: height .2s; }
+  .updates span {
+    display: block;
+    opacity: 1;
+    height: 60px;
+    transition: opacity .2s; }
+  .updates.hidden {
+    height: 30px; }
+    .updates.hidden span {
+      opacity: 0;
+      height: 0; }
 
 h1 {
   padding: 10px 20px;
@@ -573,6 +584,8 @@ h1 {
     font-size: 1rem;
     letter-spacing: 1px;
     width: auto; }
+    h1.page-title .fa {
+      font-size: 1.3rem; }
 
 #calories {
   background-color: #5CAECE; }
@@ -850,6 +863,8 @@ p {
     font-size: .7rem;
     border-bottom: 1px solid #ddd;
     padding: 5px; }
+    #search .selected-foods li:hover {
+      background-color: #f9f9f9; }
     #search .selected-foods li.totals:last-child {
       xborder-top: 1px solid #ddd; }
     #search .selected-foods li.totals span {
@@ -871,7 +886,7 @@ p {
       overflow: hidden;
       text-overflow: ellipsis; }
     #search .selected-foods li .remove {
-      background-color: #53C0A8;
+      background-color: #429A86;
       color: #fff;
       border: 0;
       border-radius: 2px;
@@ -880,7 +895,7 @@ p {
       width: 6%;
       font-weight: bold; }
       #search .selected-foods li .remove:hover {
-        background-color: #429A86; }
+        background-color: #53C0A8; }
 
 .tip {
   fill: #25B3F9;

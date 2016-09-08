@@ -21,6 +21,9 @@ class Tracker extends React.Component {
 		this.selectedUnit = 'kg';
 		this.selectedYear = '2014';
 		this.getData(true);
+		setTimeout(()=>{
+			document.querySelector('.updates').classList.add('hidden');
+		}, 12000)
 	}
 
 	static parseDate(date){

@@ -218,7 +218,7 @@ class FoodList extends React.Component {
 				<ul className="selected-foods headers">
 					<li className="clearfix">
 						<span> </span>
-						<span>Cals</span>
+						<span>Calories</span>
 						<span>Carbs</span>
 						<span>Fat</span>
 						<span>Protein</span>

@@ -49,6 +49,7 @@ class Calories extends React.Component{
 
 		this.arcTween = (transition, newAngle) => {
 			transition.attrTween('d', (d) => {
+				console.log('angle', d.endAngle, newAngle)
 				var interpolate = d3.interpolate(d.endAngle, newAngle);
 				return (t) => {
 					d.endAngle = interpolate(t);

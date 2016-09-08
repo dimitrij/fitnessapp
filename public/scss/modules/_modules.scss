@@ -18,7 +18,7 @@ nav {
                 background-color: #23333E;
                 height: 39px;
                 border: 0;
-                padding: 20px 10px 10px 60px;
+                padding: 40px 10px 22px 60px;
                 cursor: default;
 
                 img {
@@ -26,7 +26,7 @@ nav {
                     width: 40px;
                     position: absolute;
                     left: 8px;
-                    top: 10px;
+                    top: 28px;
                 }
 
                 span {
@@ -45,11 +45,28 @@ nav {
 }
 
 .updates {
-    height: 30px;
     line-height: 30px;
+    height: 60px;
     background-color: #8F4DAE;
     padding-left: 30px;
     font-size: .8rem;
+    transition: height .2s;
+
+    span {
+        display: block;
+        opacity: 1;
+        height: 60px;
+        transition: opacity .2s;
+    }
+
+    &.hidden {
+        height: 30px;
+
+        span {
+            opacity: 0;
+            height: 0;
+        }
+    }
 }
 
 h1 {
@@ -67,6 +84,9 @@ h1 {
         letter-spacing: 1px;
         width: auto;
 
+        .fa {
+            font-size: 1.3rem;
+        }
 
     }
 }
@@ -468,6 +488,10 @@ p {
             border-bottom: 1px solid #ddd;
             padding: 5px;
 
+            &:hover {
+                background-color: #f9f9f9;
+            }
+
             &.totals:last-child {
                 xborder-top: 1px solid #ddd;
             }
@@ -499,7 +523,7 @@ p {
             }
 
             .remove{
-                background-color: #53C0A8;
+                background-color: #429A86;
                 color: #fff;
                 border: 0;
                 border-radius: 2px;
@@ -509,7 +533,7 @@ p {
                 font-weight: bold;
 
                 &:hover {
-                    background-color: #429A86
+                    background-color: #53C0A8;
                 }
             }
         }
