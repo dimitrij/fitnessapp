@@ -12,7 +12,7 @@ class Tracker extends React.Component {
 		this.selectUnit = this.selectUnit.bind(this);
 		this.selectYear = this.selectYear.bind(this);
 		this.margin = {top: 90, bottom: 20, left: 40, right: 40};
-		this.w = 450;
+		this.w = 520;
 		this.h = 164;
 		this.areaHeight = 240;
 		this.dates = [];
@@ -265,11 +265,27 @@ class Tracker extends React.Component {
 			<div id="weight-tracker">
 				<h1>Weight history</h1>
 				<svg id="svg" width={this.w + this.margin.left + this.margin.right} height={this.h + this.margin.top + this.margin.bottom}></svg>
-				<div id="radios">
-					<label><input type="radio" className="year" name="year" id="2014" defaultChecked="true" onClick={this.selectYear} />2014</label>
-					<label className="year"><input type="radio" className="year" name="year" id="2015" onClick={this.selectYear} />2015</label>
-					<label><input type="radio" className="unit" name="unit" id="kg" defaultChecked="true" onClick={this.selectUnit} />Kgs</label>
-					<label><input type="radio" className="unit" name="unit" id="lb" onClick={this.selectUnit} />Lbs</label>
+				<div className="radios">
+					<div>
+						<label className="control">2014
+							<input type="radio" className="year" name="year" id="2014" defaultChecked="true" onClick={this.selectYear} />
+							<div className="indicator"></div>
+						</label>
+						<label className="control year">2015
+							<input type="radio" className="year" name="year" id="2015" onClick={this.selectYear} />
+							<div className="indicator"></div>
+						</label>
+					</div>
+					<div>
+						<label className="control">Kgs
+							<input type="radio" className="unit" name="unit" id="kg" defaultChecked="true" onClick={this.selectUnit} />
+							<div className="indicator"></div>
+						</label>
+						<label className="control lbs">Lbs
+							<input type="radio" className="unit" name="unit" id="lb" onClick={this.selectUnit} />
+							<div className="indicator"></div>
+						</label>
+					</div>
 				</div>
 			</div>
 		)

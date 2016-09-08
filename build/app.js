@@ -23562,8 +23562,8 @@ var Chart = (function (_React$Component) {
 			return _react2['default'].createElement(
 				'div',
 				{ id: 'chart', className: 'clearfix' },
-				_react2['default'].createElement(_Tracker2['default'], null),
-				_react2['default'].createElement(_Dial2['default'], null)
+				_react2['default'].createElement(_Dial2['default'], null),
+				_react2['default'].createElement(_Tracker2['default'], null)
 			);
 		}
 	}]);
@@ -23630,7 +23630,7 @@ var Dial = (function (_React$Component) {
 		_get(Object.getPrototypeOf(Dial.prototype), 'constructor', this).call(this);
 		this.rerenderDailyPermitted = this.rerenderDailyPermitted.bind(this);
 		this.width = 420;
-		this.height = 400;
+		this.height = 240;
 		this.date = new Date();
 		this.month = this.date.getMonth() + 1 < 10 ? '0' + (this.date.getMonth() + 1) : this.date.getMonth() + 1;
 		this.today = String(this.parseDate(this.date.getFullYear() + '' + this.month + '' + this.date.getDate())).substr(4, 11);
@@ -23674,7 +23674,7 @@ var Dial = (function (_React$Component) {
 		value: function componentDidMount() {
 			var _this2 = this;
 
-			this.svg = _node_modulesD3D3Min2['default'].select('#calories').append('svg').attr('width', this.width).attr('height', this.height).append('g').attr('id', 'dial-container').attr('transform', 'translate(' + (this.centreX + 80) + ',' + this.centreY + ')');
+			this.svg = _node_modulesD3D3Min2['default'].select('#calories').append('svg').attr('width', this.width).attr('height', this.height).append('g').attr('id', 'dial-container').attr('transform', 'translate(' + this.centreX + ',' + 110 + ')');
 
 			_servicesUserCalories.cursors.consumedCalories.on('update', function () {
 				if (document.querySelector('#dial-container')) {
@@ -23741,12 +23741,8 @@ var Dial = (function (_React$Component) {
 					null,
 					'Today\'s calories'
 				),
-				_react2['default'].createElement(Legend, { dataCurrentConsumed: this.state.dataCurrentConsumed,
-					dataCaloriesBurned: this.state.dataCaloriesBurned,
-					dataExcessConsumed: this.state.dataExcessConsumed }),
-				_react2['default'].createElement('div', { className: 'user-stats' }),
-				_react2['default'].createElement(_Calories2['default'], { data: { id: 'current-consumed', dataTotalCals: this.state.dataTotalCals, consumed: this.state.dataCurrentConsumed, innerRadius: 90, outerRadius: 115, bgColour: '#e9e9e9', fgColour: '#25B3F9', circ: this.circ } }),
-				_react2['default'].createElement(_Calories2['default'], { data: { id: 'excess-consumed', dataTotalCals: this.state.dataTotalCals, consumed: this.state.dataExcessConsumed, innerRadius: 65, outerRadius: 90, bgColour: '#e9e9e9', fgColour: '#CE392B', circ: this.circ } }),
+				_react2['default'].createElement(_Calories2['default'], { data: { id: 'current-consumed', dataTotalCals: this.state.dataTotalCals, consumed: this.state.dataCurrentConsumed, innerRadius: 90, outerRadius: 105, bgColour: '#7CBDD7', fgColour: '#ffffff', circ: this.circ } }),
+				_react2['default'].createElement(_Calories2['default'], { data: { id: 'excess-consumed', dataTotalCals: this.state.dataTotalCals, consumed: this.state.dataExcessConsumed, innerRadius: 65, outerRadius: 90, bgColour: '#7CBDD7', fgColour: '#CE392B', circ: this.circ } }),
 				_react2['default'].createElement(
 					'text',
 					{ id: 'daily-permitted-text' },
@@ -23754,7 +23750,10 @@ var Dial = (function (_React$Component) {
 				),
 				_react2['default'].createElement('input', { type: 'text', ref: 'dailyPermitted', id: 'daily-permitted',
 					onChange: this.debounce(this.rerenderDailyPermitted, 800),
-					defaultValue: '' })
+					defaultValue: '' }),
+				_react2['default'].createElement(Legend, { dataCurrentConsumed: this.state.dataCurrentConsumed,
+					dataCaloriesBurned: this.state.dataCaloriesBurned,
+					dataExcessConsumed: this.state.dataExcessConsumed })
 			);
 		}
 	}]);
@@ -23819,9 +23818,13 @@ var Legend = (function (_React$Component2) {
 					_react2['default'].createElement(
 						'p',
 						null,
-						'You have ',
-						-this.props.dataExcessConsumed,
-						' calories remaining today'
+						'Today you have ',
+						_react2['default'].createElement(
+							'span',
+							{ className: 'calories-consumed' },
+							-this.props.dataExcessConsumed
+						),
+						' calories remaining'
 					)
 				),
 				this.props.dataExcessConsumed > 0 && _react2['default'].createElement(
@@ -23844,7 +23847,7 @@ var Legend = (function (_React$Component2) {
 
 exports['default'] = Dial;
 module.exports = exports['default'];
-/*<Calories data={{id : 'calories-burned', dataTotalCals :this.state.dataTotalCals, consumed : this.state.dataCaloriesBurned, innerRadius : 65, outerRadius : 95, bgColour: '#e9e9e9', fgColour : '#7FBB5B', circ : this.circ}} />*/ /*<Calories data={{id : 'centre', dataTotalCals :0, consumed : 0, innerRadius : 0, outerRadius : 65, bgColour: '#f7f7f7', fgColour : '#f7f7f7', circ : this.circ}} />*/
+/*<div className="user-stats"></div>*/ /*<Calories data={{id : 'calories-burned', dataTotalCals :this.state.dataTotalCals, consumed : this.state.dataCaloriesBurned, innerRadius : 65, outerRadius : 95, bgColour: '#e9e9e9', fgColour : '#7FBB5B', circ : this.circ}} />*/ /*<Calories data={{id : 'centre', dataTotalCals :0, consumed : 0, innerRadius : 0, outerRadius : 65, bgColour: '#f7f7f7', fgColour : '#f7f7f7', circ : this.circ}} />*/
 
 },{"../../node_modules/d3/d3.min":11,"../../node_modules/superagent/lib/client":170,"../services/ApiService":178,"../services/UserCalories":180,"./Calories":171,"react":168}],174:[function(require,module,exports){
 'use strict';
@@ -23881,27 +23884,6 @@ var _jsUtils2 = _interopRequireDefault(_jsUtils);
 
 var _servicesUserCalories = require('../services/UserCalories');
 
-//Phase 1
-//get search data from real API
-
-//new db table for all user's previously selected foods, and related UI search
-//$pull only one element from array
-//validation on adding meal
-//add correct calories depending on number of servings
-//move graph below dial, new user's food list below todays food list
-//Gulp workflow, linting, git hooks etc
-//fix weight chart bugs
-//Adapt to use Mongoose?
-
-//Phase 2
-//User registration / log in functionality
-
-//Phase 3
-//Adding exercises / calories burned etc
-
-//Ohase 4
-//Activate weight history graph per user
-
 var selectedMeal = null,
     searching = false,
     caloriesTotal = 0,
@@ -23921,8 +23903,6 @@ var SearchAPI = (function (_React$Component) {
 		_get(Object.getPrototypeOf(SearchAPI.prototype), 'constructor', this).call(this);
 		this.searchApi = this.searchApi.bind(this);
 		this.getTodaysFoods = this.getTodaysFoods.bind(this);
-		var apiUrl = 'http://api.exchangeratelab.com/api/current/GBP?apikey=';
-		var apiKey = 'F06383D65BCBFF52629D059B7D3EEB7D&callback=JSON_CALLBACK';
 
 		this.state = {
 			searchResults: [],
@@ -23932,15 +23912,6 @@ var SearchAPI = (function (_React$Component) {
 			snacksList: [],
 			foodsList: []
 		};
-
-		/*var encodedStr = 'http://platform.fatsecret.com/rest/server.api?food_id=33691&method=food.get&oauth_consumer_key=4d662c4b8b394fd290ae2fbacf2bd1bf&oauth_nonce=1234&oauth_signature_method=HMAC-SHA1&oauth_timestamp=1245126631&oauth_version=1.0'
-  	Request.get(encodedStr).end((err, res)=>{
-  	if (res.ok){
-  		console.log('res', res)
-  		} else{
-  		console.log(err);
-  	}
-  })*/
 
 		this.getTodaysFoods();
 	}
@@ -24022,7 +23993,25 @@ var SearchAPI = (function (_React$Component) {
 				{ id: 'search' },
 				_react2['default'].createElement('input', { type: 'text', ref: 'searchApi', id: 'search-api',
 					onChange: this.searchApi,
-					placeholder: 'Search database' }),
+					placeholder: 'Type to search database' }),
+				_react2['default'].createElement(
+					'div',
+					{ className: 'select-dbs radios' },
+					_react2['default'].createElement(
+						'label',
+						{ className: 'control' },
+						'Foods database',
+						_react2['default'].createElement('input', { type: 'radio', name: 'db', defaultChecked: 'true' }),
+						_react2['default'].createElement('div', { className: 'indicator' })
+					),
+					_react2['default'].createElement(
+						'label',
+						{ className: 'control lbs' },
+						'Your foods',
+						_react2['default'].createElement('input', { type: 'radio', name: 'db' }),
+						_react2['default'].createElement('div', { className: 'indicator' })
+					)
+				),
 				_react2['default'].createElement(ApiSearchResults, { query: this.state.query,
 					results: this.state.searchResults,
 					todaysFoods: this.getTodaysFoods }),
@@ -24356,7 +24345,7 @@ var Meal = (function (_React$Component4) {
 						_react2['default'].createElement(
 							'span',
 							{ className: 'remove', onClick: _this6.removeFood.bind(_this6, food, _this6.props.meal) },
-							'X'
+							'remove'
 						)
 					);
 				}),
@@ -24537,9 +24526,9 @@ var Tracker = (function (_React$Component) {
 		this.selectUnit = this.selectUnit.bind(this);
 		this.selectYear = this.selectYear.bind(this);
 		this.margin = { top: 90, bottom: 20, left: 40, right: 40 };
-		this.w = 450;
-		this.h = 300;
-		this.areaHeight = 300;
+		this.w = 520;
+		this.h = 164;
+		this.areaHeight = 240;
 		this.dates = [];
 		this.kgs = [];
 		this.lbs = [];
@@ -24618,9 +24607,9 @@ var Tracker = (function (_React$Component) {
 
 			this.toggleYAxes();
 
-			this.path = this.svg.append('g').attr('id', 'path').attr('transform', 'translate(40, 70)').append('path');
+			this.path = this.svg.append('g').attr('id', 'path').attr('transform', 'translate(40, 10)').append('path');
 
-			this.svg.append('g').attr('class', 'x axis').attr('transform', 'translate(40, ' + (this.h + 70) + ')').call(this.xAxis);
+			this.svg.append('g').attr('class', 'x axis').attr('transform', 'translate(40, ' + (this.h + 86) + ')').call(this.xAxis);
 
 			this.svg.append('g').attr('class', 'y axis currentY').attr('transform', 'translate(40, 70)').call(this.yAxis);
 
@@ -24648,7 +24637,7 @@ var Tracker = (function (_React$Component) {
 
 			this.path.datum(this.data).attr('d', this.area).attr('stroke', '#25B3F9').attr('stroke-width', 1).attr('fill', 'rgba(204, 204, 204, .6)');
 
-			this.svg.selectAll('circle').data(this.data).enter().append('circle').attr('transform', 'translate(40, 70)').attr('class', 'bubble').attr('cx', function (d, i) {
+			this.svg.selectAll('circle').data(this.data).enter().append('circle').attr('transform', 'translate(40, 10)').attr('class', 'bubble').attr('cx', function (d, i) {
 				return _this3.xScale(_this3.dates[i]);
 			}).attr('cy', function (d, i) {
 				return _this3.areaHeight;
@@ -24659,7 +24648,7 @@ var Tracker = (function (_React$Component) {
 				circle.attr('r', 6);
 				circle.classed('active', true);
 				_this3.yScale = _node_modulesD3D3Min2['default'].scale.linear().domain(_node_modulesD3D3Min2['default'].extent(_this3.units)).range([_this3.h, 0]);
-				_this3.toggleToolTip(true, _this3.xScale(_this3.dates[i]), _this3.yScale(_this3.units[i]), _this3.dates[i], _this3.units[i]);
+				_this3.toggleToolTip(true, _this3.xScale(_this3.dates[i]), circle.attr('cy') - 40, _this3.dates[i], _this3.units[i]);
 			}).on('mouseout', function (d, i) {
 				var circle = _node_modulesD3D3Min2['default'].select(_this3.svg[0][0].childNodes[i + 5]);
 				circle.attr('r', 4);
@@ -24697,29 +24686,30 @@ var Tracker = (function (_React$Component) {
 				return _this5.yScale(_this5.units[i]);
 			});
 
-			this.path.datum(this.data).transition().duration(1000).ease('exp').attr('d', this.area).attr('stroke', '#25B3F9').attr('stroke-width', 1).attr('fill', 'rgba(204, 204, 204, .2)');
+			this.path.datum(this.data).transition().duration(1000).ease('exp').attr('d', this.area).attr('stroke', '#429A86').attr('stroke-width', 1).attr('fill', 'rgba(204, 204, 204, .4)');
 		}
 	}, {
 		key: 'toggleYAxes',
 		value: function toggleYAxes() {
 			_node_modulesD3D3Min2['default'].selectAll('.currentY').remove();
 
-			this.yScale = _node_modulesD3D3Min2['default'].scale.linear().domain(_node_modulesD3D3Min2['default'].extent(this.units)).range([this.h, 0]);
+			this.yScale = _node_modulesD3D3Min2['default'].scale.linear().domain(_node_modulesD3D3Min2['default'].extent(this.units)).range([240, 0]);
 
 			this.yAxis = _node_modulesD3D3Min2['default'].svg.axis().scale(this.yScale).orient('left');
 
-			this.svg.append('g').attr('class', 'y axis currentY').attr('transform', 'translate(40, 70)').call(this.yAxis);
+			this.svg.append('g').attr('class', 'y axis currentY').attr('transform', 'translate(40, 10)').call(this.yAxis);
 
-			this.svg.append("g").attr("class", "y grid currentY").attr('id', '#grid').attr('transform', 'translate(40, 70)').call(this.yGridLine().tickSize(-this.w, 0, 0).tickFormat(""));
+			this.svg.append("g").attr("class", "y grid currentY").attr('id', '#grid').attr('transform', 'translate(40, 10)').call(this.yGridLine().tickSize(-this.w, 0, 0).tickFormat(""));
 
-			_node_modulesD3D3Min2['default'].selectAll('.currentY').transition().style('opacity', 1);
+			_node_modulesD3D3Min2['default'].selectAll('.axis.currentY').transition().style('opacity', 1);
+			_node_modulesD3D3Min2['default'].selectAll('.grid.currentY').transition().style('opacity', .5);
 		}
 	}, {
 		key: 'toggleToolTip',
 		value: function toggleToolTip(b, xVal, yVal, date, weight) {
 			date = String(date).substr(4, 11);
 			if (b) {
-				_node_modulesD3D3Min2['default'].select('#tooltip').attr('transform', 'translate(' + (xVal + 5) + ',' + (yVal + 20) + ')').classed('active', true);
+				_node_modulesD3D3Min2['default'].select('#tooltip').attr('transform', 'translate(' + (xVal + 5) + ',' + yVal + ')').classed('active', true);
 
 				_node_modulesD3D3Min2['default'].selectAll('.content text').remove();
 				_node_modulesD3D3Min2['default'].select('.content').append('text').attr('class', 'date').text(date);
@@ -24755,30 +24745,42 @@ var Tracker = (function (_React$Component) {
 				_react2['default'].createElement('svg', { id: 'svg', width: this.w + this.margin.left + this.margin.right, height: this.h + this.margin.top + this.margin.bottom }),
 				_react2['default'].createElement(
 					'div',
-					{ id: 'radios' },
+					{ className: 'radios' },
 					_react2['default'].createElement(
-						'label',
+						'div',
 						null,
-						_react2['default'].createElement('input', { type: 'radio', className: 'year', name: 'year', id: '2014', defaultChecked: 'true', onClick: this.selectYear }),
-						'2014'
+						_react2['default'].createElement(
+							'label',
+							{ className: 'control' },
+							'2014',
+							_react2['default'].createElement('input', { type: 'radio', className: 'year', name: 'year', id: '2014', defaultChecked: 'true', onClick: this.selectYear }),
+							_react2['default'].createElement('div', { className: 'indicator' })
+						),
+						_react2['default'].createElement(
+							'label',
+							{ className: 'control year' },
+							'2015',
+							_react2['default'].createElement('input', { type: 'radio', className: 'year', name: 'year', id: '2015', onClick: this.selectYear }),
+							_react2['default'].createElement('div', { className: 'indicator' })
+						)
 					),
 					_react2['default'].createElement(
-						'label',
-						{ className: 'year' },
-						_react2['default'].createElement('input', { type: 'radio', className: 'year', name: 'year', id: '2015', onClick: this.selectYear }),
-						'2015'
-					),
-					_react2['default'].createElement(
-						'label',
+						'div',
 						null,
-						_react2['default'].createElement('input', { type: 'radio', className: 'unit', name: 'unit', id: 'kg', defaultChecked: 'true', onClick: this.selectUnit }),
-						'Kgs'
-					),
-					_react2['default'].createElement(
-						'label',
-						null,
-						_react2['default'].createElement('input', { type: 'radio', className: 'unit', name: 'unit', id: 'lb', onClick: this.selectUnit }),
-						'Lbs'
+						_react2['default'].createElement(
+							'label',
+							{ className: 'control' },
+							'Kgs',
+							_react2['default'].createElement('input', { type: 'radio', className: 'unit', name: 'unit', id: 'kg', defaultChecked: 'true', onClick: this.selectUnit }),
+							_react2['default'].createElement('div', { className: 'indicator' })
+						),
+						_react2['default'].createElement(
+							'label',
+							{ className: 'control lbs' },
+							'Lbs',
+							_react2['default'].createElement('input', { type: 'radio', className: 'unit', name: 'unit', id: 'lb', onClick: this.selectUnit }),
+							_react2['default'].createElement('div', { className: 'indicator' })
+						)
 					)
 				)
 			);
@@ -24817,7 +24819,7 @@ var _publicComponentsSearchAPI = require('../../public/components/SearchAPI');
 
 var _publicComponentsSearchAPI2 = _interopRequireDefault(_publicComponentsSearchAPI);
 
-_react2['default'].render(_react2['default'].createElement(_publicComponentsChart2['default'], null), document.getElementById('content'));
+_react2['default'].render(_react2['default'].createElement(_publicComponentsChart2['default'], null), document.getElementById('chart-container'));
 _react2['default'].render(_react2['default'].createElement(_publicComponentsSearchAPI2['default'], null), document.getElementById('search-api-container'));
 
 },{"../../public/components/Chart":172,"../../public/components/SearchAPI":174,"../../public/js/utils":177,"react":168}],177:[function(require,module,exports){

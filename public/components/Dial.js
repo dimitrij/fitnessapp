@@ -158,7 +158,7 @@ class Legend extends React.Component{
 				</li>
 				{this.props.dataExcessConsumed <= 0 &&
 					<li>
-						<p>You have {-this.props.dataExcessConsumed} calories remaining today</p>
+						<p>Today you have <span className="calories-consumed">{-this.props.dataExcessConsumed}</span> calories remaining</p>
 					</li>
 				}
 				{this.props.dataExcessConsumed > 0 &&

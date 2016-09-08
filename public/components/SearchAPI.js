@@ -101,7 +101,18 @@ class SearchAPI extends React.Component {
 			<div id="search">
 				<input type="text" ref="searchApi" id="search-api"
 					   onChange={this.searchApi}
-					   placeholder="Search database" />
+					   placeholder="Type to search database" />
+
+				<div className="select-dbs radios">
+					<label className="control">Foods database
+						<input type="radio" name="db" defaultChecked="true" />
+						<div className="indicator"></div>
+					</label>
+					<label className="control lbs">Your foods
+						<input type="radio" name="db" />
+						<div className="indicator"></div>
+					</label>
+				</div>
 
 				<ApiSearchResults query={this.state.query}
 								  results={this.state.searchResults}
@@ -294,7 +305,7 @@ class Meal extends React.Component {
 						<span>{food.protein}</span>
 						<span>{food.sodium}</span>
 						<span>{food.sugar}</span>
-						<span className="remove" onClick={this.removeFood.bind(this, food, this.props.meal)}>X</span>
+						<span className="remove" onClick={this.removeFood.bind(this, food, this.props.meal)}>remove</span>
 					</li>
 				})}
 

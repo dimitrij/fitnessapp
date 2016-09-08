@@ -18,9 +18,16 @@ nav {
                 background-color: #23333E;
                 height: 39px;
                 border: 0;
-                padding: 10px;
+                padding: 20px 10px 10px 60px;
                 cursor: default;
-                padding-bottom: 30px;
+
+                img {
+                    -webkit-clip-path: circle(20px at center);
+                    width: 40px;
+                    position: absolute;
+                    left: 8px;
+                    top: 10px;
+                }
 
                 span {
                     display: block;
@@ -102,23 +109,80 @@ h2 {
     left: 100px;
 }
 
-#radios {
+.radios {
     height: 70px;
     background-color: #429A86;
+    position: relative;
+    text-align: left;
+
+    div {
+        text-align: center;
+        display: inline-block;
+        width: 49%;
+        height: 100%;
+    }
+
+    div:first-child {
+        border-right: 2px solid #5FB9A5;
+    }
 
     input {
         margin-right: 6px;
+        position: absolute;
+        z-index: -1;
+        opacity: 0;
     }
 
     label {
-        margin:3px;
         display: inline-block;
         font-size: .9rem;
         line-height: 64px;
+        position: relative;
+        margin-left: 35px;
     }
 
-    .year {
+    .indicator {
+        position: absolute;
+        top: 20px;
+        left: -30px;
+        height: 20px;
+        width: 20px;
+        background: #e6e6e6;
+        border:1px solid $white;
+    }
+
+    input:checked ~ .indicator {
+        background: #5FB9A5;
+    }
+    .indicator {
+        border-radius: 50%;
+    }
+
+    input:checked ~ .indicator:after {
+        display: block;
+    }
+    .indicator:after {
+        left: 7px;
+        top: 7px;
+        height: 6px;
+        width: 6px;
+        border-radius: 50%;
+        background: #fff;
+    }
+    .indicator:after {
+        content: '';
+        position: absolute;
+        display: none;
+    }
+
+    .year,
+    .lbs {
         padding-right: 10px;
+        margin-left: 65px;
+
+        /*.indicator {
+            left:80px;
+        }*/
     }
 }
 
@@ -209,39 +273,62 @@ p {
         font-size: 0.8rem;
         margin: 0;
     }
+
+    .calories-consumed {
+        display: block;
+        font-size: 1.9rem;
+    }
 }
 
 #search {
     text-align: left;
     position: relative;
-    width: 50%;
     background-color: $white;
     color: #444;
 
     input {
         border: 0;
         text-align: left;
-        border-bottom: 1px solid #ddd;
         padding: 10px 0 10px 12px;
-        background-color: #fbfbfb;
+        background-color: #f5f5f5;
         font-size: 1rem;
-        width: calc(100% - 12px);
+        width: calc(50% - 12px);
+        border-radius: 3px;
+        margin: 6px;
     }
 
     input::-webkit-input-placeholder {
-        color:#429A86;
+        color:#3D92B6;
     }
 
     input::-moz-placeholder {
-        color:#429A86;
+        color:#3D92B6;
     }
 
     input:-ms-input-placeholder {
-        color:#429A86;
+        color:#3D92B6;
+    }
+
+    .select-dbs {
+        width: 45%;
+        display: inline-block;
+
+        &.radios {
+            background-color: transparent;
+            height: auto;
+
+            label {
+                line-height: normal;
+            }
+
+            .indicator {
+                top: -2px;
+            }
+        }
     }
 
     .results {
-        width: 47%;
+        width: calc(100% - 46px);
         list-style: none;
         background-color: #fff;
         box-shadow: 0px 0px 5px #ccc;
@@ -249,9 +336,9 @@ p {
         margin-top: 0;
         display: none;
         position: absolute;
-        top: 46px;
+        top: 38px;
         overflow: auto;
-        max-height: 353px;
+        max-height: 322px;
 
         &.active {
             display: block;
@@ -281,17 +368,15 @@ p {
             display: inline-block;
             font-size: .7rem;
             width: 100%;
+            color: #3D92B6;
             /* add ellipsis */
-
-            &:hover {
-                color: #25B3F9;
-            }
 
             button {
                 float: right;
                 margin-right: 14px;
-                background-color: #25B3F9;
+                background-color: #53C0A8;
                 color: #fff;
+                font-weight: bold;
                 border: 0;
                 border-radius: 5px;
                 box-shadow: 1px 1px 2px #ececec;
@@ -338,7 +423,7 @@ p {
 
             &:hover,
             &.active {
-                color: #25B3F9;
+                color: #3D92B6;
             }
         }
     }
@@ -353,12 +438,12 @@ p {
         &.headers {
 
             li {
-                background-color: #fbfbfb;
+                background-color: #f5f5f5;
 
                 span {
                     display: inline-block;
                     font-size: .7rem;
-                    color: #429A86;
+                    color: #3D92B6;
 
                     &:last-child {
                         width: auto;
@@ -374,7 +459,7 @@ p {
             margin: 10px 10px 2px;
             text-transform: uppercase;
             font-weight: normal;
-            color: #429A86;
+            color: #3D92B6;
         }
 
         li {
@@ -388,13 +473,14 @@ p {
 
             &.totals span {
                 font-weight: bold;
+                color: #3D92B6;
             }
 
             span {
-                padding: 5px;
+                padding: 5px 0;
                 float: left;
-                font-size: .6rem;
-                width: 7.5%;
+                font-size: .8rem;
+                width: 10%;
                 text-align: center;
 
                 &:first-child {
@@ -418,7 +504,8 @@ p {
                 border-radius: 2px;
                 box-shadow: 1px 1px 2px #ececec;
                 cursor: pointer;
-                width: 20px;
+                width: 6%;
+                font-weight: bold;
 
                 &:hover {
                     background-color: #429A86
