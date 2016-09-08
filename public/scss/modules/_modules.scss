@@ -328,7 +328,7 @@ p {
     }
 
     .results {
-        width: calc(100% - 46px);
+        width: calc(50% - 30px);
         list-style: none;
         background-color: #fff;
         box-shadow: 0px 0px 5px #ccc;
@@ -339,6 +339,7 @@ p {
         top: 38px;
         overflow: auto;
         max-height: 322px;
+        left: 4px;
 
         &.active {
             display: block;
