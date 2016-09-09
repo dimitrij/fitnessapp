@@ -1,5 +1,4 @@
 import React from 'react';
-import Request from '../../node_modules/superagent/lib/client';
 import d3 from '../../node_modules/d3/d3.min';
 import Calories from './Calories';
 import {cursors, userCalories} from '../services/UserCalories';

@@ -1,5 +1,4 @@
 import React from 'react';
-import Utils from '../../public/js/utils';
 import Chart from '../../public/components/Chart';
 import SearchAPI from '../../public/components/SearchAPI';
 

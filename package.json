@@ -8,10 +8,15 @@
   "devDependencies": {
     "babelify": "^6.1.2",
     "baobab": "^1.1.2",
-    "gulp": "^3.9.0",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
     "gulp-browserify": "^0.5.1",
+    "gulp-cssnano": "^2.1.2",
     "gulp-livereload": "3.8.0",
-    "gulp-sass": "^2.3.2"
+    "gulp-minify": "0.0.14",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.3.2",
+    "run-sequence": "^1.2.2"
   },
   "dependencies": {
     "react": "^0.13.3",

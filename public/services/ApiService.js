@@ -7,7 +7,7 @@ class ApiService {
 	}
 
 	getApiData(){
-		return Request.get('../../data/mfpapi.json');
+		return Request.get('../../data/data.json');
 	}
 
 	addFood(food){

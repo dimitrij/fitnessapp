@@ -1,5 +1,4 @@
 import React from 'react';
-import Request from '../../node_modules/superagent/lib/client';
 import ApiService from '../services/ApiService';
 import $ from '../js/utils';
 import {cursors, userCalories} from '../services/UserCalories';
@@ -91,7 +90,7 @@ class SearchAPI extends React.Component {
 				});
 			}
 
-		} else{
+		} else {
 			console.log(err);
 		}
 	}
@@ -133,12 +132,14 @@ class ApiSearchResults extends React.Component {
 	constructor() {
 		super();
 		this.selectResult = this.selectResult.bind(this);
+		this.amount = null;
 		var selectedMeal = null;
 	}
 
-	selectResult(result){
+	selectResult(result, e){
+		this.amount = e.target.parentNode.parentNode.getElementsByTagName('input')[0].value;
 		$.$('#search-api').value = '';
-		this.addFood(result);
+		this.addFood(result, this.amount);
 		$.removeClass(this.refs['results'].getDOMNode(), 'active')
 	}
 
@@ -146,16 +147,23 @@ class ApiSearchResults extends React.Component {
 	selectMeal(e){
 		let foods = e.target.parentNode.getElementsByTagName('li');
 		selectedMeal = e.target.getAttribute('data-meal');
-
+		
+		//make for of loop
 		for(let i = 0, j = foods.length; i < j; i++){
 			$.removeClass(foods[i], 'active')
 		}
 		$.addClass(e.target, 'active');
 	}
 
-	addFood(food){
+	addFood(food, amount){
 
 		food['meal'] = selectedMeal;
+		food.calories *= amount;
+		food.carbs *= amount;
+		food.fat *= amount;
+		food.protein *= amount;
+		food.sodium *= amount;
+		food.sugar *= amount;
 
 		apiService.addFood(food).end((err, res) => {
 			this.addFoodCallback(err, res);
@@ -173,7 +181,7 @@ class ApiSearchResults extends React.Component {
 
 	render(){
 		return (
-			<div>
+			<div ref="cont">
 				<ul ref="results" className={this.props.results.length > 0 ? 'results active' : 'results'}>
 					{this.props.results.map((result) => {
 						if(result.name.toLowerCase().indexOf(this.props.query.toLowerCase()) !== -1 && this.props.query !== '') {
