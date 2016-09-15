@@ -48,13 +48,6 @@ class SearchAPI extends React.Component {
 		});
 	}
 
-	getTodaysFoods(){
-		searching = false;
-		apiService.getTodaysFoods().end((err, res)=>{
-			this.todaysFoodsCallback(err, res);
-		});
-	}
-
 	getApiDataCallback(err, res){
 		if (res.ok) {
 			//will need to send search params to api, and not load all results on keypress
@@ -74,6 +67,13 @@ class SearchAPI extends React.Component {
 		}  else {
 			console.log(err);
 		}
+	}
+	
+	getTodaysFoods(){
+		searching = false;
+		apiService.getTodaysFoods().end((err, res)=>{
+			this.todaysFoodsCallback(err, res);
+		});
 	}
 
 	todaysFoodsCallback(err, res){
@@ -181,7 +181,7 @@ class ApiSearchResults extends React.Component {
 
 	render(){
 		return (
-			<div ref="cont">
+			<div>
 				<ul ref="results" className={this.props.results.length > 0 ? 'results active' : 'results'}>
 					{this.props.results.map((result) => {
 						if(result.name.toLowerCase().indexOf(this.props.query.toLowerCase()) !== -1 && this.props.query !== '') {
