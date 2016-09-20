@@ -6,8 +6,9 @@ let apiService = new ApiService();
 
 class Tracker extends React.Component {
 
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
+		//console.log('propssss', this.props, props)
 		this.selectUnit = this.selectUnit.bind(this);
 		this.selectYear = this.selectYear.bind(this);
 		this.margin = {top: 90, bottom: 20, left: 40, right: 40};
@@ -19,50 +20,38 @@ class Tracker extends React.Component {
 		this.lbs = [];
 		this.selectedUnit = 'kg';
 		this.selectedYear = '2014';
-		this.getData(true);
 		setTimeout(()=>{
 			document.querySelector('.updates').classList.add('hidden');
 		}, 12000)
+		this.init = true;
+	}
+	
+	componentWillReceiveProps(nextProps){
+		this.name = nextProps['userData']['name'];
+		this.data = nextProps['userData'][this.selectedYear];
+		
+		this.data.map(datum => {
+			if (datum.date.substr(0, 4) === this.selectedYear) {
+				this.dates.push(Tracker.parseDate(datum.date));
+				this.kgs.push(datum.kg);
+				this.lbs.push(datum.lb);
+			}
+		});
+		
+		this.setUnit();
+		this.initChart(this.init);
+		this.init = false;
+	}
+	
+	componentDidUpdate() {
+		console.log('componentDidUpdate')
 	}
 
 	static parseDate(date){
 		return d3.time.format("%Y%m%d").parse(date);
 	}
 
-	getData(b){
-		this.dates = [];
-		this.kgs = [];
-		this.lbs = [];
-
-		apiService.getUser().end((err, res)=>{
-			this.getUserCallback(err, res, b);
-		});
-
-	}
-
-	getUserCallback(err, res, b){
-		if (res.ok) {
-			this.trackerObj = res.body;
-			this.name = this.trackerObj[0]['name'];
-			this.data = this.trackerObj[0][this.selectedYear];
-
-			this.data.map(datum => {
-				if (datum.date.substr(0, 4) === this.selectedYear) {
-					this.dates.push(Tracker.parseDate(datum.date));
-					this.kgs.push(datum.kg);
-					this.lbs.push(datum.lb);
-				}
-			});
-
-			this.setUnit();
-			this.initChart(b);
-
-		} else {
-			console.log(err);
-		}
-	}
-
-	initChart(b){
+	initChart(){
 		this.xScale = d3.time.scale()
 			.domain(d3.extent(this.dates))
 			.range([0, this.w]);
@@ -84,7 +73,7 @@ class Tracker extends React.Component {
 			.scale(this.yScale)
 			.orient('left');
 
-		if(b){
+		if(this.init){
 			this.appendElements();
 			this.setChart();
 		}
@@ -259,7 +248,6 @@ class Tracker extends React.Component {
 
 	selectYear(e){
 		this.selectedYear = e.target.id;
-		this.getData(false);
 	}
 
 	render(){
@@ -294,4 +282,36 @@ class Tracker extends React.Component {
 	}
 }
 
-export default Tracker;
+//Higher order component
+var TrackerContainer = TrackerComponent => class extends React.Component {
+	
+	constructor(props){
+		super(props);
+		
+		this.state = {
+			userData : {}
+		}
+		
+		this.props = {
+			foo : 'bar'
+		}
+	}
+	
+	componentDidMount() {
+		apiService.getUser().end((err, response)=>{
+			if (response.ok) {
+				this.setState({
+					userData: response.body[0]
+				})
+			} else {
+				console.log('error')
+			}
+		});
+	}
+	
+	render() {
+		return <TrackerComponent {...this.props} {...this.state} />;
+	}
+};
+
+export default TrackerContainer(Tracker);

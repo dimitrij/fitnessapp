@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import d3 from '../../node_modules/d3/d3.min';
 import Calories from './Calories';
 import {cursors, userCalories} from '../services/UserCalories';
@@ -30,10 +31,6 @@ class Dial extends React.Component{
 			dataExcessConsumed : 0,
 			caloriesRemaining : 0
 		};
-
-		apiService.getUser().end((err, res)=> {
-			this.getUserCallback(err, res);
-		});
 	}
 
 	getUserCallback(err, res){
@@ -43,7 +40,7 @@ class Dial extends React.Component{
 			//dataCurrentConsumed = parseInt(this.calsObj[0]['currentConsumed']);
 			dataCaloriesBurned = parseInt(this.calsObj[0]['caloriesBurned']);
 			dataExcessConsumed = parseInt(this.calsObj[0]['excessConsumed']);
-			React.findDOMNode(this.refs.dailyPermitted).value = dataTotalCals;
+			ReactDOM.findDOMNode(this.refs.dailyPermitted).value = dataTotalCals;
 		} else{
 			console.log(err);
 		}
@@ -54,6 +51,11 @@ class Dial extends React.Component{
 	}
 
 	componentDidMount(){
+		
+		apiService.getUser().end((err, res)=> {
+			this.getUserCallback(err, res);
+		});
+		
 		this.svg = d3.select('#calories').append('svg')
 			.attr('width', this.width)
 			.attr('height', this.height)
@@ -82,7 +84,7 @@ class Dial extends React.Component{
 			document.querySelector('#dial-container').innerHTML = '';
 		}
 
-		var newDailyPermitted = React.findDOMNode(this.refs.dailyPermitted).value;
+		var newDailyPermitted = ReactDOM.findDOMNode(this.refs.dailyPermitted).value;
 
 		apiService.updateCalories({'totalCalories' : newDailyPermitted}).end((err, res)=>{
 			this.updateCaloriesCallback(err, res, newDailyPermitted);
@@ -116,11 +118,9 @@ class Dial extends React.Component{
 		return (
 			<div id="calories">
 				<h1>Today's calories</h1>
-				{/*<div className="user-stats"></div>*/}
 				{/*<Calories data={{id : 'calories-burned', dataTotalCals :this.state.dataTotalCals, consumed : this.state.dataCaloriesBurned, innerRadius : 65, outerRadius : 95, bgColour: '#e9e9e9', fgColour : '#7FBB5B', circ : this.circ}} />*/}
 				<Calories data={{id : 'current-consumed', dataTotalCals :this.state.dataTotalCals, consumed : this.state.dataCurrentConsumed, innerRadius : 90, outerRadius : 105, bgColour: '#7CBDD7', fgColour : '#ffffff', circ : this.circ}} />
 				<Calories data={{id : 'excess-consumed', dataTotalCals :this.state.dataTotalCals, consumed : this.state.dataExcessConsumed, innerRadius : 75, outerRadius : 90, bgColour: '#7CBDD7', fgColour : '#CE392B', circ : this.circ}}/>
-				{/*<Calories data={{id : 'centre', dataTotalCals :0, consumed : 0, innerRadius : 0, outerRadius : 65, bgColour: '#f7f7f7', fgColour : '#f7f7f7', circ : this.circ}} />*/}
 				<text id="daily-permitted-text">Daily calorie intake</text>
 				<input type="text" ref="dailyPermitted" id="daily-permitted"
 					   onChange={this.debounce(this.rerenderDailyPermitted, 800)}
@@ -133,41 +133,30 @@ class Dial extends React.Component{
 	}
 }
 
-class Legend extends React.Component{
-
-	constructor(){
-		super();
-		this.state = {
-			dataExcessConsumed : 0
+//functional stateless component
+let Legend = (props) => (
+	
+	<ul id="legend">
+		<li>
+			<div className="legend blue"></div>Calories consumed <span className="amount">{props.dataCurrentConsumed}</span>
+		</li>
+		<li>
+			<div className="legend green"></div>Calories burned <span className="amount">{props.dataCaloriesBurned}</span>
+		</li>
+		<li>
+			<div className="legend red"></div>Excess calories <span className="amount">{props.dataExcessConsumed <= 0 ? 0 : props.dataExcessConsumed}</span>
+		</li>
+		{props.dataExcessConsumed <= 0 &&
+			<li>
+				<p>Today you have <span className="calories-consumed">{-props.dataExcessConsumed}</span> calories remaining</p>
+			</li>
 		}
-	}
-
-	render(){
-		return(
-
-			<ul id="legend">
-				<li>
-					<div className="legend blue"></div>Calories consumed <span className="amount">{this.props.dataCurrentConsumed}</span>
-				</li>
-				<li>
-					<div className="legend green"></div>Calories burned <span className="amount">{this.props.dataCaloriesBurned}</span>
-				</li>
-				<li>
-					<div className="legend red"></div>Excess calories <span className="amount">{this.props.dataExcessConsumed <= 0 ? 0 : this.props.dataExcessConsumed}</span>
-				</li>
-				{this.props.dataExcessConsumed <= 0 &&
-					<li>
-						<p>Today you have <span className="calories-consumed">{-this.props.dataExcessConsumed}</span> calories remaining</p>
-					</li>
-				}
-				{this.props.dataExcessConsumed > 0 &&
-					<li>
-						<p>You have exceeded your daily calorie intake by {this.props.dataExcessConsumed} calories</p>
-					</li>
-				}
-			</ul>
-		)
-	}
-}
+		{props.dataExcessConsumed > 0 &&
+			<li>
+				<p>You have exceeded your daily calorie intake by {props.dataExcessConsumed} calories</p>
+			</li>
+		}
+	</ul>
+);
 
 export default Dial;
