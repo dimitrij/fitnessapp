@@ -2,6 +2,8 @@ import React from 'react';
 import d3 from '../../node_modules/d3/d3.min';
 
 class Calories extends React.Component{
+	
+	//needs to be split out in to initial state and received state
 
 	componentWillReceiveProps(nextProps){
 		this.id = nextProps.data.id;

@@ -43,9 +43,9 @@ class Tracker extends React.Component {
 		this.init = false;
 	}
 	
-	componentDidUpdate() {
+	/*componentDidUpdate() {
 		console.log('componentDidUpdate')
-	}
+	}*/
 
 	static parseDate(date){
 		return d3.time.format("%Y%m%d").parse(date);

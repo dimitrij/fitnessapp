@@ -1,20 +1,33 @@
-import React from 'react';
+import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import d3 from '../../node_modules/d3/d3.min';
 import Calories from './Calories';
-import {cursors, userCalories} from '../services/UserCalories';
+import Legend from './Legend';
+//import {cursors, userCalories} from '../services/UserCalories';
 import ApiService from '../services/ApiService';
+import { connect, Provider } from 'react-redux'
+/*import { createStore } from 'redux'
+import fitnessApp from '../js/reducers'
+import { updateCalories } from '../js/actions'
+let store = createStore(fitnessApp)*/
 
+// add comments
+// error handling
+// tests
+
+//these shouldnt be here
 var dataTotalCals = 0,
 	dataCurrentConsumed = 0,
 	dataCaloriesBurned = 0,
 	dataExcessConsumed = 0,
 	apiService = new ApiService();
 
-class Dial extends React.Component{
+//add prop validation
 
-	constructor(){
-		super();
+class Dial extends Component {
+
+	constructor(props){
+		super(props);
 		this.rerenderDailyPermitted = this.rerenderDailyPermitted.bind(this);
 		this.width = 420;
 		this.height = 240;
@@ -33,27 +46,10 @@ class Dial extends React.Component{
 		};
 	}
 
-	getUserCallback(err, res){
-		if (res.ok){
-			this.calsObj = res.body;
-			dataTotalCals = parseInt(this.calsObj[0]['totalCalories']);
-			//dataCurrentConsumed = parseInt(this.calsObj[0]['currentConsumed']);
-			dataCaloriesBurned = parseInt(this.calsObj[0]['caloriesBurned']);
-			dataExcessConsumed = parseInt(this.calsObj[0]['excessConsumed']);
-			ReactDOM.findDOMNode(this.refs.dailyPermitted).value = dataTotalCals;
-		} else{
-			console.log(err);
-		}
-	}
-
-	parseDate(date){
-		return d3.time.format('%Y%m%d').parse(date);
-	}
-
 	componentDidMount(){
 		
 		apiService.getUser().end((err, res)=> {
-			this.getUserCallback(err, res);
+			this.setUser(err, res);
 		});
 		
 		this.svg = d3.select('#calories').append('svg')
@@ -62,7 +58,7 @@ class Dial extends React.Component{
 			.append('g').attr('id', 'dial-container')
 			.attr('transform', 'translate(' + (this.centreX) + ',' + 110 + ')');
 
-		cursors.consumedCalories.on('update', () => {
+		/*cursors.consumedCalories.on('update', () => {
 			if(document.querySelector('#dial-container')){
 				document.querySelector('#dial-container').innerHTML = '';
 			}
@@ -74,9 +70,28 @@ class Dial extends React.Component{
 				dataCaloriesBurned : dataCaloriesBurned,
 				dataExcessConsumed : objConsumed.calories.consumed - dataTotalCals
 			});
-
-
-		})
+		})*/
+		
+		
+		// get data from redux store
+		// set state with retrieved data
+	}
+	
+	setUser(err, res){
+		if (res.ok){
+			this.calsObj = res.body;
+			dataTotalCals = parseInt(this.calsObj[0]['totalCalories']);
+			//dataCurrentConsumed = parseInt(this.calsObj[0]['currentConsumed']);
+			dataCaloriesBurned = parseInt(this.calsObj[0]['caloriesBurned']);
+			dataExcessConsumed = parseInt(this.calsObj[0]['excessConsumed']);
+			ReactDOM.findDOMNode(this.refs.dailyPermitted).value = dataTotalCals;
+		} else{
+			console.log(err);
+		}
+	}
+	
+	parseDate(date){
+		return d3.time.format('%Y%m%d').parse(date);
 	}
 
 	rerenderDailyPermitted(e){
@@ -93,11 +108,11 @@ class Dial extends React.Component{
 
 	updateCaloriesCallback(err, res, newDailyPermitted){
 		if (res.ok){
-			var objConsumed = userCalories.getCalories();
+			/*var objConsumed = userCalories.getCalories();
 			this.setState({
 				dataTotalCals : newDailyPermitted,
 				dataExcessConsumed : objConsumed.calories.consumed - newDailyPermitted
-			});
+			});*/
 		} else{
 			console.log(err);
 		}
@@ -115,48 +130,32 @@ class Dial extends React.Component{
 	}
 
 	render(){
+		console.log('this.props - render', this.props)
 		return (
 			<div id="calories">
 				<h1>Today's calories</h1>
 				{/*<Calories data={{id : 'calories-burned', dataTotalCals :this.state.dataTotalCals, consumed : this.state.dataCaloriesBurned, innerRadius : 65, outerRadius : 95, bgColour: '#e9e9e9', fgColour : '#7FBB5B', circ : this.circ}} />*/}
-				<Calories data={{id : 'current-consumed', dataTotalCals :this.state.dataTotalCals, consumed : this.state.dataCurrentConsumed, innerRadius : 90, outerRadius : 105, bgColour: '#7CBDD7', fgColour : '#ffffff', circ : this.circ}} />
-				<Calories data={{id : 'excess-consumed', dataTotalCals :this.state.dataTotalCals, consumed : this.state.dataExcessConsumed, innerRadius : 75, outerRadius : 90, bgColour: '#7CBDD7', fgColour : '#CE392B', circ : this.circ}}/>
+				<Calories data={{id : 'current-consumed', dataTotalCals :this.props.dataTotalCals, consumed : this.props.dataCurrentConsumed, innerRadius : 90, outerRadius : 105, bgColour: '#7CBDD7', fgColour : '#ffffff', circ : this.circ}} />
+				<Calories data={{id : 'excess-consumed', dataTotalCals :this.props.dataTotalCals, consumed : this.props.dataExcessConsumed, innerRadius : 75, outerRadius : 90, bgColour: '#7CBDD7', fgColour : '#CE392B', circ : this.circ}}/>
 				<text id="daily-permitted-text">Daily calorie intake</text>
 				<input type="text" ref="dailyPermitted" id="daily-permitted"
 					   onChange={this.debounce(this.rerenderDailyPermitted, 800)}
 					   defaultValue="" />
-				<Legend dataCurrentConsumed={this.state.dataCurrentConsumed}
-						dataCaloriesBurned={this.state.dataCaloriesBurned}
-						dataExcessConsumed={this.state.dataExcessConsumed} />
+				<Legend dataCurrentConsumed={this.props.dataCurrentConsumed}
+						dataCaloriesBurned={this.props.dataCaloriesBurned}
+						dataExcessConsumed={this.props.dataExcessConsumed} />
 			</div>
 		);
 	}
 }
 
-//functional stateless component
-let Legend = (props) => (
-	
-	<ul id="legend">
-		<li>
-			<div className="legend blue"></div>Calories consumed <span className="amount">{props.dataCurrentConsumed}</span>
-		</li>
-		<li>
-			<div className="legend green"></div>Calories burned <span className="amount">{props.dataCaloriesBurned}</span>
-		</li>
-		<li>
-			<div className="legend red"></div>Excess calories <span className="amount">{props.dataExcessConsumed <= 0 ? 0 : props.dataExcessConsumed}</span>
-		</li>
-		{props.dataExcessConsumed <= 0 &&
-			<li>
-				<p>Today you have <span className="calories-consumed">{-props.dataExcessConsumed}</span> calories remaining</p>
-			</li>
-		}
-		{props.dataExcessConsumed > 0 &&
-			<li>
-				<p>You have exceeded your daily calorie intake by {props.dataExcessConsumed} calories</p>
-			</li>
-		}
-	</ul>
-);
+const mapStateToProps = state => {
+	console.log('mapStateToProps', dataTotalCals)
+	return {
+		dataTotalCals: 2250,
+		dataCurrentConsumed: state.calories,
+		dataExcessConsumed: 0
+	}
+}
 
-export default Dial;
+export default connect(mapStateToProps)(Dial)
