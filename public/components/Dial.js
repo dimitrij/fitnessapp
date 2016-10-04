@@ -12,14 +12,6 @@ import { updateCurrentConsumed } from '../js/actions';
 // add comments
 // error handling
 // tests
-
-//these shouldnt be here
-var dataTotalCals = 0,
-	dataCurrentConsumed = 0,
-	dataCaloriesBurned = 0,
-	dataExcessConsumed = 0,
-	apiService = new ApiService();
-
 //add prop validation
 
 class Dial extends Component {
@@ -31,22 +23,14 @@ class Dial extends Component {
 		this.height = 240;
 		this.date = new Date();
 		this.month = this.date.getMonth() + 1 < 10 ? '0' + (this.date.getMonth() + 1) : this.date.getMonth() + 1;
-		this.today = String(this.parseDate(this.date.getFullYear() + '' + this.month + '' + this.date.getDate())).substr(4, 11);
 		this.circ = 2 * Math.PI;
 		this.centreX = this.width / 2;
-		this.centreY = this.height / 2;
-		this.state = {
-			dataTotalCals : 0,
-			dataCurrentConsumed : 0,
-			dataCaloriesBurned : 0,
-			dataExcessConsumed : 0,
-			caloriesRemaining : 0
-		};
+		this.dataTotalCals = 0;
+		this.apiService = new ApiService();
 	}
 
 	componentDidMount(){
-		
-		apiService.getUser().end((err, res)=> {
+		this.apiService.getUser().end((err, res)=> {
 			if (res.ok){
 				this.setUser(res);
 			} else {
@@ -69,10 +53,10 @@ class Dial extends Component {
 	
 	setUser(res){
 		this.calsObj = res.body;
-		dataTotalCals = parseInt(this.calsObj[0]['totalCalories']);
-		this.props.actions.getTotalCalories(dataTotalCals);
-		this.props.actions.updateCurrentConsumed(this.props.dataCurrentConsumed - dataTotalCals);
-		this.refs.dailyPermitted.value = dataTotalCals;
+		this.dataTotalCals = parseInt(this.calsObj[0]['totalCalories']);
+		this.props.actions.getTotalCalories(this.dataTotalCals);
+		this.props.actions.updateCurrentConsumed(this.props.dataCurrentConsumed - this.dataTotalCals);
+		this.refs.dailyPermitted.value = this.dataTotalCals;
 	}
 	
 	parseDate(date){
@@ -85,8 +69,8 @@ class Dial extends Component {
 		}
 
 		var newDailyPermitted = ReactDOM.findDOMNode(this.refs.dailyPermitted).value;
-
-		apiService.updateCalories({'totalCalories' : newDailyPermitted}).end((err, res)=>{
+		
+		this.apiService.updateCalories({'totalCalories' : newDailyPermitted}).end((err, res)=>{
 			this.updateCalories(err, res, newDailyPermitted);
 		})
 	}

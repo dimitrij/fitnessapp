@@ -15,22 +15,22 @@ class ApiSearchResults extends React.Component {
     selectResult(result, e){
         this.amount = e.target.parentNode.parentNode.getElementsByTagName('input')[0].value;
         $.$('#search-api').value = '';
-        this.addItem(result, this.amount);
+        this.addFood(result, this.amount);
         $.removeClass(ReactDOM.findDOMNode(this.refs['results']), 'active')
     }
     
     selectMeal(e){
         let foods = [...e.target.parentNode.getElementsByTagName('li')];
-        console.log('meal', this)
         this.selectedMeal = e.target.getAttribute('data-meal');
         
         for(let food of foods){
             $.removeClass(food, 'active')
         }
+        
         $.addClass(e.target, 'active');
     }
     
-    addItem(food, amount){
+    addFood(food, amount){
         
         food['meal'] = this.selectedMeal;
         food.calories *= amount;
@@ -41,17 +41,13 @@ class ApiSearchResults extends React.Component {
         food.sugar *= amount;
         
         apiService.addFood(food).end((err, res) => {
-            this.addFood(err, res);
+            if (res.ok){
+                this.props.todaysFoods();
+            } else {
+                console.log(err);
+            }
         });
         
-    }
-    
-    addFood(err, res){
-        if (res.ok){
-            this.props.todaysFoods();
-        } else {
-            console.log(err);
-        }
     }
     
     render(){
