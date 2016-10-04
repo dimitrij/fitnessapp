@@ -42,7 +42,7 @@ class Meal extends React.Component {
         return (
             <ul className="selected-foods">
                 <li><h2>{this.props.meal}</h2></li>
-                {this.props.items.map(food => {
+                {this.props.items.map((food, index) => {
                     caloriesTotal += food.calories;
                     carbsTotal += food.carbs;
                     fatTotal += food.fat;
@@ -50,7 +50,7 @@ class Meal extends React.Component {
                     sodiumTotal += food.sodium;
                     sugarTotal += food.sugar;
                     
-                    return <li className="clearfix" key={food.name}>
+                    return <li className="clearfix" key={index}>
                         <span className="food-name" title={food.name}>{food.name}</span>
                         <span>{food.calories}</span>
                         <span>{food.carbs}</span>

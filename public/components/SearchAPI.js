@@ -37,11 +37,11 @@ class SearchAPI extends React.Component {
 		this.query = e.target.value;
 
 		apiService.getApiData().end((err, res)=>{
-			this.getApiDataCallback(err, res);
+			this.getApiData(err, res);
 		});
 	}
 
-	getApiDataCallback(err, res){
+	getApiData(err, res){
 		if (res.ok) {
 			//will need to send search params to api, and not load all results on keypress
 			let breakfast =  res.body['meals']['breakfast']['food'],
@@ -65,11 +65,11 @@ class SearchAPI extends React.Component {
 	getTodaysFoods(){
 		searching = false;
 		apiService.getTodaysFoods().end((err, res)=>{
-			this.todaysFoodsCallback(err, res);
+			this.todaysFoods(err, res);
 		});
 	}
 
-	todaysFoodsCallback(err, res){
+	todaysFoods(err, res){
 		if (res.ok){
 			this.meals = res.body;
 
