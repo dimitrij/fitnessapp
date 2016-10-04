@@ -44,10 +44,11 @@ class SearchAPI extends React.Component {
 	getApiData(err, res){
 		if (res.ok) {
 			//will need to send search params to api, and not load all results on keypress
-			let breakfast =  res.body['meals']['breakfast']['food'],
-				lunch =  res.body['meals']['lunch']['food'],
-				dinner =  res.body['meals']['dinner']['food'],
-				snacks =  res.body['meals']['snacks']['food'],
+			let meals = res.body['meals'],
+				breakfast =  meals['breakfast']['food'],
+				lunch =  meals['lunch']['food'],
+				dinner =  meals['dinner']['food'],
+				snacks =  meals['snacks']['food'],
 				foods = breakfast.concat(lunch.concat(dinner.concat(snacks)));
 
 			this.setState({
@@ -72,14 +73,14 @@ class SearchAPI extends React.Component {
 	todaysFoods(err, res){
 		if (res.ok){
 			this.meals = res.body;
-
 			if(this.meals && this.meals[0]){
+				let meals = this.meals[0]['meals'];
 				this.setState({
 					breakfastList : this.meals[0]['meals']['breakfast']['food'],
-					lunchList : this.meals[0]['meals']['lunch']['food'],
-					dinnerList : this.meals[0]['meals']['dinner']['food'],
-					snacksList : this.meals[0]['meals']['snacks']['food'],
-					foodsList : this.meals[0]['meals']['breakfast']['food'].concat(this.meals[0]['meals']['lunch']['food'].concat(this.meals[0]['meals']['dinner']['food'].concat(this.meals[0]['meals']['snacks']['food'])))
+					lunchList : meals['lunch']['food'],
+					dinnerList : meals['dinner']['food'],
+					snacksList : meals['snacks']['food'],
+					foodsList : meals['breakfast']['food'].concat(meals['lunch']['food'].concat(meals['dinner']['food'].concat(meals['snacks']['food'])))
 				});
 			}
 

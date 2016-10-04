@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
-import ReactDOM from 'react-dom';
 import d3 from '../../node_modules/d3/d3.min';
+import $ from '../js/utils';
 import Calories from './Calories';
 import Legend from './Legend';
 import ApiService from '../services/ApiService';
@@ -68,7 +68,7 @@ class Dial extends Component {
 			document.querySelector('#dial-container').innerHTML = '';
 		}
 
-		var newDailyPermitted = ReactDOM.findDOMNode(this.refs.dailyPermitted).value;
+		let newDailyPermitted = this.refs.dailyPermitted.value;
 		
 		this.apiService.updateCalories({'totalCalories' : newDailyPermitted}).end((err, res)=>{
 			this.updateCalories(err, res, newDailyPermitted);
@@ -77,29 +77,15 @@ class Dial extends Component {
 
 	updateCalories(err, res, newDailyPermitted){
 		if (res.ok){
-			/*var objConsumed = userCalories.getCalories();
-			this.setState({
-				dataTotalCals : newDailyPermitted,
-				dataExcessConsumed : objConsumed.calories.consumed - newDailyPermitted
-			});*/
+			this.props.actions.getTotalCalories(newDailyPermitted);
+			this.props.actions.updateCurrentConsumed(this.props.dataCurrentConsumed - newDailyPermitted);
 		} else{
 			console.log(err);
 		}
 	}
 
-	debounce(fn, delay) {
-		var timer = null;
-		return function () {
-			var args = arguments;
-			clearTimeout(timer);
-			timer = setTimeout(() => {
-				fn(args);
-			}, delay);
-		};
-	}
-
 	render(){
-		console.log('this.props - render', this.props)
+		console.log('this.props - render', this.props.dataCurrentConsumed, this.props.dataExcessConsumed)
 		return (
 			<div id="calories">
 				<h1>Today's calories</h1>
@@ -108,7 +94,7 @@ class Dial extends Component {
 				<Calories data={{id : 'excess-consumed', dataTotalCals :this.props.dataTotalCals, consumed : this.props.dataExcessConsumed, innerRadius : 75, outerRadius : 90, bgColour: '#7CBDD7', fgColour : '#CE392B', circ : this.circ}}/>
 				<text id="daily-permitted-text">Daily calorie intake</text>
 				<input type="text" ref="dailyPermitted" id="daily-permitted"
-					   onChange={this.debounce(this.rerenderDailyPermitted, 800)}
+					   onChange={$.debounce(this.rerenderDailyPermitted, 800)}
 					   defaultValue="" />
 				<Legend dataCurrentConsumed={this.props.dataCurrentConsumed}
 						dataCaloriesBurned={this.props.dataCaloriesBurned}
@@ -129,4 +115,4 @@ const mapStateToProps = state => {
 	}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dial)
+export default connect(mapStateToProps, mapDispatchToProps)(Dial);

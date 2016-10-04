@@ -1,7 +1,5 @@
 import { combineReducers } from 'redux';
-import { UPDATE_CALORIES } from './actions';
-import { TOTAL_CALORIES } from './actions';
-import { CURRENT_CONSUMED } from './actions';
+import { UPDATE_CALORIES, TOTAL_CALORIES, CURRENT_CONSUMED } from './actions';
 
 const calories = (state = 0, action) => {
     switch (action.type) {

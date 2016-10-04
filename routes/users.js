@@ -21,7 +21,7 @@ router.put('/updatecalories', function(req, res) {
 	var db = req.db;
 	var collection = db.get('weighttracker.user');
 
-	collection.update({ _id : "570d0c77b1cfd5f2a480f5ba"}, {$set:{totalCalories : req.body.totalCalories}}, {safe:true},
+	collection.update({ _id : "572caf79f7150c14c0b64076"}, {$set:{totalCalories : req.body.totalCalories}}, {safe:true},
 		function(err){
 			res.send(
 				(err === null) ? { msg: '' } : { msg: err }

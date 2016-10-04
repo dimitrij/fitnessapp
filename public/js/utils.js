@@ -36,6 +36,17 @@ class $ {
 		var id = str.replace('#', '');
 		return str.indexOf('#') !== -1 ? document.getElementById(id) : document.querySelectorAll(str);
 	}
+	
+	static debounce(fn, delay) {
+		var timer = null;
+		return function () {
+			var args = arguments;
+			clearTimeout(timer);
+			timer = setTimeout(() => {
+				fn(args);
+			}, delay);
+		};
+	}
 }
 
 export default $;
