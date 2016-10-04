@@ -4,6 +4,8 @@ import MealTotals from './MealTotalsComponent';
 
 let searching = false;
 
+//make stateless component, remove state and shouldComponentUpdate
+
 class FoodList extends React.Component {
         
     constructor(){

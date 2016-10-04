@@ -8,7 +8,6 @@ class Tracker extends React.Component {
 
 	constructor(props) {
 		super(props);
-		//console.log('propssss', this.props, props)
 		this.selectUnit = this.selectUnit.bind(this);
 		this.selectYear = this.selectYear.bind(this);
 		this.margin = {top: 90, bottom: 20, left: 40, right: 40};
@@ -300,13 +299,17 @@ var TrackerContainer = TrackerComponent => class extends React.Component {
 	componentDidMount() {
 		apiService.getUser().end((err, response)=>{
 			if (response.ok) {
-				this.setState({
-					userData: response.body[0]
-				})
+				this.updateUserData(response)
 			} else {
 				console.log('error')
 			}
 		});
+	}
+	
+	updateUserData(response){
+		this.setState({
+			userData: response.body[0]
+		})
 	}
 	
 	render() {

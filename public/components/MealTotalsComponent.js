@@ -22,9 +22,6 @@ const MealTotalsComponent = props => {
         totalSugar += food.sugar;
     })
     
-    //userCalories.updateCalories(totalCalories);
-    //debugger;
-    //store.dispatch(updateCalories(totalCalories));
     props.actions.updateCalories(totalCalories);
     
     //console.log('getState', store.getState())
@@ -46,9 +43,11 @@ const MealTotalsComponent = props => {
     </ul>)
 }
 
-function mapDispatchToProps(dispatch) {
+let mapDispatchToProps = dispatch => ({ actions: bindActionCreators({ updateCalories }, dispatch) });
+
+/*function mapDispatchToProps(dispatch) {
     return { actions: bindActionCreators({ updateCalories }, dispatch) }
-}
+}*/
 
 const MealTotals = connect(null, mapDispatchToProps)(MealTotalsComponent);
 

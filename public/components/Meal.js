@@ -11,16 +11,16 @@ let caloriesTotal = 0,
     
 class Meal extends React.Component {
     
-    removeFood(food, meal){
+    removeItem(food, meal){
         
         food['meal'] = meal;
         
         apiService.removeFood(food).end((err, res) => {
-            this.removeFoodCallback(err, res);
+            this.removeFood(err, res);
         });
     }
     
-    removeFoodCallback(err, res){
+    removeFood(err, res){
         if (res.ok){
             this.props.todaysFoods();
         } else {
@@ -58,7 +58,7 @@ class Meal extends React.Component {
                         <span>{food.protein}</span>
                         <span>{food.sodium}</span>
                         <span>{food.sugar}</span>
-                        <span className="remove" onClick={this.removeFood.bind(this, food, this.props.meal)}>remove</span>
+                        <span className="remove" onClick={this.removeItem.bind(this, food, this.props.meal)}>remove</span>
                     </li>
                 })}
                 

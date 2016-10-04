@@ -3,13 +3,11 @@ import ReactDOM from 'react-dom';
 import d3 from '../../node_modules/d3/d3.min';
 import Calories from './Calories';
 import Legend from './Legend';
-//import {cursors, userCalories} from '../services/UserCalories';
 import ApiService from '../services/ApiService';
-import { connect, Provider } from 'react-redux'
-/*import { createStore } from 'redux'
-import fitnessApp from '../js/reducers'
-import { updateCalories } from '../js/actions'
-let store = createStore(fitnessApp)*/
+import { connect} from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { getTotalCalories } from '../js/actions';
+import { updateCurrentConsumed } from '../js/actions';
 
 // add comments
 // error handling
@@ -49,7 +47,11 @@ class Dial extends Component {
 	componentDidMount(){
 		
 		apiService.getUser().end((err, res)=> {
-			this.setUser(err, res);
+			if (res.ok){
+				this.setUser(res);
+			} else {
+				console.log(err);
+			}
 		});
 		
 		this.svg = d3.select('#calories').append('svg')
@@ -62,32 +64,15 @@ class Dial extends Component {
 			if(document.querySelector('#dial-container')){
 				document.querySelector('#dial-container').innerHTML = '';
 			}
-			var objConsumed = userCalories.getCalories();
-
-			this.setState({
-				dataCurrentConsumed : objConsumed.calories.consumed,
-				dataTotalCals : dataTotalCals,
-				dataCaloriesBurned : dataCaloriesBurned,
-				dataExcessConsumed : objConsumed.calories.consumed - dataTotalCals
-			});
 		})*/
-		
-		
-		// get data from redux store
-		// set state with retrieved data
 	}
 	
-	setUser(err, res){
-		if (res.ok){
-			this.calsObj = res.body;
-			dataTotalCals = parseInt(this.calsObj[0]['totalCalories']);
-			//dataCurrentConsumed = parseInt(this.calsObj[0]['currentConsumed']);
-			dataCaloriesBurned = parseInt(this.calsObj[0]['caloriesBurned']);
-			dataExcessConsumed = parseInt(this.calsObj[0]['excessConsumed']);
-			ReactDOM.findDOMNode(this.refs.dailyPermitted).value = dataTotalCals;
-		} else{
-			console.log(err);
-		}
+	setUser(res){
+		this.calsObj = res.body;
+		dataTotalCals = parseInt(this.calsObj[0]['totalCalories']);
+		this.props.actions.getTotalCalories(dataTotalCals);
+		this.props.actions.updateCurrentConsumed(this.props.dataCurrentConsumed - dataTotalCals);
+		this.refs.dailyPermitted.value = dataTotalCals;
 	}
 	
 	parseDate(date){
@@ -102,11 +87,11 @@ class Dial extends Component {
 		var newDailyPermitted = ReactDOM.findDOMNode(this.refs.dailyPermitted).value;
 
 		apiService.updateCalories({'totalCalories' : newDailyPermitted}).end((err, res)=>{
-			this.updateCaloriesCallback(err, res, newDailyPermitted);
+			this.updateCalories(err, res, newDailyPermitted);
 		})
 	}
 
-	updateCaloriesCallback(err, res, newDailyPermitted){
+	updateCalories(err, res, newDailyPermitted){
 		if (res.ok){
 			/*var objConsumed = userCalories.getCalories();
 			this.setState({
@@ -149,13 +134,15 @@ class Dial extends Component {
 	}
 }
 
+const mapDispatchToProps = dispatch => ({ actions: bindActionCreators({ getTotalCalories, updateCurrentConsumed }, dispatch) });
+
 const mapStateToProps = state => {
-	console.log('mapStateToProps', dataTotalCals)
 	return {
-		dataTotalCals: 2250,
-		dataCurrentConsumed: state.calories,
-		dataExcessConsumed: 0
+		dataTotalCals: state.totalCalories,// from database
+		dataCurrentConsumed: state.calories, //from MealTotals component
+		dataExcessConsumed: state.currentConsumed,// from Dial component
+		dataCaloriesBurned: 0
 	}
 }
 
-export default connect(mapStateToProps)(Dial)
+export default connect(mapStateToProps, mapDispatchToProps)(Dial)
