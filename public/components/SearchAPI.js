@@ -76,7 +76,7 @@ class SearchAPI extends React.Component {
 			if(this.meals && this.meals[0]){
 				let meals = this.meals[0]['meals'];
 				this.setState({
-					breakfastList : this.meals[0]['meals']['breakfast']['food'],
+					breakfastList : meals['breakfast']['food'],
 					lunchList : meals['lunch']['food'],
 					dinnerList : meals['dinner']['food'],
 					snacksList : meals['snacks']['food'],

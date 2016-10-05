@@ -1,6 +1,5 @@
 import React from 'react';
-import fitnessApp from '../js/reducers'
-import { updateCalories } from '../js/actions';
+import { updateCalories, updateCurrentConsumed } from '../js/actions';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
 
@@ -23,6 +22,7 @@ const MealTotalsComponent = props => {
     })
     
     props.actions.updateCalories(totalCalories);
+    props.actions.updateCurrentConsumed(totalCalories - 2250);
     
     //console.log('getState', store.getState())
     /*let unsubscribe = store.subscribe(() =>
@@ -43,11 +43,7 @@ const MealTotalsComponent = props => {
     </ul>)
 }
 
-let mapDispatchToProps = dispatch => ({ actions: bindActionCreators({ updateCalories }, dispatch) });
-
-/*function mapDispatchToProps(dispatch) {
-    return { actions: bindActionCreators({ updateCalories }, dispatch) }
-}*/
+let mapDispatchToProps = dispatch => ({ actions: bindActionCreators({ updateCalories, updateCurrentConsumed }, dispatch) });
 
 const MealTotals = connect(null, mapDispatchToProps)(MealTotalsComponent);
 
