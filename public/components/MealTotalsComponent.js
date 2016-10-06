@@ -24,12 +24,6 @@ const MealTotalsComponent = props => {
     props.actions.updateCalories(totalCalories);
     props.actions.updateCurrentConsumed(totalCalories - 2250);
     
-    //console.log('getState', store.getState())
-    /*let unsubscribe = store.subscribe(() =>
-     console.log(store.getState())
-     )*/
-    
-    
     return (<ul className="selected-foods">
         <li className="totals clearfix">
             <span className="food-name">Totals</span>

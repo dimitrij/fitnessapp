@@ -1,8 +1,7 @@
 import React from 'react';
 import $ from '../js/utils';
 import ApiService from '../services/ApiService';
-import ReactDOM from 'react-dom';
-let apiService = new ApiService();
+const apiService = new ApiService();
 
 class ApiSearchResults extends React.Component {
     constructor() {
@@ -16,7 +15,7 @@ class ApiSearchResults extends React.Component {
         this.amount = e.target.parentNode.parentNode.getElementsByTagName('input')[0].value;
         $.$('#search-api').value = '';
         this.addFood(result, this.amount);
-        $.removeClass(ReactDOM.findDOMNode(this.refs['results']), 'active')
+        $.removeClass(this.refs.results, 'active');
     }
     
     selectMeal(e){

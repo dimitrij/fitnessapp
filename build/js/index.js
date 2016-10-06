@@ -23662,10 +23662,6 @@ var _servicesApiService = require('../services/ApiService');
 
 var _servicesApiService2 = _interopRequireDefault(_servicesApiService);
 
-var _reactDom = require('react-dom');
-
-var _reactDom2 = _interopRequireDefault(_reactDom);
-
 var apiService = new _servicesApiService2['default']();
 
 var ApiSearchResults = (function (_React$Component) {
@@ -23686,7 +23682,7 @@ var ApiSearchResults = (function (_React$Component) {
             this.amount = e.target.parentNode.parentNode.getElementsByTagName('input')[0].value;
             _jsUtils2['default'].$('#search-api').value = '';
             this.addFood(result, this.amount);
-            _jsUtils2['default'].removeClass(_reactDom2['default'].findDOMNode(this.refs['results']), 'active');
+            _jsUtils2['default'].removeClass(this.refs.results, 'active');
         }
     }, {
         key: 'selectMeal',
@@ -23812,7 +23808,7 @@ var ApiSearchResults = (function (_React$Component) {
 exports['default'] = ApiSearchResults;
 module.exports = exports['default'];
 
-},{"../js/utils":220,"../services/ApiService":221,"react":186,"react-dom":32}],207:[function(require,module,exports){
+},{"../js/utils":220,"../services/ApiService":221,"react":186}],207:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -24190,15 +24186,7 @@ Object.defineProperty(exports, '__esModule', {
     value: true
 });
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var _react = require('react');
 
@@ -24212,104 +24200,77 @@ var _MealTotalsComponent = require('./MealTotalsComponent');
 
 var _MealTotalsComponent2 = _interopRequireDefault(_MealTotalsComponent);
 
-var searching = false;
-
-//make stateless component, remove state and shouldComponentUpdate
-
-var FoodList = (function (_React$Component) {
-    _inherits(FoodList, _React$Component);
-
-    function FoodList() {
-        _classCallCheck(this, FoodList);
-
-        _get(Object.getPrototypeOf(FoodList.prototype), 'constructor', this).call(this);
-        this.state = {
-            totalCalories: 0
-        };
-    }
-
-    _createClass(FoodList, [{
-        key: 'shouldComponentUpdate',
-        value: function shouldComponentUpdate() {
-            return !searching;
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            return _react2['default'].createElement(
-                'div',
-                null,
+var FoodList = function FoodList(props) {
+    return _react2['default'].createElement(
+        'div',
+        null,
+        _react2['default'].createElement(
+            'ul',
+            { className: 'selected-foods headers' },
+            _react2['default'].createElement(
+                'li',
+                { className: 'clearfix' },
                 _react2['default'].createElement(
-                    'ul',
-                    { className: 'selected-foods headers' },
-                    _react2['default'].createElement(
-                        'li',
-                        { className: 'clearfix' },
-                        _react2['default'].createElement(
-                            'span',
-                            null,
-                            ' '
-                        ),
-                        _react2['default'].createElement(
-                            'span',
-                            null,
-                            'Calories'
-                        ),
-                        _react2['default'].createElement(
-                            'span',
-                            null,
-                            'Carbs'
-                        ),
-                        _react2['default'].createElement(
-                            'span',
-                            null,
-                            'Fat'
-                        ),
-                        _react2['default'].createElement(
-                            'span',
-                            null,
-                            'Protein'
-                        ),
-                        _react2['default'].createElement(
-                            'span',
-                            null,
-                            'Sodium'
-                        ),
-                        _react2['default'].createElement(
-                            'span',
-                            null,
-                            'Sugar'
-                        ),
-                        _react2['default'].createElement(
-                            'span',
-                            null,
-                            ' '
-                        )
-                    )
+                    'span',
+                    null,
+                    ' '
                 ),
                 _react2['default'].createElement(
-                    'div',
-                    { className: 'selected-foods-container' },
-                    _react2['default'].createElement(_Meal2['default'], { items: this.props.breakfastList,
-                        todaysFoods: this.props.todaysFoods,
-                        meal: 'breakfast' }),
-                    _react2['default'].createElement(_Meal2['default'], { items: this.props.lunchList,
-                        todaysFoods: this.props.todaysFoods,
-                        meal: 'lunch' }),
-                    _react2['default'].createElement(_Meal2['default'], { items: this.props.dinnerList,
-                        todaysFoods: this.props.todaysFoods,
-                        meal: 'dinner' }),
-                    _react2['default'].createElement(_Meal2['default'], { items: this.props.snacksList,
-                        todaysFoods: this.props.todaysFoods,
-                        meal: 'snacks' }),
-                    _react2['default'].createElement(_MealTotalsComponent2['default'], { foods: this.props.foodsList })
+                    'span',
+                    null,
+                    'Calories'
+                ),
+                _react2['default'].createElement(
+                    'span',
+                    null,
+                    'Carbs'
+                ),
+                _react2['default'].createElement(
+                    'span',
+                    null,
+                    'Fat'
+                ),
+                _react2['default'].createElement(
+                    'span',
+                    null,
+                    'Protein'
+                ),
+                _react2['default'].createElement(
+                    'span',
+                    null,
+                    'Sodium'
+                ),
+                _react2['default'].createElement(
+                    'span',
+                    null,
+                    'Sugar'
+                ),
+                _react2['default'].createElement(
+                    'span',
+                    null,
+                    ' '
                 )
-            );
-        }
-    }]);
-
-    return FoodList;
-})(_react2['default'].Component);
+            )
+        ),
+        _react2['default'].createElement(
+            'div',
+            { className: 'selected-foods-container' },
+            _react2['default'].createElement(_Meal2['default'], { items: props.breakfastList,
+                todaysFoods: props.todaysFoods,
+                meal: 'breakfast' }),
+            _react2['default'].createElement(_Meal2['default'], { items: props.lunchList,
+                todaysFoods: props.todaysFoods,
+                meal: 'lunch' }),
+            _react2['default'].createElement(_Meal2['default'], { items: props.dinnerList,
+                todaysFoods: props.todaysFoods,
+                meal: 'dinner' }),
+            _react2['default'].createElement(_Meal2['default'], { items: props.snacksList,
+                todaysFoods: props.todaysFoods,
+                meal: 'snacks' }),
+            _react2['default'].createElement(_MealTotalsComponent2['default'], { foods: props.foodsList })
+        )
+    );
+};
 
 exports['default'] = FoodList;
 module.exports = exports['default'];
@@ -24628,11 +24589,6 @@ var MealTotalsComponent = function MealTotalsComponent(props) {
 
     props.actions.updateCalories(totalCalories);
     props.actions.updateCurrentConsumed(totalCalories - 2250);
-
-    //console.log('getState', store.getState())
-    /*let unsubscribe = store.subscribe(() =>
-     console.log(store.getState())
-     )*/
 
     return _react2['default'].createElement(
         'ul',
