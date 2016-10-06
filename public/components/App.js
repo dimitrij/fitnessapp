@@ -1,10 +1,10 @@
 import React from 'react';
-import Chart from '../../public/components/Chart';
-import SearchAPI from '../../public/components/SearchAPI';
+import Charts from './Charts';
+import SearchAPI from './SearchAPI';
 
 const App = () => (
     <div>
-        <Chart/>
+        <Charts/>
         <SearchAPI/>
     </div>
 )

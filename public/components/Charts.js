@@ -2,7 +2,7 @@ import React from 'react';
 import Tracker from './Tracker';
 import Dial from './Dial';
 
-class Chart extends React.Component{
+class Charts extends React.Component{
 
 	render(){
 		return (
@@ -14,4 +14,4 @@ class Chart extends React.Component{
 	}
 }
 
-export default Chart;
+export default Charts;
