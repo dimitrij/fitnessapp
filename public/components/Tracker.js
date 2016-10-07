@@ -26,9 +26,26 @@ class Tracker extends React.Component {
 	}
 	
 	componentWillReceiveProps(nextProps){
-		this.name = nextProps['userData']['name'];
-		this.data = nextProps['userData'][this.selectedYear];
-		
+		this.generateChart(nextProps);
+	}
+	
+	/*componentDidUpdate() {
+		console.log('componentDidUpdate')
+	}*/
+
+	static parseDate(date){
+		return d3.time.format("%Y%m%d").parse(date);
+	}
+	
+	generateChart(data){
+		this.data = null;
+		this.dates = [];
+		this.kgs = [];
+		this.lbs = [];
+		this.userData = data || this.userData;
+		this.name = this.userData['userData']['name'];
+		this.data = this.userData['userData'][this.selectedYear];
+		q
 		this.data.map(datum => {
 			if (datum.date.substr(0, 4) === this.selectedYear) {
 				this.dates.push(Tracker.parseDate(datum.date));
@@ -38,16 +55,8 @@ class Tracker extends React.Component {
 		});
 		
 		this.setUnit();
-		this.initChart(this.init);
+		this.initChart();
 		this.init = false;
-	}
-	
-	/*componentDidUpdate() {
-		console.log('componentDidUpdate')
-	}*/
-
-	static parseDate(date){
-		return d3.time.format("%Y%m%d").parse(date);
 	}
 
 	initChart(){
@@ -247,6 +256,7 @@ class Tracker extends React.Component {
 
 	selectYear(e){
 		this.selectedYear = e.target.id;
+		this.generateChart();
 	}
 
 	render(){
@@ -292,7 +302,7 @@ var TrackerContainer = TrackerComponent => class extends React.Component {
 		}
 		
 		this.props = {
-			foo : 'bar'
+			data : 'bar'
 		}
 	}
 	

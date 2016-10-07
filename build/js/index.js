@@ -24383,13 +24383,14 @@ var _servicesApiService = require('../services/ApiService');
 
 var _servicesApiService2 = _interopRequireDefault(_servicesApiService);
 
+var apiService = new _servicesApiService2['default']();
+
 var caloriesTotal = 0,
     carbsTotal = 0,
     fatTotal = 0,
     proteinTotal = 0,
     sodiumTotal = 0,
-    sugarTotal = 0,
-    apiService = new _servicesApiService2['default']();
+    sugarTotal = 0;
 
 var Meal = (function (_React$Component) {
     _inherits(Meal, _React$Component);
@@ -24882,10 +24883,25 @@ var Tracker = (function (_React$Component) {
 	_createClass(Tracker, [{
 		key: 'componentWillReceiveProps',
 		value: function componentWillReceiveProps(nextProps) {
+			this.generateChart(nextProps);
+		}
+
+		/*componentDidUpdate() {
+  	console.log('componentDidUpdate')
+  }*/
+
+	}, {
+		key: 'generateChart',
+		value: function generateChart(data) {
 			var _this = this;
 
-			this.name = nextProps['userData']['name'];
-			this.data = nextProps['userData'][this.selectedYear];
+			this.data = null;
+			this.dates = [];
+			this.kgs = [];
+			this.lbs = [];
+			this.userData = data || this.userData;
+			this.name = this.userData['userData']['name'];
+			this.data = this.userData['userData'][this.selectedYear];
 
 			this.data.map(function (datum) {
 				if (datum.date.substr(0, 4) === _this.selectedYear) {
@@ -24895,15 +24911,12 @@ var Tracker = (function (_React$Component) {
 				}
 			});
 
+			console.log('sdfsdfs', this.kgs.length);
+
 			this.setUnit();
-			this.initChart(this.init);
+			this.initChart();
 			this.init = false;
 		}
-
-		/*componentDidUpdate() {
-  	console.log('componentDidUpdate')
-  }*/
-
 	}, {
 		key: 'initChart',
 		value: function initChart() {
@@ -25059,6 +25072,7 @@ var Tracker = (function (_React$Component) {
 		key: 'selectYear',
 		value: function selectYear(e) {
 			this.selectedYear = e.target.id;
+			this.generateChart();
 		}
 	}, {
 		key: 'render',
@@ -25138,7 +25152,7 @@ var TrackerContainer = function TrackerContainer(TrackerComponent) {
 			};
 
 			this.props = {
-				foo: 'bar'
+				data: 'bar'
 			};
 		}
 

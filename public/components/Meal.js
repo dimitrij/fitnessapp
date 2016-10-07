@@ -1,13 +1,14 @@
 import React from 'react';
 import ApiService from '../services/ApiService';
 
+const apiService = new ApiService();
+
 let caloriesTotal = 0,
     carbsTotal = 0,
     fatTotal = 0,
     proteinTotal = 0,
     sodiumTotal = 0,
-    sugarTotal = 0,
-    apiService = new ApiService();
+    sugarTotal = 0;
     
 class Meal extends React.Component {
     
