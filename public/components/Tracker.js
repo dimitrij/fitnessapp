@@ -45,7 +45,7 @@ class Tracker extends React.Component {
 		this.userData = data || this.userData;
 		this.name = this.userData['userData']['name'];
 		this.data = this.userData['userData'][this.selectedYear];
-		q
+		
 		this.data.map(datum => {
 			if (datum.date.substr(0, 4) === this.selectedYear) {
 				this.dates.push(Tracker.parseDate(datum.date));

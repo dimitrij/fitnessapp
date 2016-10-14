@@ -23,7 +23,6 @@ class Dial extends Component {
 		this.height = 240;
 		this.date = new Date();
 		this.month = this.date.getMonth() + 1 < 10 ? '0' + (this.date.getMonth() + 1) : this.date.getMonth() + 1;
-		this.circ = 2 * Math.PI;
 		this.centreX = this.width / 2;
 		this.dataTotalCals = 0;
 		this.apiService = new ApiService();
@@ -89,9 +88,9 @@ class Dial extends Component {
 		return (
 			<div id="calories">
 				<h1>Today's calories</h1>
-				{/*<Calories data={{id : 'calories-burned', dataTotalCals :this.state.dataTotalCals, consumed : this.state.dataCaloriesBurned, innerRadius : 65, outerRadius : 95, bgColour: '#e9e9e9', fgColour : '#7FBB5B', circ : this.circ}} />*/}
-				<Calories data={{id : 'current-consumed', dataTotalCals :this.props.dataTotalCals, consumed : this.props.dataCurrentConsumed, innerRadius : 90, outerRadius : 105, bgColour: '#7CBDD7', fgColour : '#ffffff', circ : this.circ}} />
-				<Calories data={{id : 'excess-consumed', dataTotalCals :this.props.dataTotalCals, consumed : this.props.dataExcessConsumed, innerRadius : 75, outerRadius : 90, bgColour: '#7CBDD7', fgColour : '#CE392B', circ : this.circ}}/>
+				{/*<Calories data={{id : 'calories-burned', dataTotalCals :this.state.dataTotalCals, consumed : this.state.dataCaloriesBurned, innerRadius : 65, outerRadius : 95, bgColour: '#e9e9e9', fgColour : '#7FBB5B'}} />*/}
+				<Calories data={{id : 'current-consumed', dataTotalCals :this.props.dataTotalCals, consumed : this.props.dataCurrentConsumed, innerRadius : 90, outerRadius : 105, bgColour: '#7CBDD7', fgColour : '#ffffff'}} />
+				<Calories data={{id : 'excess-consumed', dataTotalCals :this.props.dataTotalCals, consumed : this.props.dataExcessConsumed, innerRadius : 75, outerRadius : 90, bgColour: '#7CBDD7', fgColour : '#CE392B'}}/>
 				<text id="daily-permitted-text">Daily calorie intake</text>
 				<input type="text" ref="dailyPermitted" id="daily-permitted"
 					   onChange={$.debounce(this.rerenderDailyPermitted, 800)}
@@ -107,6 +106,7 @@ class Dial extends Component {
 const mapDispatchToProps = dispatch => ({ actions: bindActionCreators({ getTotalCalories, updateCurrentConsumed }, dispatch) });
 
 const mapStateToProps = state => {
+	console.log('typeof', state, state.totalCalories)
 	return {
 		dataTotalCals: state.totalCalories,// from database
 		dataCurrentConsumed: state.calories, //from MealTotals component

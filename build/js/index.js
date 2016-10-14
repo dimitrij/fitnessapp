@@ -23869,54 +23869,43 @@ var _node_modulesD3D3Min2 = _interopRequireDefault(_node_modulesD3D3Min);
 var Calories = (function (_React$Component) {
 	_inherits(Calories, _React$Component);
 
-	function Calories() {
+	//needs to be split out in to initial state and received state
+
+	function Calories(props) {
 		_classCallCheck(this, Calories);
 
-		_get(Object.getPrototypeOf(Calories.prototype), 'constructor', this).apply(this, arguments);
+		_get(Object.getPrototypeOf(Calories.prototype), 'constructor', this).call(this, props);
+		console.log(props);
+		this.width = 400;
+		this.innerRadius = props.data.innerRadius;
+		this.outerRadius = props.data.outerRadius;
+		this.bgColour = props.data.bgColour;
+		this.fg = props.data.fgColour;
+		this.arc = _node_modulesD3D3Min2['default'].svg.arc().innerRadius(this.innerRadius).outerRadius(this.outerRadius).startAngle(0);
+		this.dialClass = '';
+		this.circ = 2 * Math.PI;
 	}
 
 	_createClass(Calories, [{
 		key: 'componentWillReceiveProps',
-
-		//needs to be split out in to initial state and received state
-
 		value: function componentWillReceiveProps(nextProps) {
 			var _this = this;
 
 			this.id = nextProps.data.id;
-			this.width = 400;
-			this.totalCalories = nextProps.data.dataTotalCals;
-			this.consumed = nextProps.data.consumed;
-			this.consumedAsPct = this.consumed / this.totalCalories * 100;
-			this.ofCirc = this.consumedAsPct / 100 * nextProps.data.circ;
-			this.innerRadius = nextProps.data.innerRadius;
-			this.outerRadius = nextProps.data.outerRadius;
-			this.bgColour = nextProps.data.bgColour;
-			this.fgColour = nextProps.data.fgColour;
-			this.arc = _node_modulesD3D3Min2['default'].svg.arc().innerRadius(this.innerRadius).outerRadius(this.outerRadius).startAngle(0);
-			this.dialClass = '';
+			//this.consumed = nextProps.data.consumed;
+			this.consumedAsPct = nextProps.data.consumed / nextProps.data.dataTotalCals * 100;
+			this.ofCirc = this.consumedAsPct / 100 * this.circ;
 
 			if (this.id === 'excess-consumed') {
 				this.dialClass = 'excess-dial';
-				if (this.consumed <= 0) {
+				if (nextProps.data.consumed <= 0) {
 					return;
 				}
 			}
 
-			this.bg = _node_modulesD3D3Min2['default'].select('#calories svg g').append('path').datum({ endAngle: nextProps.data.circ }).style('fill', this.bgColour).attr('f', 'sdfsd').attr('d', this.arc);
+			_node_modulesD3D3Min2['default'].select('#calories svg g').append('path').datum({ endAngle: this.circ }).style('fill', this.bgColour).attr('f', '').attr('d', this.arc);
 
-			this.fgColour = _node_modulesD3D3Min2['default'].select('#calories svg g').append('path').datum({ endAngle: 0 }).style('fill', this.fgColour).attr('d', this.arc).attr('class', this.dialClass);
-			/*.on('mouseover', () => {
-   	this.offsetWidth = document.getElementById(this.id).getBBox().width;
-   	d3.select('#' + this.id).attr('transform', 'translate(' + ((this.width/2) - this.offsetWidth - 20) + ',-160)');
-   	d3.select('#today').attr('transform', 'translate(' + ((this.width/2) - this.offsetWidth - 20) + ',-175)');
-   	d3.select('#today').classed('visible', true);
-   	d3.select('#' + this.id).classed('visible', true);
-   	d3.select('#more-data').remove();
-   })
-   .on('mouseout', () => {
-   	d3.selectAll('.info').classed('visible', false);
-   });*/
+			this.fgColour = _node_modulesD3D3Min2['default'].select('#calories svg g').append('path').datum({ endAngle: 0 }).style('fill', this.fg).attr('d', this.arc).attr('class', this.dialClass);
 
 			this.arcTween = function (transition, newAngle) {
 				transition.attrTween('d', function (d) {
@@ -24064,7 +24053,6 @@ var Dial = (function (_Component) {
 		this.height = 240;
 		this.date = new Date();
 		this.month = this.date.getMonth() + 1 < 10 ? '0' + (this.date.getMonth() + 1) : this.date.getMonth() + 1;
-		this.circ = 2 * Math.PI;
 		this.centreX = this.width / 2;
 		this.dataTotalCals = 0;
 		this.apiService = new _servicesApiService2['default']();
@@ -24142,8 +24130,8 @@ var Dial = (function (_Component) {
 					null,
 					'Today\'s calories'
 				),
-				_react2['default'].createElement(_Calories2['default'], { data: { id: 'current-consumed', dataTotalCals: this.props.dataTotalCals, consumed: this.props.dataCurrentConsumed, innerRadius: 90, outerRadius: 105, bgColour: '#7CBDD7', fgColour: '#ffffff', circ: this.circ } }),
-				_react2['default'].createElement(_Calories2['default'], { data: { id: 'excess-consumed', dataTotalCals: this.props.dataTotalCals, consumed: this.props.dataExcessConsumed, innerRadius: 75, outerRadius: 90, bgColour: '#7CBDD7', fgColour: '#CE392B', circ: this.circ } }),
+				_react2['default'].createElement(_Calories2['default'], { data: { id: 'current-consumed', dataTotalCals: this.props.dataTotalCals, consumed: this.props.dataCurrentConsumed, innerRadius: 90, outerRadius: 105, bgColour: '#7CBDD7', fgColour: '#ffffff' } }),
+				_react2['default'].createElement(_Calories2['default'], { data: { id: 'excess-consumed', dataTotalCals: this.props.dataTotalCals, consumed: this.props.dataExcessConsumed, innerRadius: 75, outerRadius: 90, bgColour: '#7CBDD7', fgColour: '#CE392B' } }),
 				_react2['default'].createElement(
 					'text',
 					{ id: 'daily-permitted-text' },
@@ -24167,6 +24155,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 };
 
 var mapStateToProps = function mapStateToProps(state) {
+	console.log('typeof', state, state.totalCalories);
 	return {
 		dataTotalCals: state.totalCalories, // from database
 		dataCurrentConsumed: state.calories, //from MealTotals component
@@ -24177,7 +24166,7 @@ var mapStateToProps = function mapStateToProps(state) {
 
 exports['default'] = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Dial);
 module.exports = exports['default'];
-/*<Calories data={{id : 'calories-burned', dataTotalCals :this.state.dataTotalCals, consumed : this.state.dataCaloriesBurned, innerRadius : 65, outerRadius : 95, bgColour: '#e9e9e9', fgColour : '#7FBB5B', circ : this.circ}} />*/
+/*<Calories data={{id : 'calories-burned', dataTotalCals :this.state.dataTotalCals, consumed : this.state.dataCaloriesBurned, innerRadius : 65, outerRadius : 95, bgColour: '#e9e9e9', fgColour : '#7FBB5B'}} />*/
 
 },{"../../node_modules/d3/d3.min":2,"../js/actions":217,"../js/utils":220,"../services/ApiService":221,"./Calories":208,"./Legend":212,"react":186,"react-redux":35,"redux":193}],211:[function(require,module,exports){
 'use strict';
@@ -24910,8 +24899,6 @@ var Tracker = (function (_React$Component) {
 					_this.lbs.push(datum.lb);
 				}
 			});
-
-			console.log('sdfsdfs', this.kgs.length);
 
 			this.setUnit();
 			this.initChart();
