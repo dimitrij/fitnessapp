@@ -23869,47 +23869,41 @@ var _node_modulesD3D3Min2 = _interopRequireDefault(_node_modulesD3D3Min);
 var Calories = (function (_React$Component) {
 	_inherits(Calories, _React$Component);
 
-	//needs to be split out in to initial state and received state
-
 	function Calories(props) {
 		_classCallCheck(this, Calories);
 
 		_get(Object.getPrototypeOf(Calories.prototype), 'constructor', this).call(this, props);
-		console.log(props);
 		this.width = 400;
 		this.innerRadius = props.data.innerRadius;
 		this.outerRadius = props.data.outerRadius;
 		this.bgColour = props.data.bgColour;
 		this.fg = props.data.fgColour;
 		this.arc = _node_modulesD3D3Min2['default'].svg.arc().innerRadius(this.innerRadius).outerRadius(this.outerRadius).startAngle(0);
-		this.dialClass = '';
 		this.circ = 2 * Math.PI;
 	}
 
 	_createClass(Calories, [{
 		key: 'componentWillReceiveProps',
 		value: function componentWillReceiveProps(nextProps) {
-			var _this = this;
-
-			this.id = nextProps.data.id;
-			//this.consumed = nextProps.data.consumed;
 			this.consumedAsPct = nextProps.data.consumed / nextProps.data.dataTotalCals * 100;
 			this.ofCirc = this.consumedAsPct / 100 * this.circ;
-
-			if (this.id === 'excess-consumed') {
-				this.dialClass = 'excess-dial';
-				if (nextProps.data.consumed <= 0) {
-					return;
-				}
-			}
+		}
+	}, {
+		key: 'shouldComponentUpdate',
+		value: function shouldComponentUpdate(nextProps) {
+			return nextProps.data.consumed >= 0;
+		}
+	}, {
+		key: 'componentWillUpdate',
+		value: function componentWillUpdate() {
+			var _this = this;
 
 			_node_modulesD3D3Min2['default'].select('#calories svg g').append('path').datum({ endAngle: this.circ }).style('fill', this.bgColour).attr('f', '').attr('d', this.arc);
 
-			this.fgColour = _node_modulesD3D3Min2['default'].select('#calories svg g').append('path').datum({ endAngle: 0 }).style('fill', this.fg).attr('d', this.arc).attr('class', this.dialClass);
+			this.fgColour = _node_modulesD3D3Min2['default'].select('#calories svg g').append('path').datum({ endAngle: 0 }).style('fill', this.fg).attr('d', this.arc);
 
 			this.arcTween = function (transition, newAngle) {
 				transition.attrTween('d', function (d) {
-					console.log('angle', d.endAngle, newAngle);
 					var interpolate = _node_modulesD3D3Min2['default'].interpolate(d.endAngle, newAngle);
 					return function (t) {
 						d.endAngle = interpolate(t);
