@@ -1,8 +1,6 @@
 import React from 'react';
 import d3 from '../../node_modules/d3/d3.min';
-import ApiService from '../services/ApiService';
-
-let apiService = new ApiService();
+import ApiDataContainer from './ApiData';
 
 class Tracker extends React.Component {
 
@@ -28,10 +26,6 @@ class Tracker extends React.Component {
 	componentWillReceiveProps(nextProps){
 		this.generateChart(nextProps);
 	}
-	
-	/*componentDidUpdate() {
-		console.log('componentDidUpdate')
-	}*/
 
 	static parseDate(date){
 		return d3.time.format("%Y%m%d").parse(date);
@@ -291,40 +285,4 @@ class Tracker extends React.Component {
 	}
 }
 
-//Higher order component
-var TrackerContainer = TrackerComponent => class extends React.Component {
-	
-	constructor(props){
-		super(props);
-		
-		this.state = {
-			userData : {}
-		}
-		
-		this.props = {
-			data : 'bar'
-		}
-	}
-	
-	componentDidMount() {
-		apiService.getUser().end((err, response)=>{
-			if (response.ok) {
-				this.updateUserData(response)
-			} else {
-				console.log('error')
-			}
-		});
-	}
-	
-	updateUserData(response){
-		this.setState({
-			userData: response.body[0]
-		})
-	}
-	
-	render() {
-		return <TrackerComponent {...this.props} {...this.state} />;
-	}
-};
-
-export default TrackerContainer(Tracker);
+export default ApiDataContainer(Tracker);

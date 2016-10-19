@@ -23644,6 +23644,80 @@ var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_ag
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _servicesApiService = require('../services/ApiService');
+
+var _servicesApiService2 = _interopRequireDefault(_servicesApiService);
+
+//Higher order component
+var ApiDataContainer = function ApiDataContainer(ChildComponent) {
+    return (function (_React$Component) {
+        _inherits(_class, _React$Component);
+
+        function _class(props) {
+            _classCallCheck(this, _class);
+
+            _get(Object.getPrototypeOf(_class.prototype), 'constructor', this).call(this, props);
+            this.apiService = new _servicesApiService2['default']();
+            this.state = {
+                userData: {}
+            };
+        }
+
+        _createClass(_class, [{
+            key: 'componentDidMount',
+            value: function componentDidMount() {
+                var _this = this;
+
+                this.apiService.getUser().end(function (err, response) {
+                    if (response.ok) {
+                        _this.updateUserData(response);
+                    } else {
+                        console.log('error');
+                    }
+                });
+            }
+        }, {
+            key: 'updateUserData',
+            value: function updateUserData(response) {
+                this.setState({
+                    userData: response.body[0]
+                });
+            }
+        }, {
+            key: 'render',
+            value: function render() {
+                return _react2['default'].createElement(ChildComponent, this.state);
+            }
+        }]);
+
+        return _class;
+    })(_react2['default'].Component);
+};
+
+exports['default'] = ApiDataContainer;
+module.exports = exports['default'];
+
+},{"../services/ApiService":222,"react":186}],207:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
@@ -23808,7 +23882,7 @@ var ApiSearchResults = (function (_React$Component) {
 exports['default'] = ApiSearchResults;
 module.exports = exports['default'];
 
-},{"../js/utils":220,"../services/ApiService":221,"react":186}],207:[function(require,module,exports){
+},{"../js/utils":221,"../services/ApiService":222,"react":186}],208:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -23841,7 +23915,7 @@ var App = function App() {
 exports['default'] = App;
 module.exports = exports['default'];
 
-},{"./Charts":209,"./SearchAPI":215,"react":186}],208:[function(require,module,exports){
+},{"./Charts":210,"./SearchAPI":216,"react":186}],209:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -23927,7 +24001,7 @@ var Calories = (function (_React$Component) {
 exports['default'] = Calories;
 module.exports = exports['default'];
 
-},{"../../node_modules/d3/d3.min":2,"react":186}],209:[function(require,module,exports){
+},{"../../node_modules/d3/d3.min":2,"react":186}],210:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -23983,7 +24057,7 @@ var Charts = (function (_React$Component) {
 exports['default'] = Charts;
 module.exports = exports['default'];
 
-},{"./Dial":210,"./Tracker":216,"react":186}],210:[function(require,module,exports){
+},{"./Dial":211,"./Tracker":217,"react":186}],211:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -24162,7 +24236,7 @@ exports['default'] = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProp
 module.exports = exports['default'];
 /*<Calories data={{id : 'calories-burned', dataTotalCals :this.state.dataTotalCals, consumed : this.state.dataCaloriesBurned, innerRadius : 65, outerRadius : 95, bgColour: '#e9e9e9', fgColour : '#7FBB5B'}} />*/
 
-},{"../../node_modules/d3/d3.min":2,"../js/actions":217,"../js/utils":220,"../services/ApiService":221,"./Calories":208,"./Legend":212,"react":186,"react-redux":35,"redux":193}],211:[function(require,module,exports){
+},{"../../node_modules/d3/d3.min":2,"../js/actions":218,"../js/utils":221,"../services/ApiService":222,"./Calories":209,"./Legend":213,"react":186,"react-redux":35,"redux":193}],212:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -24258,7 +24332,7 @@ var FoodList = function FoodList(props) {
 exports['default'] = FoodList;
 module.exports = exports['default'];
 
-},{"./Meal":213,"./MealTotalsComponent":214,"react":186}],212:[function(require,module,exports){
+},{"./Meal":214,"./MealTotalsComponent":215,"react":186}],213:[function(require,module,exports){
 //stateless functional component
 "use strict";
 
@@ -24341,7 +24415,7 @@ var Legend = function Legend(props) {
 exports["default"] = Legend;
 module.exports = exports["default"];
 
-},{"react":186}],213:[function(require,module,exports){
+},{"react":186}],214:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -24534,7 +24608,7 @@ var Meal = (function (_React$Component) {
 exports['default'] = Meal;
 module.exports = exports['default'];
 
-},{"../services/ApiService":221,"react":186}],214:[function(require,module,exports){
+},{"../services/ApiService":222,"react":186}],215:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -24628,7 +24702,7 @@ var MealTotals = (0, _reactRedux.connect)(null, mapDispatchToProps)(MealTotalsCo
 exports['default'] = MealTotals;
 module.exports = exports['default'];
 
-},{"../js/actions":217,"react":186,"react-redux":35,"redux":193}],215:[function(require,module,exports){
+},{"../js/actions":218,"react":186,"react-redux":35,"redux":193}],216:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -24804,14 +24878,12 @@ exports['default'] = SearchAPI;
 module.exports = exports['default'];
 /*load today's selected foods from db on page load*/
 
-},{"../services/ApiService":221,"./ApiSearchResults":206,"./FoodList":211,"react":186}],216:[function(require,module,exports){
+},{"../services/ApiService":222,"./ApiSearchResults":207,"./FoodList":212,"react":186}],217:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
 	value: true
 });
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -24831,11 +24903,9 @@ var _node_modulesD3D3Min = require('../../node_modules/d3/d3.min');
 
 var _node_modulesD3D3Min2 = _interopRequireDefault(_node_modulesD3D3Min);
 
-var _servicesApiService = require('../services/ApiService');
+var _ApiData = require('./ApiData');
 
-var _servicesApiService2 = _interopRequireDefault(_servicesApiService);
-
-var apiService = new _servicesApiService2['default']();
+var _ApiData2 = _interopRequireDefault(_ApiData);
 
 var Tracker = (function (_React$Component) {
 	_inherits(Tracker, _React$Component);
@@ -24861,18 +24931,11 @@ var Tracker = (function (_React$Component) {
 		this.init = true;
 	}
 
-	//Higher order component
-
 	_createClass(Tracker, [{
 		key: 'componentWillReceiveProps',
 		value: function componentWillReceiveProps(nextProps) {
 			this.generateChart(nextProps);
 		}
-
-		/*componentDidUpdate() {
-  	console.log('componentDidUpdate')
-  }*/
-
 	}, {
 		key: 'generateChart',
 		value: function generateChart(data) {
@@ -25119,59 +25182,10 @@ var Tracker = (function (_React$Component) {
 	return Tracker;
 })(_react2['default'].Component);
 
-var TrackerContainer = function TrackerContainer(TrackerComponent) {
-	return (function (_React$Component2) {
-		_inherits(_class, _React$Component2);
-
-		function _class(props) {
-			_classCallCheck(this, _class);
-
-			_get(Object.getPrototypeOf(_class.prototype), 'constructor', this).call(this, props);
-
-			this.state = {
-				userData: {}
-			};
-
-			this.props = {
-				data: 'bar'
-			};
-		}
-
-		_createClass(_class, [{
-			key: 'componentDidMount',
-			value: function componentDidMount() {
-				var _this5 = this;
-
-				apiService.getUser().end(function (err, response) {
-					if (response.ok) {
-						_this5.updateUserData(response);
-					} else {
-						console.log('error');
-					}
-				});
-			}
-		}, {
-			key: 'updateUserData',
-			value: function updateUserData(response) {
-				this.setState({
-					userData: response.body[0]
-				});
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				return _react2['default'].createElement(TrackerComponent, _extends({}, this.props, this.state));
-			}
-		}]);
-
-		return _class;
-	})(_react2['default'].Component);
-};
-
-exports['default'] = TrackerContainer(Tracker);
+exports['default'] = (0, _ApiData2['default'])(Tracker);
 module.exports = exports['default'];
 
-},{"../../node_modules/d3/d3.min":2,"../services/ApiService":221,"react":186}],217:[function(require,module,exports){
+},{"../../node_modules/d3/d3.min":2,"./ApiData":206,"react":186}],218:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -25208,7 +25222,7 @@ var updateCurrentConsumed = function updateCurrentConsumed(calories) {
 };
 exports.updateCurrentConsumed = updateCurrentConsumed;
 
-},{}],218:[function(require,module,exports){
+},{}],219:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -25239,7 +25253,7 @@ var store = (0, _redux.createStore)(_reducers2['default']);
     _react2['default'].createElement(_componentsApp2['default'], null)
 ), document.getElementById('app'));
 
-},{"../components/App":207,"./reducers":219,"react":186,"react-dom":32,"react-redux":35,"redux":193}],219:[function(require,module,exports){
+},{"../components/App":208,"./reducers":220,"react":186,"react-dom":32,"react-redux":35,"redux":193}],220:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -25300,7 +25314,7 @@ var fitnessApp = (0, _redux.combineReducers)({
 exports['default'] = fitnessApp;
 module.exports = exports['default'];
 
-},{"./actions":217,"redux":193}],220:[function(require,module,exports){
+},{"./actions":218,"redux":193}],221:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -25378,7 +25392,7 @@ var $ = (function () {
 exports['default'] = $;
 module.exports = exports['default'];
 
-},{}],221:[function(require,module,exports){
+},{}],222:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -25438,4 +25452,4 @@ var ApiService = (function () {
 exports['default'] = ApiService;
 module.exports = exports['default'];
 
-},{"../../node_modules/superagent/lib/client":199}]},{},[218])
+},{"../../node_modules/superagent/lib/client":199}]},{},[219])
