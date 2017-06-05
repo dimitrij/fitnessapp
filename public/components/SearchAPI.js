@@ -24,6 +24,32 @@ class SearchAPI extends React.Component {
 
 		this.getTodaysFoods();
 	}
+	
+	getTodaysFoods(){
+		searching = false;
+		apiService.getTodaysFoods().end((err, res)=>{
+			this.todaysFoods(err, res);
+		});
+	}
+	
+	todaysFoods(err, res){
+		if (res.ok){
+			this.meals = res.body;
+			if(this.meals && this.meals[0]){
+				let meals = this.meals[0]['meals'];
+				this.setState({
+					breakfastList : meals['breakfast']['food'],
+					lunchList : meals['lunch']['food'],
+					dinnerList : meals['dinner']['food'],
+					snacksList : meals['snacks']['food'],
+					foodsList : meals['breakfast']['food'].concat(meals['lunch']['food'].concat(meals['dinner']['food'].concat(meals['snacks']['food'])))
+				});
+			}
+			
+		} else {
+			console.log(err);
+		}
+	}
 
 	searchApi(e){
 		searching = true;
@@ -62,32 +88,6 @@ class SearchAPI extends React.Component {
 			console.log(err);
 		}
 	}
-	
-	getTodaysFoods(){
-		searching = false;
-		apiService.getTodaysFoods().end((err, res)=>{
-			this.todaysFoods(err, res);
-		});
-	}
-
-	todaysFoods(err, res){
-		if (res.ok){
-			this.meals = res.body;
-			if(this.meals && this.meals[0]){
-				let meals = this.meals[0]['meals'];
-				this.setState({
-					breakfastList : meals['breakfast']['food'],
-					lunchList : meals['lunch']['food'],
-					dinnerList : meals['dinner']['food'],
-					snacksList : meals['snacks']['food'],
-					foodsList : meals['breakfast']['food'].concat(meals['lunch']['food'].concat(meals['dinner']['food'].concat(meals['snacks']['food'])))
-				});
-			}
-
-		} else {
-			console.log(err);
-		}
-	}
 
 	render(){
 		return (
@@ -110,13 +110,9 @@ class SearchAPI extends React.Component {
 				<ApiSearchResults query={this.state.query}
 								  results={this.state.searchResults}
 								  todaysFoods={this.getTodaysFoods} />
-
-				<FoodList foodsList={this.state.foodsList}
-						  breakfastList={this.state.breakfastList}
-						  lunchList={this.state.lunchList}
-						  dinnerList={this.state.dinnerList}
-						  snacksList={this.state.snacksList}
-						  todaysFoods={this.getTodaysFoods} /> {/*load today's selected foods from db on page load*/}
+				
+				{/*load today's selected foods from db on page load*/}
+				<FoodList {...this.state} todaysFoods={this.getTodaysFoods} />
 			</div>
 		)
 	}
