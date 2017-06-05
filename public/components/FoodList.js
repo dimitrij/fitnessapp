@@ -2,9 +2,11 @@ import React from 'react';
 import Meal from './Meal';
 import MealTotals from './MealTotalsComponent';
 
-const FoodList = props => (
+const FoodList = props => {
     
-    <div>
+    const {breakfastList, lunchList, dinnerList, snacksList, foodsList} = props;
+    
+    return (<div>
         <ul className="selected-foods headers">
             <li className="clearfix">
                 <span> </span>
@@ -20,27 +22,27 @@ const FoodList = props => (
         
         <div className="selected-foods-container">
             
-            <Meal items={props.breakfastList}
+            <Meal items={breakfastList}
                   todaysFoods={props.todaysFoods}
                   meal="breakfast"/>
             
-            <Meal items={props.lunchList}
+            <Meal items={lunchList}
                   todaysFoods={props.todaysFoods}
                   meal="lunch"/>
             
-            <Meal items={props.dinnerList}
+            <Meal items={dinnerList}
                   todaysFoods={props.todaysFoods}
                   meal="dinner"/>
             
-            <Meal items={props.snacksList}
+            <Meal items={snacksList}
                   todaysFoods={props.todaysFoods}
                   meal="snacks"/>
             
-            <MealTotals	foods={props.foodsList}/>
+            <MealTotals foods={foodsList}/>
         
         </div>
     
-    </div>
-)
+    </div>)
+}
 
 export default FoodList;
